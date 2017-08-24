@@ -3,7 +3,13 @@ FxBase
 
 ![Logo](website/static/logo.png)
 
-This is an app development infrastructure.
+FxBase is a flexible base frame to develop an app.it mainly included:
+
+* BaseActivity
+* BaseToolbarActivity
+* BaseFragment
+* BaseListFragment
+* BaseDialog
 
 License
 -------
