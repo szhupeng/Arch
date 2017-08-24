@@ -1,7 +1,7 @@
 FxBase
 ============
 
-![Logo](website/static/logo.png)
+![Logo](http://ob0r3vf26.bkt.clouddn.com/logo.png)
 
 FxBase is a flexible base frame to develop an app.it mainly included:
 
