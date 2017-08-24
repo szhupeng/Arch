@@ -3,10 +3,12 @@ package space.zhupeng.base.widget;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -14,7 +16,21 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.AbsoluteSizeSpan;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.BulletSpan;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
+import android.text.style.LeadingMarginSpan;
+import android.text.style.MaskFilterSpan;
+import android.text.style.QuoteSpan;
+import android.text.style.StrikethroughSpan;
+import android.text.style.StyleSpan;
+import android.text.style.SubscriptSpan;
+import android.text.style.SuperscriptSpan;
+import android.text.style.TypefaceSpan;
+import android.text.style.URLSpan;
+import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -32,7 +48,7 @@ public class MultiStyleTextView extends AppCompatTextView {
     }
 
     private final SpannableStringBuilder mSpannableBuilder;
-
+    private Spannable mEndSpannable;
     private final int mDefaultColor;
 
     public MultiStyleTextView(Context context) {
@@ -49,6 +65,10 @@ public class MultiStyleTextView extends AppCompatTextView {
         mDefaultColor = getTextColors().getDefaultColor();
 
         mSpannableBuilder = new SpannableStringBuilder();
+
+        if (!TextUtils.isEmpty(getText())) {
+            mEndSpannable = new SpannableString(getText());
+        }
     }
 
     /**
@@ -58,6 +78,7 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @return
      */
     public MultiStyleTextView segment(final CharSequence text) {
+        segment(text, 0f, 0, null);
         return this;
     }
 
@@ -68,7 +89,8 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @param textSize 字体大小，单位为SP
      * @return
      */
-    public MultiStyleTextView segment(final CharSequence text, final int textSize) {
+    public MultiStyleTextView segment(final CharSequence text, final float textSize) {
+        segment(text, textSize, 0, null);
         return this;
     }
 
@@ -80,49 +102,76 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @param listener 点击事件监听
      * @return
      */
-    public MultiStyleTextView segment(final CharSequence text, final int textSize, final OnSegmentClickListener listener) {
-
+    public MultiStyleTextView segment(final CharSequence text, final float textSize, final OnSegmentClickListener listener) {
+        segment(text, textSize, 0, listener);
         return this;
     }
 
     /**
-     * 添加特定字体大小并且可点击的文本片段
+     * 添加特定颜色的文本片段
      *
      * @param text
-     * @param textSize  字体大小，单位为SP
-     * @param underline true 带下划线，false 不带下划线
-     * @param listener
+     * @param textColor 字体颜色
      * @return
      */
-    public MultiStyleTextView segment(final CharSequence text, final int textSize, final boolean underline, final OnSegmentClickListener listener) {
-        if (TextUtils.isEmpty(text)) return this;
-
-        final SpannableString ss = new SpannableString(text);
-        if (textSize > 0) {
-            ss.setSpan(new AbsoluteSizeSpan(textSize), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-
-        if (listener != null) {
-            ss.setSpan(new ClickSpan(text, mDefaultColor, underline, listener), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-
-        mSpannableBuilder.append(ss);
+    public MultiStyleTextView segment(final CharSequence text, final int textColor) {
+        segment(text, 0f, textColor, null);
         return this;
     }
 
-    public MultiStyleTextView segment(final CharSequence text, final int textSize, final int textColor, final boolean underline, final OnSegmentClickListener listener) {
+    /**
+     * 添加特定字体大小和颜色的文本片段
+     *
+     * @param text
+     * @param textSize  字体大小
+     * @param textColor 字体颜色
+     * @return
+     */
+    public MultiStyleTextView segment(final CharSequence text, final float textSize, final int textColor) {
+        segment(text, textSize, textColor, null);
+        return this;
+    }
+
+    /**
+     * 添加特定颜色并且可点击的文本片段
+     *
+     * @param text
+     * @param textColor 字体颜色
+     * @return
+     */
+    public MultiStyleTextView segment(final CharSequence text, final int textColor, final OnSegmentClickListener listener) {
+        segment(text, 0f, textColor, listener);
+        return this;
+    }
+
+    /**
+     * 添加特定字体大小和颜色并且可点击的文本片段
+     *
+     * @param text
+     * @param textSize  字体大小
+     * @param textColor 字体颜色
+     * @param listener
+     * @return
+     */
+    public MultiStyleTextView segment(final CharSequence text, final float textSize, int textColor, final OnSegmentClickListener listener) {
         if (TextUtils.isEmpty(text)) return this;
 
-        final SpannableString ss = new SpannableString(text);
-        if (textSize > 0) {
-            ss.setSpan(new AbsoluteSizeSpan(textSize), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mEndSpannable = new SpannableString(text);
+        if ((int) textSize > 0) {
+            mEndSpannable.setSpan(new AbsoluteSizeSpan((int) textSize), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        if (textColor != 0) {
+            mEndSpannable.setSpan(new ForegroundColorSpan(textColor), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } else {
+            textColor = mDefaultColor;
         }
 
         if (listener != null) {
-            ss.setSpan(new ClickSpan(text, mDefaultColor, underline, listener), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mEndSpannable.setSpan(new ClickSpan(text, textColor, listener), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        mSpannableBuilder.append(ss);
+        mSpannableBuilder.append(mEndSpannable);
         return this;
     }
 
@@ -133,9 +182,9 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @return
      */
     public MultiStyleTextView appendBackgroundColor(final int color) {
-        if (color <= 0) return this;
+        if (color <= 0 || null == mEndSpannable) return this;
 
-//        mBuilder.setSpan(new BackgroundColorSpan(backgroundColor), start, end, flag);
+        mEndSpannable.setSpan(new BackgroundColorSpan(color), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -146,10 +195,9 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @return
      */
     public MultiStyleTextView appendQuoteColor(final int color) {
-        if (color <= 0) return this;
+        if (color <= 0 || null == mEndSpannable) return this;
 
-//        mBuilder.setSpan(new QuoteSpan(quoteColor), start, end, 0);
-
+        mEndSpannable.setSpan(new QuoteSpan(color), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -160,8 +208,13 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @param rest  剩余行缩进
      * @return
      */
-    public MultiStyleTextView appendLeadingMargin(final int first, final int rest) {
-//        mBuilder.setSpan(new LeadingMarginSpan.Standard(first, rest), start, end, flag);
+    public MultiStyleTextView appendLeadingMargin(int first, int rest) {
+        if (null == mEndSpannable) return this;
+
+        if (first < 0) first = 0;
+        if (rest < 0) rest = 0;
+
+        mEndSpannable.setSpan(new LeadingMarginSpan.Standard(first, rest), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -172,8 +225,11 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @return
      */
     public MultiStyleTextView appendUrl(final String url) {
-//        mBuilder.setSpan(new URLSpan(url), start, end, flag);
+        if (TextUtils.isEmpty(url) || null == mEndSpannable) return this;
+
         setMovementMethod(LinkMovementMethod.getInstance());
+
+        mEndSpannable.setSpan(new URLSpan(url), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -184,8 +240,12 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @param color   列表标记的颜色
      * @return
      */
-    public MultiStyleTextView appendBullet(final int padding, final int color) {
-//        mBuilder.setSpan(new BulletSpan(padding, color), start, end, 0);
+    public MultiStyleTextView appendBullet(final int padding, int color) {
+        if (null == mEndSpannable) return this;
+
+        if (0 == color) color = mDefaultColor;
+
+        mEndSpannable.setSpan(new BulletSpan(padding, color), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -195,7 +255,9 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @return
      */
     public MultiStyleTextView appendStrikeThrough() {
-//        mBuilder.setSpan(new StrikethroughSpan(), start, end, flag);
+        if (null == mEndSpannable) return this;
+
+        mEndSpannable.setSpan(new StrikethroughSpan(), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -205,7 +267,9 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @return
      */
     public MultiStyleTextView appendUnderline() {
-//        mBuilder.setSpan(new UnderlineSpan(), start, end, flag);
+        if (null == mEndSpannable) return this;
+
+        mEndSpannable.setSpan(new UnderlineSpan(), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -215,7 +279,9 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @return
      */
     public MultiStyleTextView appendSuperscript() {
-//        mBuilder.setSpan(new SuperscriptSpan(), start, end, flag);
+        if (null == mEndSpannable) return this;
+
+        mEndSpannable.setSpan(new SuperscriptSpan(), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -225,7 +291,9 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @return
      */
     public MultiStyleTextView appendSubscript() {
-//        mBuilder.setSpan(new SubscriptSpan(), start, end, flag);
+        if (null == mEndSpannable) return this;
+
+        mEndSpannable.setSpan(new SubscriptSpan(), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -235,7 +303,9 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @return
      */
     public MultiStyleTextView appendBoldStyle() {
-//        mBuilder.setSpan(new StyleSpan(Typeface.BOLD), start, end, flag);
+        if (null == mEndSpannable) return this;
+
+        mEndSpannable.setSpan(new StyleSpan(Typeface.BOLD), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -245,7 +315,9 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @return
      */
     public MultiStyleTextView appendItalicStyle() {
-//        mBuilder.setSpan(new StyleSpan(Typeface.ITALIC), start, end, flag);
+        if (null == mEndSpannable) return this;
+
+        mEndSpannable.setSpan(new StyleSpan(Typeface.ITALIC), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -256,9 +328,9 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @return
      */
     public MultiStyleTextView appendFontFamily(final String fontFamily) {
-        if (TextUtils.isEmpty(fontFamily)) return this;
+        if (TextUtils.isEmpty(fontFamily) || null == mEndSpannable) return this;
 
-//        mBuilder.setSpan(new TypefaceSpan(fontFamily), start, end, flag);
+        mEndSpannable.setSpan(new TypefaceSpan(fontFamily), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -266,24 +338,33 @@ public class MultiStyleTextView extends AppCompatTextView {
      * 追加图片
      *
      * @param bitmap 位图
+     * @param start  插入图片的位置
      * @return
      */
-    public MultiStyleTextView appendImage(final Bitmap bitmap) {
-        if (null == bitmap) return this;
-//        mBuilder.setSpan(new ImageSpan(getContext(), bitmap), start, end, flag);
+    public MultiStyleTextView appendImage(final Bitmap bitmap, int start) {
+        if (null == bitmap || null == mEndSpannable) return this;
+
+        if (start < 0) start = 0;
+        if (start > mEndSpannable.length()) start = mEndSpannable.length();
+
+        mEndSpannable.setSpan(new ImageSpan(getContext(), bitmap), start, start + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
     /**
      * 追加图片
      *
-     * @param drawable
+     * @param drawable 图片
+     * @param start    插入图片的位置
      * @return
      */
-    public MultiStyleTextView appendImage(final Drawable drawable) {
-        if (null == drawable) return this;
+    public MultiStyleTextView appendImage(final Drawable drawable, int start) {
+        if (null == drawable || null == mEndSpannable) return this;
 
-//        mBuilder.setSpan(new ImageSpan(drawable), start, end, flag);
+        if (start < 0) start = 0;
+        if (start > mEndSpannable.length()) start = mEndSpannable.length();
+
+        mEndSpannable.setSpan(new ImageSpan(drawable), start, start + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -291,10 +372,16 @@ public class MultiStyleTextView extends AppCompatTextView {
      * 追加图片
      *
      * @param resId 图片资源id
+     * @param start 插入图片的位置
      * @return
      */
-    public MultiStyleTextView appendImage(@DrawableRes final int resId) {
-//        mBuilder.setSpan(new ImageSpan(getContext(), resourceId), start, end, flag);
+    public MultiStyleTextView appendImage(@DrawableRes final int resId, int start) {
+        if (null == mEndSpannable) return this;
+
+        if (start < 0) start = 0;
+        if (start > mEndSpannable.length()) start = mEndSpannable.length();
+
+        mEndSpannable.setSpan(new ImageSpan(getContext(), resId), start, start + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -302,10 +389,13 @@ public class MultiStyleTextView extends AppCompatTextView {
      * 追加图片
      *
      * @param uri
+     * @param start 插入图片的位置
      * @return
      */
-    public MultiStyleTextView appendImage(final Uri uri) {
-//        mBuilder.setSpan(new ImageSpan(getContext(), uri), start, end, flag);
+    public MultiStyleTextView appendImage(final Uri uri, int start) {
+        if (null == mEndSpannable) return this;
+
+        mEndSpannable.setSpan(new ImageSpan(getContext(), uri), start, start + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -322,9 +412,9 @@ public class MultiStyleTextView extends AppCompatTextView {
      * @return
      */
     public MultiStyleTextView appendBlurStyle(final float radius, final BlurMaskFilter.Blur style) {
-        if (Float.compare(radius, 0) <= 0) return this;
+        if (Float.compare(radius, 0) <= 0 || null == style || null == mEndSpannable) return this;
 
-//        mBuilder.setSpan(new MaskFilterSpan(new BlurMaskFilter(radius, style)), start, end, flag);
+        mEndSpannable.setSpan(new MaskFilterSpan(new BlurMaskFilter(radius, style)), 0, mEndSpannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -338,14 +428,12 @@ public class MultiStyleTextView extends AppCompatTextView {
     protected static class ClickSpan extends ClickableSpan {
         private CharSequence text;
         private int color;
-        private boolean underline;
         private OnSegmentClickListener listener;
 
-        public ClickSpan(CharSequence text, int color, boolean underline, OnSegmentClickListener listener) {
+        public ClickSpan(CharSequence text, int color, OnSegmentClickListener listener) {
             super();
             this.text = text;
             this.color = color;
-            this.underline = underline;
             this.listener = listener;
         }
 
@@ -354,7 +442,7 @@ public class MultiStyleTextView extends AppCompatTextView {
             if (color != 0) {
                 ds.setColor(color);
             }
-            ds.setUnderlineText(underline); //下划线
+            ds.setUnderlineText(false); //下划线
         }
 
         @Override
