@@ -11,6 +11,8 @@ FxBase is a flexible base frame to develop an app.it mainly included:
 * BaseListFragment
 * BaseDialog
 
+You just need to simply inherit them and implement some methods will be able to quickly complete some work.
+
 License
 -------
 
