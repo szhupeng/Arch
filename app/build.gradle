@@ -1,0 +1,52 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion project.ANDROID_BUILD_SDK_VERSION as int
+    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+
+    signingConfigs {
+        release {
+            storeFile file(STORE_FILE)
+            storePassword STORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+            v2SigningEnabled false
+        }
+    }
+
+    defaultConfig {
+        applicationId "space.zhupeng.toft"
+        minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION as int
+        targetSdkVersion project.ANDROID_BUILD_TARGET_SDK_VERSION as int
+        versionCode project.VERSION_CODE as int
+        versionName project.VERSION_NAME
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile "com.android.support:appcompat-v7:${APPCOMPAT_VERSION}"
+    compile "com.android.support:design:${APPCOMPAT_VERSION}"
+    compile "com.android.support:cardview-v7:${APPCOMPAT_VERSION}"
+    compile "com.android.support:support-v4:${APPCOMPAT_VERSION}"
+    compile "com.android.support:multidex:1.0.1"
+
+    compile "android.arch.lifecycle:runtime:${LIFECYCLE_VERSION}"
+    compile "android.arch.lifecycle:extensions:${LIFECYCLE_VERSION}"
+    annotationProcessor "android.arch.lifecycle:compiler:${LIFECYCLE_VERSION}"
+
+    compile "com.jakewharton:butterknife:7.0.1"
+}
