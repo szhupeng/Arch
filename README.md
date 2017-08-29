@@ -13,6 +13,26 @@ FxBase is a flexible base frame to develop an app. It mainly included:
 
 You just need to simply inherit them and implement some methods will be able to quickly complete some work.
 
+Download
+--------
+
+Download [the latest JAR][2] or grab via Maven:
+```xml
+<dependency>
+  <groupId>space.zhupeng.base</groupId>
+  <artifactId>fxbase</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+or Gradle:
+```groovy
+compile 'space.zhupeng.base:fxbase:1.0.0'
+```
+
+Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
+
+FxBase requires at minimum Java 14 or Android 2.3.
+
 License
 -------
 
