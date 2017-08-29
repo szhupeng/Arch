@@ -1,4 +1,4 @@
-FxBase
+FxBase [![RxTools](https://jitpack.io/v/vondear/RxTools.svg)](https://jitpack.io/#vondear/RxTools)  [![API](https://img.shields.io/badge/API-14%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=14)
 ============
 
 ![Logo](http://ob0r3vf26.bkt.clouddn.com/logo.png)
