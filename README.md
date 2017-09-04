@@ -19,14 +19,14 @@ Download
 Download [the latest JAR][2] or grab via Maven:
 ```xml
 <dependency>
-  <groupId>space.zhupeng.base</groupId>
+  <groupId>space.zhupeng.fxbase</groupId>
   <artifactId>fxbase</artifactId>
   <version>1.0.0</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'space.zhupeng.base:fxbase:1.0.0'
+compile 'space.zhupeng.fxbase:fxbase:1.0.0'
 ```
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
