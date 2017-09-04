@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<space.zhupeng.base.widget.MultiStateView xmlns:android="http://schemas.android.com/apk/res/android"
+<space.zhupeng.fxbase.widget.MultiStateView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/multi_state_view"
     android:layout_width="match_parent"
@@ -9,7 +9,7 @@
     app:msv_loadingView="@layout/layout_loading"
     app:msv_viewState="loading">
 
-    <space.zhupeng.base.widget.ptr.PtrFrameLayout
+    <space.zhupeng.fxbase.widget.ptr.PtrFrameLayout
         android:id="@+id/pull_to_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,5 +25,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false" />
-    </space.zhupeng.base.widget.ptr.PtrFrameLayout>
-</space.zhupeng.base.widget.MultiStateView>
+    </space.zhupeng.fxbase.widget.ptr.PtrFrameLayout>
+</space.zhupeng.fxbase.widget.MultiStateView>

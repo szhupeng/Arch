@@ -7,9 +7,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".App"
+        android:name="space.zhupeng.fxbase.App"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name="space.zhupeng.fxbase.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
