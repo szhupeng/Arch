@@ -1,5 +1,6 @@
 package space.zhupeng.fxbase.widget.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -21,8 +22,12 @@ import space.zhupeng.fxbase.utils.DensityUtils;
 
 public abstract class BaseDialog extends Dialog {
 
+    protected Activity mActivity;
+
     public BaseDialog(@NonNull Context context) {
         super(context, R.style.BaseDialog);
+
+        mActivity = (Activity) context;
 
         init();
     }
@@ -30,11 +35,15 @@ public abstract class BaseDialog extends Dialog {
     public BaseDialog(@NonNull Context context, @StyleRes int themeResId) {
         super(context, themeResId);
 
+        mActivity = (Activity) context;
+
         init();
     }
 
     protected BaseDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
+
+        mActivity = (Activity) context;
 
         init();
     }
@@ -51,6 +60,14 @@ public abstract class BaseDialog extends Dialog {
         setCanceledOnTouchOutside(false);
 
         initView();
+    }
+
+    @Override
+    public void dismiss() {
+        if (mActivity != null && !mActivity.isFinishing()) {
+            //防止窗体句柄泄漏
+            super.dismiss();
+        }
     }
 
     protected void setWindowAttributes(float width) {

@@ -26,4 +26,8 @@ public interface BaseView {
     void showSimpleProgress();
 
     void closeDialog();
+
+    void loadData();
+
+    void bindData();
 }

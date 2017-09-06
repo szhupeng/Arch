@@ -67,7 +67,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
         initView(root);
         return root;
     }
-    
+
     private void initialize() {
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.BaseDialog);
         getDialog().getWindow().getAttributes().windowAnimations = getAnimationId();
@@ -126,5 +126,13 @@ public abstract class BaseDialogFragment extends DialogFragment {
     @AnimRes
     protected int getAnimationId() {
         return 0;
+    }
+
+    @Override
+    public void dismiss() {
+        if (mActivity != null && !mActivity.isFinishing()) {
+            //防止窗体句柄泄漏
+            super.dismiss();
+        }
     }
 }
