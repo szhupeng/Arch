@@ -7,7 +7,9 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.Loader;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.text.TextUtils;
@@ -15,9 +17,12 @@ import android.view.View;
 
 import butterknife.ButterKnife;
 import space.zhupeng.fxbase.presenter.BasePresenter;
+import space.zhupeng.fxbase.presenter.PresenterFactory;
+import space.zhupeng.fxbase.presenter.PresenterLoader;
 import space.zhupeng.fxbase.utils.NetworkUtils;
 import space.zhupeng.fxbase.utils.ToastUtils;
 import space.zhupeng.fxbase.utils.Utils;
+import space.zhupeng.fxbase.view.BaseMvpView;
 import space.zhupeng.fxbase.widget.dialog.DialogProvider;
 
 /**
@@ -27,7 +32,9 @@ import space.zhupeng.fxbase.widget.dialog.DialogProvider;
  * @date 2017/1/14
  */
 
-public abstract class BaseActivity<P extends BasePresenter> extends XActivity {
+public abstract class BaseActivity<M, V extends BaseMvpView, P extends BasePresenter<M, V>> extends XActivity implements BaseMvpView, LoaderManager.LoaderCallbacks<P> {
+
+    private static final int LOADER_ID = 100;
 
     protected final Handler mHandler = new Handler(Looper.getMainLooper());
 
@@ -51,24 +58,32 @@ public abstract class BaseActivity<P extends BasePresenter> extends XActivity {
 
         ButterKnife.bind(this);
 
-        mPresenter = getPresenter();
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
         initView(savedInstanceState);
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (mPresenter != null) {
+            mPresenter.attachView((V) this);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         ButterKnife.unbind(this);
+        if (mPresenter != null) {
+            mPresenter.detachView();
+        }
         super.onDestroy();
     }
 
     @Override
     protected int getContainerId() {
         return 0;
-    }
-
-    protected P getPresenter() {
-        return null;
     }
 
     /**
@@ -110,30 +125,80 @@ public abstract class BaseActivity<P extends BasePresenter> extends XActivity {
         }
     }
 
-    protected void showToast(@NonNull final CharSequence text) {
+    @Override
+    public void showToast(@NonNull final CharSequence text) {
         if (TextUtils.isEmpty(text)) return;
 
         ToastUtils.showShortSafely(getApplicationContext(), text);
     }
 
-    protected void showToast(@StringRes final int resId) {
+    @Override
+    public void showToast(@StringRes final int resId) {
         showToast(getResources().getString(resId));
     }
 
-    protected void showCustomToast(@LayoutRes final int layoutId) {
+    @Override
+    public void showCustomToast(@LayoutRes final int layoutId) {
         ToastUtils.showCustomShortSafely(getApplicationContext(), layoutId);
     }
 
-    protected void showCustomToast(@NonNull final View view) {
+    @Override
+    public void showCustomToast(@NonNull final View view) {
         ToastUtils.showCustomShortSafely(getApplicationContext(), view);
     }
 
-    protected void showMessageProgress(final CharSequence message) {
+    @Override
+    public void showMessageProgress(@NonNull final CharSequence message) {
         DialogProvider.showMessageProgress(message);
     }
 
-    protected void showSimpleProgress() {
+    @Override
+    public void showMessageProgress(@StringRes int resId) {
+        DialogProvider.showMessageProgress(getResources().getString(resId));
+    }
+
+    @Override
+    public void showSimpleProgress() {
         DialogProvider.showSimpleProgress();
+    }
+
+    @Override
+    public void closeDialog() {
+        DialogProvider.dismissDialog();
+    }
+
+    @Override
+    public Loader<P> onCreateLoader(int id, Bundle args) {
+        return new PresenterLoader(this, new PresenterFactory<P>() {
+            @Override
+            public P create() {
+                return createPresenter();
+            }
+        });
+    }
+
+    public P createPresenter() {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<P> loader, P data) {
+        mPresenter = data;
+    }
+
+    @Override
+    public void onLoaderReset(Loader<P> loader) {
+        mPresenter = null;
+    }
+
+    @Override
+    public void loadData() {
+
+    }
+
+    @Override
+    public void bindData() {
+
     }
 
     /**

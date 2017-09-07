@@ -24,7 +24,6 @@ public class DialogProvider {
     }
 
     public static void showCustomDialog(@LayoutRes int viewId) {
-
     }
 
     /**

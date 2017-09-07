@@ -1,26 +1,30 @@
 package space.zhupeng.fxbase.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.lang.reflect.Field;
 import java.util.concurrent.Executor;
 
 import butterknife.ButterKnife;
 import space.zhupeng.fxbase.presenter.BasePresenter;
+import space.zhupeng.fxbase.presenter.PresenterFactory;
+import space.zhupeng.fxbase.presenter.PresenterLoader;
 import space.zhupeng.fxbase.task.BaseAsyncTask;
 import space.zhupeng.fxbase.utils.NetworkUtils;
 import space.zhupeng.fxbase.utils.ToastUtils;
 import space.zhupeng.fxbase.utils.Utils;
+import space.zhupeng.fxbase.view.BaseMvpView;
 import space.zhupeng.fxbase.widget.dialog.DialogProvider;
 
 /**
@@ -28,15 +32,21 @@ import space.zhupeng.fxbase.widget.dialog.DialogProvider;
  * @date 2017/1/14
  */
 
-public abstract class BaseFragment<P extends BasePresenter> extends XFragment {
+public abstract class BaseFragment<M, V extends BaseMvpView, P extends BasePresenter<M, V>> extends XFragment implements BaseMvpView, LoaderManager.LoaderCallbacks<P> {
+
+    private static final int LOADER_ID = 200;
 
     protected P mPresenter;
 
     private BaseAsyncTask mTask;
 
+    protected Activity mParentActivity;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        this.mParentActivity = (Activity) context;
     }
 
     @Nullable
@@ -51,9 +61,23 @@ public abstract class BaseFragment<P extends BasePresenter> extends XFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mPresenter = getPresenter();
-
         initView(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (mPresenter != null) {
+            mPresenter.attachView((V) this);
+        }
     }
 
     protected void initView(@Nullable Bundle savedInstanceState) {
@@ -84,47 +108,88 @@ public abstract class BaseFragment<P extends BasePresenter> extends XFragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
-
         ButterKnife.unbind(this);
+        if (mPresenter != null) {
+            mPresenter.detachView();
+        }
+        super.onDestroyView();
     }
 
-    protected P getPresenter() {
-        return null;
-    }
-
-    protected void showToast(@NonNull final CharSequence text) {
+    public void showToast(@NonNull final CharSequence text) {
         if (TextUtils.isEmpty(text)) return;
 
         ToastUtils.showShortSafely(getActivity().getApplicationContext(), text);
     }
 
-    protected void showToast(@StringRes final int resId) {
+    @Override
+    public void showToast(@StringRes final int resId) {
         if (isAdded()) {
             showToast(getResources().getString(resId));
         }
     }
 
-    protected void showCustomToast(@LayoutRes final int layoutId) {
+    @Override
+    public void showCustomToast(@LayoutRes final int layoutId) {
         ToastUtils.showCustomShortSafely(getActivity().getApplicationContext(), layoutId);
     }
 
-    protected void showCustomToast(@NonNull final View view) {
+    @Override
+    public void showCustomToast(@NonNull final View view) {
         ToastUtils.showCustomShortSafely(getActivity().getApplicationContext(), view);
     }
 
-    protected void showMessageProgress(@NonNull final CharSequence message) {
+    @Override
+    public void showMessageProgress(@NonNull final CharSequence message) {
         DialogProvider.showMessageProgress(message);
     }
 
-    protected void showMessageProgress(@StringRes final int resId) {
+    @Override
+    public void showMessageProgress(@StringRes final int resId) {
         if (isAdded()) {
             DialogProvider.showMessageProgress(getResources().getString(resId));
         }
     }
 
-    protected void showSimpleProgress() {
+    @Override
+    public void showSimpleProgress() {
         DialogProvider.showSimpleProgress();
+    }
+
+    @Override
+    public void closeDialog() {
+        DialogProvider.dismissDialog();
+    }
+
+    @Override
+    public Loader<P> onCreateLoader(int id, Bundle args) {
+        return new PresenterLoader(getActivity(), new PresenterFactory<P>() {
+            @Override
+            public P create() {
+                return createPresenter();
+            }
+        });
+    }
+
+    public P createPresenter() {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<P> loader, P data) {
+        mPresenter = data;
+    }
+
+    @Override
+    public void onLoaderReset(Loader<P> loader) {
+        mPresenter = null;
+    }
+
+    @Override
+    public void loadData() {
+    }
+
+    @Override
+    public void bindData() {
     }
 
     /**
@@ -178,22 +243,6 @@ public abstract class BaseFragment<P extends BasePresenter> extends XFragment {
 
     protected <T extends View> T findView(int id) {
         return (T) getView().findViewById(id);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        try {
-            Field childFragmentManager = Fragment.class
-                    .getDeclaredField("mChildFragmentManager");
-            childFragmentManager.setAccessible(true);
-            childFragmentManager.set(this, null);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @LayoutRes

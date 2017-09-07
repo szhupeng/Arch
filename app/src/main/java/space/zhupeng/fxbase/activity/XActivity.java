@@ -1,7 +1,6 @@
 package space.zhupeng.fxbase.activity;
 
-import android.arch.lifecycle.LifecycleRegistry;
-import android.arch.lifecycle.LifecycleRegistryOwner;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
@@ -21,14 +20,7 @@ import space.zhupeng.fxbase.fragment.XFragment;
  */
 
 @SuppressWarnings("all")
-public abstract class XActivity extends AppCompatActivity implements LifecycleRegistryOwner {
-
-    private final LifecycleRegistry mRegistry = new LifecycleRegistry(this);
-
-    @Override
-    public LifecycleRegistry getLifecycle() {
-        return mRegistry;
-    }
+public abstract class XActivity extends AppCompatActivity {
 
     protected XFragment mCurrentFragment;
 
@@ -166,6 +158,14 @@ public abstract class XActivity extends AppCompatActivity implements LifecycleRe
             return;
         }
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mCurrentFragment != null) {
+            mCurrentFragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @IdRes

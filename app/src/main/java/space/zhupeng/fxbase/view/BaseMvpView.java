@@ -12,7 +12,7 @@ import android.view.View;
  * @date 2017/8/18
  */
 
-public interface BaseView {
+public interface BaseMvpView {
     void showToast(@NonNull final CharSequence text);
 
     void showToast(@StringRes final int resId);
@@ -22,6 +22,8 @@ public interface BaseView {
     void showCustomToast(@NonNull final View view);
 
     void showMessageProgress(final CharSequence message);
+
+    void showMessageProgress(@StringRes final int resId);
 
     void showSimpleProgress();
 
