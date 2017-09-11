@@ -1,6 +1,6 @@
 package space.zhupeng.fxbase.network;
 
-import space.zhupeng.fxbase.network.impl.VolleyRequest;
+import space.zhupeng.fxbase.network.impl.OkhttpRequest;
 
 /**
  * @author zhupeng
@@ -10,6 +10,6 @@ import space.zhupeng.fxbase.network.impl.VolleyRequest;
 public final class RequestFactory {
 
     public static Request getRequest() {
-        return new VolleyRequest();
+        return new OkhttpRequest();
     }
 }

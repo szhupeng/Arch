@@ -1,4 +1,4 @@
-package space.zhupeng.fxbase.model;
+package space.zhupeng.fxbase.mvp.model;
 
 /**
  * @author zhupeng

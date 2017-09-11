@@ -1,16 +1,21 @@
 package space.zhupeng.fxbase.network;
 
+import space.zhupeng.fxbase.network.response.BaseResp;
+
 /**
  * @author zhupeng
  * @date 2016/12/12
  */
 
 public interface Request {
-    void get(String url, Callback callback);
 
-    void post(String url, String requestBody, Callback callback);
+    <T> T get(String url) throws Exception;
 
-    void put(String url, String requestBody, Callback callback);
+    <T> void get(String url, Callback<T> callback) throws Exception;
 
-    void delete(String url, String requestBody, Callback callback);
+    <T> void post(String url, String requestBody, Callback<BaseResp<T>> callback) throws Exception;
+
+    <T> void put(String url, String requestBody, Callback<BaseResp<T>> callback) throws Exception;
+
+    <T> void delete(String url, String requestBody, Callback<BaseResp<T>> callback) throws Exception;
 }

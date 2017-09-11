@@ -7,12 +7,11 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import space.zhupeng.base.R;
+import space.zhupeng.fxbase.R;
 import space.zhupeng.fxbase.utils.DensityUtils;
 
 /**
@@ -54,9 +53,7 @@ public abstract class BaseDialog extends Dialog {
             setContentView(getLayoutResID());
         }
 
-        DisplayMetrics metrics = getContext().getResources()
-                .getDisplayMetrics();
-        setWindowAttributes(Math.round(metrics.widthPixels * 0.65f));
+        setWindowAttributes(1f, -1f, -1f);
         setCanceledOnTouchOutside(false);
 
         initView();

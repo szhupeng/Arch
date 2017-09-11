@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import butterknife.Bind;
-import space.zhupeng.base.R;
+import space.zhupeng.fxbase.R;
 import space.zhupeng.fxbase.widget.MultiStateView;
 
 /**

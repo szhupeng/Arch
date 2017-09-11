@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import space.zhupeng.base.R;
+import space.zhupeng.fxbase.R;
 
 /**
  * 多状态切换视图

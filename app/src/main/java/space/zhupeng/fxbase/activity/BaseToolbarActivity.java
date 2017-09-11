@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 
 import butterknife.Bind;
-import space.zhupeng.base.R;
+import space.zhupeng.fxbase.R;
 
 /**
  * 包含Toolbar的Activity基类

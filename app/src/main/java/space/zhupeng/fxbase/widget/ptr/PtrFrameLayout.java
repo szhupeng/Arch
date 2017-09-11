@@ -7,7 +7,7 @@ import android.view.*;
 import android.widget.Scroller;
 import android.widget.TextView;
 
-import space.zhupeng.base.R;
+import space.zhupeng.fxbase.R;
 import space.zhupeng.fxbase.widget.ptr.indicator.PtrIndicator;
 import space.zhupeng.fxbase.widget.ptr.util.PtrCLog;
 

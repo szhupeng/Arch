@@ -1,10 +1,10 @@
-package space.zhupeng.fxbase.presenter;
+package space.zhupeng.fxbase.mvp.presenter;
 
 import android.content.Context;
 import android.support.v4.content.Loader;
 
 /**
- * 将同步的Loader作为Presenter的缓存
+ * 将同步的Loader作为Presenter的缓存，延长Presenter寿命
  *
  * @author zhupeng
  * @date 2017/9/7
@@ -39,6 +39,9 @@ public final class PresenterLoader<P extends Presenter> extends Loader<P> {
 
     @Override
     protected void onReset() {
+        if (mPresenter != null) {
+            mPresenter.detachView();
+        }
         mPresenter = null;
     }
 }

@@ -1,4 +1,4 @@
-package space.zhupeng.fxbase.presenter;
+package space.zhupeng.fxbase.mvp.presenter;
 
 /**
  * @author zhupeng

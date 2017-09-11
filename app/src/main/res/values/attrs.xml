@@ -50,4 +50,8 @@
         <attr name="barWidth" format="dimension" />
         <attr name="linearProgress" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="PreRenderTextView">
+        <attr name="renderColor" format="color|reference" />
+    </declare-styleable>
 </resources>

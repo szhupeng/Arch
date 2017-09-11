@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.LayoutInflaterFactory;
@@ -16,13 +17,15 @@ import android.text.TextUtils;
 import android.view.View;
 
 import butterknife.ButterKnife;
-import space.zhupeng.fxbase.presenter.BasePresenter;
-import space.zhupeng.fxbase.presenter.PresenterFactory;
-import space.zhupeng.fxbase.presenter.PresenterLoader;
+import space.zhupeng.fxbase.R;
+import space.zhupeng.fxbase.manager.StatusBarTintManager;
+import space.zhupeng.fxbase.mvp.presenter.BasePresenter;
+import space.zhupeng.fxbase.mvp.presenter.PresenterFactory;
+import space.zhupeng.fxbase.mvp.presenter.PresenterLoader;
+import space.zhupeng.fxbase.mvp.view.BaseView;
 import space.zhupeng.fxbase.utils.NetworkUtils;
 import space.zhupeng.fxbase.utils.ToastUtils;
 import space.zhupeng.fxbase.utils.Utils;
-import space.zhupeng.fxbase.view.BaseMvpView;
 import space.zhupeng.fxbase.widget.dialog.DialogProvider;
 
 /**
@@ -32,7 +35,7 @@ import space.zhupeng.fxbase.widget.dialog.DialogProvider;
  * @date 2017/1/14
  */
 
-public abstract class BaseActivity<M, V extends BaseMvpView, P extends BasePresenter<M, V>> extends XActivity implements BaseMvpView, LoaderManager.LoaderCallbacks<P> {
+public abstract class BaseActivity<M, V extends BaseView, P extends BasePresenter<M, V>> extends XActivity implements BaseView, LoaderManager.LoaderCallbacks<P> {
 
     private static final int LOADER_ID = 100;
 
@@ -113,7 +116,7 @@ public abstract class BaseActivity<M, V extends BaseMvpView, P extends BasePrese
      * 状态栏着色
      */
     protected void tintStatusBar() {
-
+        StatusBarTintManager.setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
     }
 
     /**
@@ -177,7 +180,7 @@ public abstract class BaseActivity<M, V extends BaseMvpView, P extends BasePrese
         });
     }
 
-    public P createPresenter() {
+    protected P createPresenter() {
         return null;
     }
 
@@ -198,7 +201,6 @@ public abstract class BaseActivity<M, V extends BaseMvpView, P extends BasePrese
 
     @Override
     public void bindData() {
-
     }
 
     /**

@@ -10,17 +10,17 @@ import android.util.AttributeSet;
  * @date 2017/9/3
  */
 
-public class OutlineImageView extends OpacityImageView {
+public class PreRenderImageView extends OpacityImageView {
 
-    public OutlineImageView(Context context) {
+    public PreRenderImageView(Context context) {
         super(context);
     }
 
-    public OutlineImageView(Context context, AttributeSet attrs) {
+    public PreRenderImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public OutlineImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PreRenderImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 }

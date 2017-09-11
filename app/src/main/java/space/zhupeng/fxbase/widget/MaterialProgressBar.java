@@ -16,7 +16,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 
-import space.zhupeng.base.R;
+import space.zhupeng.fxbase.R;
 
 /**
  * MD风格的ProgressBar

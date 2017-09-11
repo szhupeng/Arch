@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import java.util.List;
 
 import butterknife.Bind;
-import space.zhupeng.base.R;
+import space.zhupeng.fxbase.R;
 import space.zhupeng.fxbase.adapter.BaseAdapter;
 import space.zhupeng.fxbase.task.BaseExceptionAsyncTask;
 import space.zhupeng.fxbase.utils.DensityUtils;

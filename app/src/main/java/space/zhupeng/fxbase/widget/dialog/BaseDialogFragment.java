@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import space.zhupeng.base.R;
+import space.zhupeng.fxbase.R;
 
 /**
  * 自定义对话框基类

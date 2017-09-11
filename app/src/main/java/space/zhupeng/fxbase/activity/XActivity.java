@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-import space.zhupeng.base.R;
+import space.zhupeng.fxbase.R;
 import space.zhupeng.fxbase.analysis.Analysis;
 import space.zhupeng.fxbase.anim.FragmentAnimation;
 import space.zhupeng.fxbase.anim.Transition;

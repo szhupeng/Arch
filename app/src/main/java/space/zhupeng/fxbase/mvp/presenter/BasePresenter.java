@@ -1,6 +1,6 @@
-package space.zhupeng.fxbase.presenter;
+package space.zhupeng.fxbase.mvp.presenter;
 
-import space.zhupeng.fxbase.view.BaseMvpView;
+import space.zhupeng.fxbase.mvp.view.BaseView;
 
 /**
  * MVP模式中Presenter基类
@@ -9,7 +9,7 @@ import space.zhupeng.fxbase.view.BaseMvpView;
  * @date 2017/8/18
  */
 
-public class BasePresenter<M, V extends BaseMvpView> implements Presenter<V> {
+public class BasePresenter<M, V extends BaseView> implements Presenter<V> {
 
     protected M mModel;
     protected V mView;
@@ -33,7 +33,13 @@ public class BasePresenter<M, V extends BaseMvpView> implements Presenter<V> {
      */
     public void checkViewAttached() {
         if (null == this.mView) {
-            throw new RuntimeException("The view not attached, please call attachView(view) firstly");
+            throw new MvpViewNotAttachedException();
+        }
+    }
+
+    public static class MvpViewNotAttachedException extends RuntimeException {
+        public MvpViewNotAttachedException() {
+            super("The view not attached, please call attachView(view) firstly");
         }
     }
 }

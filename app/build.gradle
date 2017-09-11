@@ -15,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "space.zhupeng.toft"
+        applicationId "space.zhupeng.fxbase"
         minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION as int
         targetSdkVersion project.ANDROID_BUILD_TARGET_SDK_VERSION as int
         versionCode project.VERSION_CODE as int
@@ -44,4 +44,7 @@ dependencies {
     compile "com.android.support:support-v4:${APPCOMPAT_VERSION}"
     compile "com.android.support:multidex:1.0.1"
     compile "com.jakewharton:butterknife:7.0.1"
+
+    compile 'com.google.code.gson:gson:2.8.1'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
 }

@@ -1,4 +1,4 @@
-package space.zhupeng.fxbase.view;
+package space.zhupeng.fxbase.mvp.view;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -12,7 +12,7 @@ import android.view.View;
  * @date 2017/8/18
  */
 
-public interface BaseMvpView {
+public interface BaseView {
     void showToast(@NonNull final CharSequence text);
 
     void showToast(@StringRes final int resId);

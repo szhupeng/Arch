@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
-import space.zhupeng.base.R;
+import space.zhupeng.fxbase.R;
 
 /**
  * Material Design风格的加载框
