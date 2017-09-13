@@ -1,4 +1,4 @@
-FxBase [![API](https://img.shields.io/badge/API-14%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=14)
+FxBase [![API](https://img.shields.io/badge/API-11%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=11)
 ============
 
 ![Logo](http://ob0r3vf26.bkt.clouddn.com/logo.png)
@@ -31,7 +31,7 @@ compile 'space.zhupeng.fxbase:fxbase:1.0.0'
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
 
-FxBase requires at minimum Java 14 or Android 2.3.
+FxBase requires at minimum Java 7 or Android 3.0.
 
 License
 -------
