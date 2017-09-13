@@ -4,16 +4,6 @@ android {
     compileSdkVersion project.ANDROID_BUILD_SDK_VERSION as int
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
-    signingConfigs {
-        release {
-            storeFile file(STORE_FILE)
-            storePassword STORE_PASSWORD
-            keyAlias KEY_ALIAS
-            keyPassword KEY_PASSWORD
-            v2SigningEnabled false
-        }
-    }
-
     defaultConfig {
         applicationId "space.zhupeng.fxbase"
         minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION as int
@@ -26,11 +16,6 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-        }
-
-        debug {
-            signingConfig signingConfigs.release
         }
     }
 }

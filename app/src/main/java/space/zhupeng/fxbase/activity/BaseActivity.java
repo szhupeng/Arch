@@ -1,5 +1,7 @@
 package space.zhupeng.fxbase.activity;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,12 +11,13 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import butterknife.ButterKnife;
 import space.zhupeng.fxbase.R;
@@ -116,7 +119,26 @@ public abstract class BaseActivity<M, V extends BaseView, P extends BasePresente
      * 状态栏着色
      */
     protected void tintStatusBar() {
-        StatusBarTintManager.setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+        }
+
+        StatusBarTintManager tintManager = new StatusBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setStatusBarTintResource(R.color.colorPrimary);
+    }
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window window = getWindow();
+        WindowManager.LayoutParams winParams = window.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        window.setAttributes(winParams);
     }
 
     /**
