@@ -44,6 +44,12 @@ public abstract class XFragment extends Fragment {
         return null;
     }
 
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
