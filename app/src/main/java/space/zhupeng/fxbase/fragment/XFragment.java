@@ -1,5 +1,7 @@
 package space.zhupeng.fxbase.fragment;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import java.lang.reflect.Field;
@@ -13,6 +15,10 @@ import space.zhupeng.fxbase.anim.Transition;
  */
 
 public abstract class XFragment extends Fragment {
+
+    protected boolean isViewCreated;
+    protected boolean isVisibleToUser;
+    protected boolean isDataLoaded;
 
     protected Object mPassedData;
 
@@ -36,6 +42,37 @@ public abstract class XFragment extends Fragment {
      */
     public Transition onCreateTransition() {
         return null;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        isViewCreated = true;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        this.isVisibleToUser = isVisibleToUser;
+        fetchData();
+    }
+
+    /**
+     * 懒加载数据
+     */
+    abstract void loadDataLazily();
+
+    final void fetchData() {
+        fetchData(false);
+    }
+
+    final void fetchData(boolean forceUpdate) {
+        if (isVisibleToUser && isViewCreated && (!isDataLoaded || forceUpdate)) {
+            loadDataLazily();
+            isDataLoaded = true;
+        }
     }
 
     @Override

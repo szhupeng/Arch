@@ -20,11 +20,11 @@ import butterknife.ButterKnife;
 import space.zhupeng.fxbase.mvp.presenter.BasePresenter;
 import space.zhupeng.fxbase.mvp.presenter.PresenterFactory;
 import space.zhupeng.fxbase.mvp.presenter.PresenterLoader;
+import space.zhupeng.fxbase.mvp.view.BaseView;
 import space.zhupeng.fxbase.task.BaseAsyncTask;
 import space.zhupeng.fxbase.utils.NetworkUtils;
 import space.zhupeng.fxbase.utils.ToastUtils;
 import space.zhupeng.fxbase.utils.Utils;
-import space.zhupeng.fxbase.mvp.view.BaseView;
 import space.zhupeng.fxbase.widget.dialog.DialogProvider;
 
 /**
@@ -37,9 +37,7 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
     private static final int LOADER_ID = 200;
 
     protected P mPresenter;
-
     private BaseAsyncTask mTask;
-
     protected Activity mParentActivity;
 
     @Override
@@ -69,6 +67,8 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
         super.onActivityCreated(savedInstanceState);
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
+
+        fetchData();
     }
 
     @Override
@@ -81,29 +81,6 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
     }
 
     protected void initView(@Nullable Bundle savedInstanceState) {
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-
-        if (!hidden) {
-            onVisible();
-        } else {
-            onInvisible();
-        }
-    }
-
-    /**
-     * fragment可见
-     */
-    protected void onVisible() {
-    }
-
-    /**
-     * fragment不可见
-     */
-    protected void onInvisible() {
     }
 
     @Override
@@ -182,6 +159,11 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
     @Override
     public void onLoaderReset(Loader<P> loader) {
         mPresenter = null;
+    }
+
+    @Override
+    final void loadDataLazily() {
+        loadData();
     }
 
     @Override
