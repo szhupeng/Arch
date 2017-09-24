@@ -91,7 +91,7 @@ public abstract class BaseAdapter<T, VH extends BaseAdapter.BaseViewHolder> exte
 
     @Override
     public final VH onCreateViewHolder(final ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(getLayoutResID(viewType), parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(getItemLayoutResID(viewType), parent, false);
         final VH holder = onCreateViewHolder(view, viewType);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +156,7 @@ public abstract class BaseAdapter<T, VH extends BaseAdapter.BaseViewHolder> exte
     }
 
     @LayoutRes
-    public abstract int getLayoutResID(final int viewType);
+    public abstract int getItemLayoutResID(final int viewType);
 
     public abstract VH onCreateViewHolder(final View view, final int viewType);
 

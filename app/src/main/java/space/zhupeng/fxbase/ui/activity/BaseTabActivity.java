@@ -1,4 +1,4 @@
-package space.zhupeng.fxbase.activity;
+package space.zhupeng.fxbase.ui.activity;
 
 /**
  * tab切换的基类

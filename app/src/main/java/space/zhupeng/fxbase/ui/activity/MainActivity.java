@@ -1,10 +1,10 @@
-package space.zhupeng.fxbase.activity;
+package space.zhupeng.fxbase.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import space.zhupeng.fxbase.R;
-import space.zhupeng.fxbase.fragment.MainListFragment;
+import space.zhupeng.fxbase.ui.fragment.MainListFragment;
 
 public class MainActivity extends BaseToolbarActivity {
 

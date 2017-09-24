@@ -1,4 +1,4 @@
-package space.zhupeng.fxbase.fragment;
+package space.zhupeng.fxbase.ui.fragment;
 
 import android.app.Activity;
 import android.content.Context;

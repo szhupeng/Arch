@@ -17,7 +17,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * Created by zhupeng on 2017/9/13.
+ * @author zhupeng
+ * @date 2017/9/13
  */
 
 public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecoration {

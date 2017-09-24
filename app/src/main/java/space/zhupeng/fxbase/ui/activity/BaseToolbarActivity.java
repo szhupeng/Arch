@@ -1,4 +1,4 @@
-package space.zhupeng.fxbase.activity;
+package space.zhupeng.fxbase.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

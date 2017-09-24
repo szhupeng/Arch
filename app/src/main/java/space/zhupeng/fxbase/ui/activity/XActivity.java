@@ -1,6 +1,8 @@
-package space.zhupeng.fxbase.activity;
+package space.zhupeng.fxbase.ui.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
@@ -12,7 +14,7 @@ import space.zhupeng.fxbase.R;
 import space.zhupeng.fxbase.analysis.Analysis;
 import space.zhupeng.fxbase.anim.FragmentAnimation;
 import space.zhupeng.fxbase.anim.Transition;
-import space.zhupeng.fxbase.fragment.XFragment;
+import space.zhupeng.fxbase.ui.fragment.XFragment;
 
 /**
  * @author zhupeng
@@ -148,13 +150,13 @@ public abstract class XActivity extends AppCompatActivity {
         return new FragmentAnimation(R.anim.enter_vertical, R.anim.exit_vertical, R.anim.pop_enter_vertical, R.anim.pop_exit_vertical);
     }
 
-    protected boolean doBeforeBack() {
+    protected boolean interceptBack() {
         return false;
     }
 
     @Override
     public void onBackPressed() {
-        if (doBeforeBack()) {
+        if (interceptBack()) {
             return;
         }
         super.onBackPressed();
@@ -166,6 +168,32 @@ public abstract class XActivity extends AppCompatActivity {
         if (mCurrentFragment != null) {
             mCurrentFragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if (newConfig.fontScale != 1) {
+            getResources();
+        }
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        if (res.getConfiguration().fontScale != 1) {
+            // 避免系统字体调节以后App字体变化
+            Configuration newConfig = new Configuration();
+            newConfig.setToDefaults();
+
+            res.updateConfiguration(newConfig, res.getDisplayMetrics());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                createConfigurationContext(newConfig);
+            } else {
+                res.updateConfiguration(newConfig, res.getDisplayMetrics());
+            }
+        }
+        return res;
     }
 
     @IdRes

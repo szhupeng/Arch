@@ -1,4 +1,4 @@
-package space.zhupeng.fxbase.activity;
+package space.zhupeng.fxbase.ui.activity;
 
 import android.annotation.TargetApi;
 import android.os.Build;

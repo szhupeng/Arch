@@ -1,4 +1,4 @@
-package space.zhupeng.fxbase.fragment;
+package space.zhupeng.fxbase.ui.fragment;
 
 import android.view.View;
 import android.widget.TextView;

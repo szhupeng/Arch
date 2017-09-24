@@ -7,11 +7,11 @@ import java.lang.annotation.Target;
 
 /**
  * @author zhupeng
- * @date 2017/9/12
+ * @date 2017/9/13
  */
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface OnPermissionsGranted {
+public @interface PermissionsDenied {
     int value();
 }

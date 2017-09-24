@@ -130,13 +130,13 @@ public class OkPermissions {
      * <p>
      * If any permissions were granted or denied, the {@code object} will receive the appropriate
      * callbacks through {@link PermissionCallback} and methods annotated with {@link
-     * OnPermissionsGranted} will be run if appropriate.
+     * PermissionsGranted} will be run if appropriate.
      *
      * @param requestCode  requestCode argument to permission result callback.
      * @param permissions  permissions argument to permission result callback.
      * @param grantResults grantResults argument to permission result callback.
      * @param receivers    an array of objects that have a method annotated with {@link
-     *                     OnPermissionsGranted} or implement {@link PermissionCallback}.
+     *                     PermissionsGranted} or implement {@link PermissionCallback}.
      */
     public static void onRequestPermissionsResult(int requestCode,
                                                   @NonNull String[] permissions,
@@ -178,7 +178,7 @@ public class OkPermissions {
     }
 
     /**
-     * Find all methods annotated with {@link OnPermissionsGranted} on a given object with the
+     * Find all methods annotated with {@link PermissionsGranted} on a given object with the
      * correct requestCode argument.
      *
      * @param object      the object with annotated methods.
@@ -192,7 +192,7 @@ public class OkPermissions {
 
         while (clazz != null) {
             for (Method method : clazz.getDeclaredMethods()) {
-                OnPermissionsGranted ann = method.getAnnotation(OnPermissionsGranted.class);
+                PermissionsGranted ann = method.getAnnotation(PermissionsGranted.class);
                 if (ann != null) {
                     // Check for annotated methods with matching request code.
                     if (ann.value() == requestCode) {

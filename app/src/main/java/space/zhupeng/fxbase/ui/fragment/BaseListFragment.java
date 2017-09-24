@@ -1,8 +1,9 @@
-package space.zhupeng.fxbase.fragment;
+package space.zhupeng.fxbase.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -79,6 +80,8 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rvDataList.setLayoutManager(llm);
+        rvDataList.setHasFixedSize(true);
+        rvDataList.setItemAnimator(new DefaultItemAnimator());
         final RecyclerView.ItemDecoration decoration = onCreateDecoration();
         if (decoration != null) rvDataList.addItemDecoration(decoration);
     }
@@ -366,7 +369,7 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
         }
 
         @Override
-        public int getLayoutResID(int viewType) {
+        public int getItemLayoutResID(int viewType) {
             return getItemLayoutId(viewType);
         }
 
