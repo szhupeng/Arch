@@ -20,7 +20,9 @@ import space.zhupeng.fxbase.R;
 
 public class PreRenderTextView extends AppCompatTextView {
 
-    public static final int DEFAULT = Color.parseColor("#f3f6f3");
+    public static final int DEFAULT_COLOR = Color.parseColor("#f3f6f3");
+    public static final int DEFAULT_WIDTH = 100;
+    public static final int DEFAULT_HEIGHT = 6;
 
     private boolean isPreRender = true;
     private int mRenderColor;
@@ -38,7 +40,7 @@ public class PreRenderTextView extends AppCompatTextView {
         super(context, attrs, defStyleAttr);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PreRenderTextView, defStyleAttr, 0);
-        mRenderColor = a.getColor(R.styleable.PreRenderTextView_renderColor, DEFAULT);
+        mRenderColor = a.getColor(R.styleable.PreRenderTextView_renderColor, DEFAULT_COLOR);
         a.recycle();
 
         mPreRenderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

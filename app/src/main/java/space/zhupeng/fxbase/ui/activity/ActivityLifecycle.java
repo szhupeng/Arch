@@ -41,14 +41,14 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
         //如果intent包含了此字段,并且为true说明不加入到list进行统一管理
-        boolean isAddEnable = true;
-        if (activity.getIntent() != null) {
-            isAddEnable = activity.getIntent().getBooleanExtra(ActivityManager.IS_ADD_ENABLE, true);
-        }
-
-        if (isAddEnable) {
-            mActivityManager.addActivity(activity);
-        }
+//        boolean isAddEnable = true;
+//        if (activity.getIntent() != null) {
+//            isAddEnable = activity.getIntent().getBooleanExtra(ActivityManager.IS_ADD_ENABLE, true);
+//        }
+//
+//        if (isAddEnable) {
+//            mActivityManager.addActivity(activity);
+//        }
 
         //配置ActivityDelegate
 
@@ -118,27 +118,27 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
      * @param activity
      */
     private void registerFragmentCallbacks(Activity activity) {
-        boolean useFragment = activity instanceof IActivity ? ((IActivity) activity).useFragment() : true;
-        if (activity instanceof FragmentActivity && useFragment) {
-
-            if (mFragmentLifecycle == null) {
-                mFragmentLifecycle = new FragmentLifecycle();
-            }
-
-            ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(mFragmentLifecycle, true);
-
-            if (mFragmentLifecycles == null && mExtras.containsKey(Injector.class.getName())) {
-                mFragmentLifecycles = new ArrayList<>();
-                List<Injector> injectors = (List<Injector>) mExtras.get(Injector.class.getName());
-                for (Injector injector : injectors) {
-                    injector.injectFragmentLifecycle(mAppContext, mFragmentLifecycles);
-                }
-                mExtras.put(Injector.class.getName(), null);
-            }
-
-            for (FragmentManager.FragmentLifecycleCallbacks fragmentLifecycle : mFragmentLifecycles) {
-                ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(fragmentLifecycle, true);
-            }
-        }
+//        boolean useFragment = activity instanceof IActivity ? ((IActivity) activity).useFragment() : true;
+//        if (activity instanceof FragmentActivity && useFragment) {
+//
+//            if (mFragmentLifecycle == null) {
+//                mFragmentLifecycle = new FragmentLifecycle();
+//            }
+//
+//            ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(mFragmentLifecycle, true);
+//
+//            if (mFragmentLifecycles == null && mExtras.containsKey(Injector.class.getName())) {
+//                mFragmentLifecycles = new ArrayList<>();
+//                List<Injector> injectors = (List<Injector>) mExtras.get(Injector.class.getName());
+//                for (Injector injector : injectors) {
+//                    injector.injectFragmentLifecycle(mAppContext, mFragmentLifecycles);
+//                }
+//                mExtras.put(Injector.class.getName(), null);
+//            }
+//
+//            for (FragmentManager.FragmentLifecycleCallbacks fragmentLifecycle : mFragmentLifecycles) {
+//                ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(fragmentLifecycle, true);
+//            }
+//        }
     }
 }

@@ -10,7 +10,7 @@ import android.util.AttributeSet;
  * @date 2017/9/3
  */
 
-public class PreRenderImageView extends OpacityImageView {
+public class PreRenderImageView extends RoundImageView {
 
     public PreRenderImageView(Context context) {
         super(context);

@@ -27,8 +27,8 @@ public class RepositoryManager implements IRepositoryManager {
         synchronized (mRetrofitServiceCache) {
             retrofitService = (T) mRetrofitServiceCache.get(service.getName());
             if (retrofitService == null) {
-                retrofitService = mRetrofit.get().create(service);
-                mRetrofitServiceCache.put(service.getName(), retrofitService);
+//                retrofitService = mRetrofit.get().create(service);
+//                mRetrofitServiceCache.put(service.getName(), retrofitService);
             }
         }
         return retrofitService;
@@ -40,7 +40,7 @@ public class RepositoryManager implements IRepositoryManager {
         synchronized (mCacheServiceCache) {
             cacheService = (T) mCacheServiceCache.get(cache.getName());
             if (cacheService == null) {
-                cacheService = mRxCache.get().using(cache);
+//                cacheService = mRxCache.get().using(cache);
                 mCacheServiceCache.put(cache.getName(), cacheService);
             }
         }
