@@ -7,7 +7,7 @@ import android.widget.AdapterView;
  * @date 2017/9/24
  */
 
-public interface List extends AdapterView.OnItemClickListener {
+public interface List<T> extends AdapterView.OnItemClickListener {
 
     /**
      * 初始化列表视图
@@ -22,6 +22,12 @@ public interface List extends AdapterView.OnItemClickListener {
     int getItemCount();
 
     /**
+     * @param position
+     * @return
+     */
+    T getItem(int position);
+
+    /**
      * 刷新列表数据
      */
     void toRefreshList();
@@ -30,4 +36,9 @@ public interface List extends AdapterView.OnItemClickListener {
      * 加载更多数据
      */
     void toLoadMoreData();
+
+    /**
+     * 设置数据
+     */
+    void setDataToAdapterView();
 }

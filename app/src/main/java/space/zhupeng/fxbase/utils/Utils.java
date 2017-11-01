@@ -1,8 +1,14 @@
 package space.zhupeng.fxbase.utils;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 
 /**
@@ -79,5 +85,92 @@ public final class Utils {
                 }
             }
         });
+    }
+
+    /**
+     * 在后台安全执行
+     *
+     * @param runnable
+     */
+    public static void runOnBackgroundSafely(final Runnable runnable) {
+        if (null == runnable) return;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    runnable.run();
+                } catch (Exception e) {
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 根据key从Activity中返回的Bundle中获取value
+     *
+     * @param key
+     * @param defValue
+     * @return
+     */
+    public static String getActivityMetaData(Activity activity, String key, String defValue) {
+        Bundle bundle = getActivityMetaDataBundle(activity.getPackageManager(), activity.getComponentName());
+        if (bundle != null && bundle.containsKey(key)) {
+            return bundle.getString(key);
+        }
+        return defValue;
+    }
+
+    /**
+     * 获取Activity中的meta-data
+     *
+     * @param packageManager
+     * @param component
+     * @return
+     */
+    public static Bundle getActivityMetaDataBundle(PackageManager packageManager, ComponentName component) {
+        Bundle bundle = null;
+        try {
+            ActivityInfo ai = packageManager.getActivityInfo(component,
+                    PackageManager.GET_META_DATA);
+            bundle = ai.metaData;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bundle;
+    }
+
+    /**
+     * 根据key从Application中返回的Bundle中获取value
+     *
+     * @param key
+     * @param defValue
+     * @return
+     */
+    private String getAppMetaData(Context context, String key, String defValue) {
+        Bundle bundle = getAppMetaDataBundle(context.getPackageManager(), context.getPackageName());
+        if (bundle != null && bundle.containsKey(key)) {
+            return bundle.getString(key);
+        }
+        return defValue;
+    }
+
+    /**
+     * 获取Application中的meta-data
+     *
+     * @param packageManager
+     * @param packageName
+     * @return
+     */
+    private Bundle getAppMetaDataBundle(PackageManager packageManager, String packageName) {
+        Bundle bundle = null;
+        try {
+            ApplicationInfo ai = packageManager.getApplicationInfo(packageName,
+                    PackageManager.GET_META_DATA);
+            bundle = ai.metaData;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bundle;
     }
 }

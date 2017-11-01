@@ -26,4 +26,8 @@ public abstract class BaseToolbarActivity extends BaseActivity {
             setSupportActionBar(mToolbar);
         }
     }
+
+    protected void setCenterTitle(CharSequence title) {
+
+    }
 }

@@ -16,8 +16,8 @@ public class BaseApplication extends Application implements App {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
 
-//        mAppDelegate = new AppDelegate(base);
-//        mAppDelegate.attachBaseContext(base);
+        mAppDelegate = new AppDelegate(base);
+        mAppDelegate.attachBaseContext(base);
     }
 
     @Override
@@ -44,6 +44,10 @@ public class BaseApplication extends Application implements App {
         if (mAppDelegate != null) {
             mAppDelegate.onTerminate(this);
         }
+    }
+
+    public AppDelegate getAppDelegate() {
+        return (AppDelegate)mAppDelegate;
     }
 
     /**

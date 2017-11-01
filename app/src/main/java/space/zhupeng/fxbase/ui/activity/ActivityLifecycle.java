@@ -8,14 +8,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import space.zhupeng.fxbase.Injector;
+import space.zhupeng.fxbase.manager.ActivityManager;
 import space.zhupeng.fxbase.ui.activity.delegate.ActivityDelegate;
 import space.zhupeng.fxbase.ui.activity.delegate.ActivityDelegateImpl;
-import space.zhupeng.fxbase.ui.fragment.FragmentLifecycle;
-import space.zhupeng.fxbase.manager.ActivityManager;
 
 /**
  * @author zhupeng
@@ -28,7 +28,6 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
 
     private ActivityManager mActivityManager;
     private Application mAppContext;
-    private FragmentManager.FragmentLifecycleCallbacks mFragmentLifecycle;
     private List<FragmentManager.FragmentLifecycleCallbacks> mFragmentLifecycles;
     private ActivityDelegate mDelegate;
 
@@ -40,18 +39,11 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        //如果intent包含了此字段,并且为true说明不加入到list进行统一管理
-//        boolean isAddEnable = true;
-//        if (activity.getIntent() != null) {
-//            isAddEnable = activity.getIntent().getBooleanExtra(ActivityManager.IS_ADD_ENABLE, true);
-//        }
-//
-//        if (isAddEnable) {
-//            mActivityManager.addActivity(activity);
-//        }
+        if (mActivityManager != null) {
+            mActivityManager.addActivity(activity);
+        }
 
         //配置ActivityDelegate
-
         if (mDelegate == null) {
             mDelegate = new ActivityDelegateImpl(activity);
         }
@@ -111,34 +103,33 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
     }
 
     /**
-     * 给每个 Activity 的所有 Fragment 设置监听其生命周期, Activity 可以通过 {@link IActivity#useFragment()}
-     * 设置是否使用监听,如果这个 Activity 返回 false 的话,这个 Activity 下面的所有 Fragment 将不能使用 {@link FragmentDelegate}
-     * 意味着 {@link BaseFragment} 也不能使用
+     * 给Activity的Fragment设置监听其生命周期
      *
      * @param activity
      */
     private void registerFragmentCallbacks(Activity activity) {
-//        boolean useFragment = activity instanceof IActivity ? ((IActivity) activity).useFragment() : true;
-//        if (activity instanceof FragmentActivity && useFragment) {
-//
-//            if (mFragmentLifecycle == null) {
-//                mFragmentLifecycle = new FragmentLifecycle();
-//            }
-//
-//            ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(mFragmentLifecycle, true);
-//
-//            if (mFragmentLifecycles == null && mExtras.containsKey(Injector.class.getName())) {
-//                mFragmentLifecycles = new ArrayList<>();
-//                List<Injector> injectors = (List<Injector>) mExtras.get(Injector.class.getName());
-//                for (Injector injector : injectors) {
-//                    injector.injectFragmentLifecycle(mAppContext, mFragmentLifecycles);
-//                }
-//                mExtras.put(Injector.class.getName(), null);
-//            }
-//
-//            for (FragmentManager.FragmentLifecycleCallbacks fragmentLifecycle : mFragmentLifecycles) {
-//                ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(fragmentLifecycle, true);
-//            }
-//        }
+        if (activity instanceof FragmentActivity) {
+            FragmentManager fm = ((FragmentActivity) activity).getSupportFragmentManager();
+            if (null == fm.getFragments() || 0 == fm.getFragments().size()) {
+                return;
+            }
+
+            if (mFragmentLifecycles == null) {
+                mFragmentLifecycles = new ArrayList<>();
+                try {
+                    Method method = mAppContext.getClass().getMethod("getAppDelegate");
+                    List<Injector> injectors = (List<Injector>) method.invoke(null);
+                    for (Injector injector : injectors) {
+                        injector.injectFragmentLifecycle(mAppContext, mFragmentLifecycles);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            for (FragmentManager.FragmentLifecycleCallbacks fragmentLifecycle : mFragmentLifecycles) {
+                ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(fragmentLifecycle, true);
+            }
+        }
     }
 }

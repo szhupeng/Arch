@@ -30,8 +30,6 @@ import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 
 public class ActivityManager {
 
-    public static final String IS_ADD_ENABLE = "isAddEnable";
-
     @RestrictTo(LIBRARY_GROUP)
     @IntDef({LENGTH_INDEFINITE, LENGTH_SHORT, LENGTH_LONG})
     @IntRange(from = 1)

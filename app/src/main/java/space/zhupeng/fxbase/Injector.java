@@ -14,14 +14,6 @@ import java.util.List;
 public interface Injector {
 
     /**
-     * 注入Application生命周期
-     *
-     * @param context
-     * @param lifecycles
-     */
-    void injectAppLifecycle(Context context, List<AppLifecycle> lifecycles);
-
-    /**
      * 注入Activity生命周期
      *
      * @param context

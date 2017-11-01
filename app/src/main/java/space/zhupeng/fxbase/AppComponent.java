@@ -16,15 +16,10 @@ import space.zhupeng.fxbase.mvp.model.Repository;
 
 public interface AppComponent {
 
-    String provideBaseUrl();
-
     Application provideAppContext();
 
     //用于管理所有的activity
     ActivityManager provideActivityManager();
-
-    //用于管理网络请求层,以及数据缓存层
-    Repository provideRepositoryManager();
 
     //图片管理器,用于加载图片的管理类,使用策略模式,可在运行时替换框架
     ImageLoader provideImageLoader();
@@ -34,6 +29,4 @@ public interface AppComponent {
 
     //用来存取一些整个App公用的数据,切勿大量存放大容量数据
     Map<String, Object> provideExtras();
-
-    void inject(AppDelegate delegate);
 }

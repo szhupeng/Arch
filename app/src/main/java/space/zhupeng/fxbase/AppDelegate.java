@@ -10,7 +10,6 @@ import android.os.Build;
 import java.util.ArrayList;
 import java.util.List;
 
-import space.zhupeng.fxbase.ui.activity.ActivityLifecycle;
 import space.zhupeng.fxbase.image.ImageConfig;
 
 /**
@@ -26,8 +25,6 @@ public final class AppDelegate implements AppLifecycle, App {
 
     private Application mAppContext;
     private final List<Injector> mInjectors;
-    private ActivityLifecycle mActivityLifecycle;
-    private List<AppLifecycle> mAppLifecycles = new ArrayList<>();
     private List<Application.ActivityLifecycleCallbacks> mActivityLifecycles = new ArrayList<>();
     private ComponentCallbacks2 mComponentCallback;
 
@@ -36,7 +33,6 @@ public final class AppDelegate implements AppLifecycle, App {
     public AppDelegate(Context context) {
         mInjectors = ManifestParser.parse(context);
         for (Injector injector : mInjectors) {
-            injector.injectAppLifecycle(context, mAppLifecycles);
             injector.injectActivityLifecycle(context, mActivityLifecycles);
             injector.injectAppComponent(context, mAppComponent);
         }
@@ -44,16 +40,11 @@ public final class AppDelegate implements AppLifecycle, App {
 
     @Override
     public void attachBaseContext(Context base) {
-        for (AppLifecycle lifecycle : mAppLifecycles) {
-            lifecycle.attachBaseContext(base);
-        }
     }
 
     @Override
     public void onCreate(Application application) {
         this.mAppContext = application;
-
-        this.mAppContext.registerActivityLifecycleCallbacks(mActivityLifecycle);
 
         for (Application.ActivityLifecycleCallbacks lifecycle : mActivityLifecycles) {
             this.mAppContext.registerActivityLifecycleCallbacks(lifecycle);
@@ -61,44 +52,32 @@ public final class AppDelegate implements AppLifecycle, App {
 
         this.mComponentCallback = new AppComponentCallbacks(mAppContext, mAppComponent);
         this.mAppContext.registerComponentCallbacks(mComponentCallback);
-
-        for (AppLifecycle lifecycle : mAppLifecycles) {
-            lifecycle.onCreate(mAppContext);
-        }
     }
 
     @Override
     public void onLowMemory(Application application) {
-        for (AppLifecycle lifecycle : mAppLifecycles) {
-            lifecycle.onLowMemory(mAppContext);
-        }
     }
 
     @Override
     public void onTerminate(Application application) {
-        if (mActivityLifecycle != null) {
-            mAppContext.unregisterActivityLifecycleCallbacks(mActivityLifecycle);
-        }
-
         if (mComponentCallback != null) {
             mAppContext.unregisterComponentCallbacks(mComponentCallback);
         }
+
         if (mActivityLifecycles != null && mActivityLifecycles.size() > 0) {
             for (Application.ActivityLifecycleCallbacks lifecycle : mActivityLifecycles) {
                 mAppContext.unregisterActivityLifecycleCallbacks(lifecycle);
             }
         }
-        if (mAppLifecycles != null && mAppLifecycles.size() > 0) {
-            for (AppLifecycle lifecycle : mAppLifecycles) {
-                lifecycle.onTerminate(mAppContext);
-            }
-        }
+
         this.mAppComponent = null;
-        this.mActivityLifecycle = null;
         this.mActivityLifecycles = null;
         this.mComponentCallback = null;
-        this.mAppLifecycles = null;
         this.mAppContext = null;
+    }
+
+    public List<Injector> getInjectors() {
+        return mInjectors;
     }
 
     @Override

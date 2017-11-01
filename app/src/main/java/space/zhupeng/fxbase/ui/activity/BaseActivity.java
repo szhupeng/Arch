@@ -67,6 +67,8 @@ public abstract class BaseActivity<M, V extends BaseView, P extends BasePresente
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
         initView(savedInstanceState);
+
+        bindEvent();
     }
 
     @Override
@@ -113,6 +115,12 @@ public abstract class BaseActivity<M, V extends BaseView, P extends BasePresente
      * @param savedInstanceState
      */
     protected void initView(@Nullable Bundle savedInstanceState) {
+    }
+
+    /**
+     * 给视图绑定事件
+     */
+    protected void bindEvent() {
     }
 
     /**
