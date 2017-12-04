@@ -2,7 +2,6 @@ package space.zhupeng.fxbase.widget.dialog;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.text.TextUtils;
@@ -33,10 +32,6 @@ public class MaterialProgressDialog extends BaseDialog {
         super(context, themeResId);
     }
 
-    public MaterialProgressDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
-    }
-
     @Override
     protected void init() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -46,6 +41,7 @@ public class MaterialProgressDialog extends BaseDialog {
 
         setWindowAttributes(ALPHA, -1f, -1f);
         setCanceledOnTouchOutside(false);
+        setCancelable(false);
 
         initView();
     }

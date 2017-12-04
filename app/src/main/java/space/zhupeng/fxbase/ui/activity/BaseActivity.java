@@ -29,7 +29,7 @@ import space.zhupeng.fxbase.mvp.view.BaseView;
 import space.zhupeng.fxbase.utils.NetworkUtils;
 import space.zhupeng.fxbase.utils.ToastUtils;
 import space.zhupeng.fxbase.utils.Utils;
-import space.zhupeng.fxbase.widget.dialog.DialogProvider;
+import space.zhupeng.fxbase.widget.dialog.DialogFactory;
 
 /**
  * 业务无关的Activity基类，包括Toast，加载进度框等
@@ -182,22 +182,22 @@ public abstract class BaseActivity<M, V extends BaseView, P extends BasePresente
 
     @Override
     public void showMessageProgress(@NonNull final CharSequence message) {
-        DialogProvider.showMessageProgress(message);
+        DialogFactory.showMessageProgress(message);
     }
 
     @Override
     public void showMessageProgress(@StringRes int resId) {
-        DialogProvider.showMessageProgress(getResources().getString(resId));
+        DialogFactory.showMessageProgress(getResources().getString(resId));
     }
 
     @Override
     public void showSimpleProgress() {
-        DialogProvider.showSimpleProgress();
+        DialogFactory.showSimpleProgress();
     }
 
     @Override
     public void closeDialog() {
-        DialogProvider.dismissDialog();
+        DialogFactory.dismissDialog();
     }
 
     @Override

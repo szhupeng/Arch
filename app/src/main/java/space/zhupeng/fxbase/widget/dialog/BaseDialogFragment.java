@@ -10,6 +10,7 @@ import android.support.annotation.AnimRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -36,12 +37,12 @@ public abstract class BaseDialogFragment extends DialogFragment {
         T fragment = null;
         try {
             fragment = (T) cls.newInstance();
+            fragment.setArguments(args);
         } catch (java.lang.InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -55,6 +56,8 @@ public abstract class BaseDialogFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+//        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.BottomDialog);
+
         mArgs = getArguments();
     }
 
@@ -62,7 +65,19 @@ public abstract class BaseDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)); //设置透明背景
         View root = inflater.inflate(getLayoutId(), container, false);
+//        getDialog().setCanceledOnTouchOutside(mIsOutCanback);//弹出框外面是否可取消
+//        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
+//            @Override
+//            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+//                if (keyCode == KeyEvent.KEYCODE_BACK) {
+//                    return !mIsKeyCanback;//return true 不往上传递则关闭不了，默认是可以取消，即return false
+//                } else {
+//                    return false;
+//                }
+//            }
+//        });
         initialize();
         initView(root);
         return root;
@@ -134,5 +149,9 @@ public abstract class BaseDialogFragment extends DialogFragment {
             //防止窗体句柄泄漏
             super.dismiss();
         }
+    }
+
+    public void show(FragmentManager manager) {
+        super.show(manager, "dialog");
     }
 }
