@@ -182,17 +182,17 @@ public abstract class BaseActivity<M, V extends BaseView, P extends BasePresente
 
     @Override
     public void showMessageProgress(@NonNull final CharSequence message) {
-        DialogFactory.showMessageProgress(message);
+        DialogFactory.showProgressDialog(getActivity(), message);
     }
 
     @Override
     public void showMessageProgress(@StringRes int resId) {
-        DialogFactory.showMessageProgress(getResources().getString(resId));
+        DialogFactory.showProgressDialog(getActivity(), getResources().getString(resId));
     }
 
     @Override
     public void showSimpleProgress() {
-        DialogFactory.showSimpleProgress();
+        DialogFactory.showProgressDialog(getActivity());
     }
 
     @Override

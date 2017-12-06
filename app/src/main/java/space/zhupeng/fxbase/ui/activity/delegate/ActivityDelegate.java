@@ -10,8 +10,6 @@ import android.support.annotation.Nullable;
 
 public interface ActivityDelegate {
 
-    String TAG = "activity_delegate";
-
     void onCreate(@Nullable Bundle savedInstanceState);
 
     void onStart();
