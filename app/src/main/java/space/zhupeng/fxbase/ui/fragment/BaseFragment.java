@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import java.util.concurrent.Executor;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import space.zhupeng.fxbase.mvp.presenter.BasePresenter;
 import space.zhupeng.fxbase.mvp.presenter.PresenterFactory;
 import space.zhupeng.fxbase.mvp.presenter.PresenterLoader;
@@ -40,6 +41,8 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
     private BaseAsyncTask mTask;
     protected Activity mParentActivity;
 
+    private Unbinder mUnbinder;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -51,7 +54,7 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(getLayoutResID(), container, false);
-        ButterKnife.bind(this, root);
+        mUnbinder = ButterKnife.bind(this, root);
         return root;
     }
 
@@ -85,11 +88,12 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
 
     @Override
     public void onDestroyView() {
-        ButterKnife.unbind(this);
+        super.onDestroyView();
+
         if (mPresenter != null) {
             mPresenter.detachView();
         }
-        super.onDestroyView();
+        mUnbinder.unbind();
     }
 
     public void showToast(@NonNull final CharSequence text) {

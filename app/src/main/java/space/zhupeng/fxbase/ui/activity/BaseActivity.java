@@ -37,7 +37,7 @@ import space.zhupeng.fxbase.widget.dialog.DialogFactory;
  * @author zhupeng
  * @date 2017/1/14
  */
-
+@SuppressWarnings("deprecation")
 public abstract class BaseActivity<M, V extends BaseView, P extends BasePresenter<M, V>> extends XActivity implements BaseView, LoaderManager.LoaderCallbacks<P> {
 
     private static final int LOADER_ID = 100;
@@ -82,7 +82,6 @@ public abstract class BaseActivity<M, V extends BaseView, P extends BasePresente
 
     @Override
     protected void onDestroy() {
-        ButterKnife.unbind(this);
         if (mPresenter != null) {
             mPresenter.detachView();
         }

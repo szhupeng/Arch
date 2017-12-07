@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import space.zhupeng.fxbase.R;
 import space.zhupeng.fxbase.adapter.BaseAdapter;
 import space.zhupeng.fxbase.task.BaseExceptionAsyncTask;
@@ -31,10 +31,10 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
     private static final int PAGE_START = 1;
     private static final int PAGE_SIZE = 15;
 
-    @Bind(R.id.pull_to_refresh)
+    @BindView(R.id.pull_to_refresh)
     PtrFrameLayout mPtrFrameLayout;
 
-    @Bind(R.id.rv_data_list)
+    @BindView(R.id.rv_data_list)
     RecyclerView rvDataList;
 
     private List<T> mDataList;

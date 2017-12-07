@@ -3,7 +3,7 @@ package space.zhupeng.fxbase.ui.fragment;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import space.zhupeng.fxbase.R;
 import space.zhupeng.fxbase.widget.MultiStateView;
 
@@ -21,7 +21,7 @@ import space.zhupeng.fxbase.widget.MultiStateView;
 public abstract class BaseStateFragment extends BaseFragment {
 
     @Nullable
-    @Bind(R.id.multi_state_view)
+    @BindView(R.id.multi_state_view)
     MultiStateView mMultiStateView;
 
     protected void showContentView() {

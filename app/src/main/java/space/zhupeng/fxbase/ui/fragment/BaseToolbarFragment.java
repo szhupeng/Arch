@@ -3,7 +3,7 @@ package space.zhupeng.fxbase.ui.fragment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import space.zhupeng.fxbase.R;
 
 /**
@@ -16,6 +16,6 @@ import space.zhupeng.fxbase.R;
 public abstract class BaseToolbarFragment extends BaseFragment {
 
     @Nullable
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 }

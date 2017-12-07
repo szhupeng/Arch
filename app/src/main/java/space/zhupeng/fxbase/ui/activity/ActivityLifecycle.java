@@ -22,7 +22,6 @@ import space.zhupeng.fxbase.ui.activity.delegate.ActivityDelegateImpl;
  * @date 2017/9/16
  */
 
-@SuppressWarnings("all")
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks {
 

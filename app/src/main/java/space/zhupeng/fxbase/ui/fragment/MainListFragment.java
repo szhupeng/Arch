@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -66,10 +66,10 @@ public class MainListFragment extends BaseListFragment<Gank.GankData, MainListFr
 
     public class Holder extends BaseAdapter.BaseViewHolder {
 
-        @Bind(R.id.tv_title)
+        @BindView(R.id.tv_title)
         TextView tvTitle;
 
-        @Bind(R.id.tv_desc)
+        @BindView(R.id.tv_desc)
         TextView tvDesc;
 
         public Holder(View itemView) {

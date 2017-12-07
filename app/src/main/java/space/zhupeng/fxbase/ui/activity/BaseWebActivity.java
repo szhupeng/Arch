@@ -27,7 +27,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import space.zhupeng.fxbase.R;
 
 /**
@@ -41,14 +41,14 @@ public class BaseWebActivity extends BaseToolbarActivity {
     public static final String EXTRA_JS_FILE = "jsFile";
 
     @Nullable
-    @Bind(R.id.rl_root)
+    @BindView(R.id.rl_root)
     protected RelativeLayout rlRoot;
 
-    @Bind(R.id.web_view)
+    @BindView(R.id.web_view)
     protected WebView mWebView;
 
     @Nullable
-    @Bind(R.id.pb_loading)
+    @BindView(R.id.pb_loading)
     protected ProgressBar pbLoading;
 
     protected String mUrl;
