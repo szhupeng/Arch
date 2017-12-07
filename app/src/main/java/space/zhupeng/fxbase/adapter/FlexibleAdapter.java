@@ -1,4 +1,3 @@
-
 package space.zhupeng.fxbase.adapter;
 
 import android.annotation.SuppressLint;

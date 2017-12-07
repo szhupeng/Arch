@@ -25,26 +25,22 @@ import static space.zhupeng.fxbase.adapter.SelectableAdapter.Mode.MULTI;
 import static space.zhupeng.fxbase.adapter.SelectableAdapter.Mode.SINGLE;
 
 /**
- * This class provides a set of standard methods to handle the selection on the items of an Adapter.
- * <p>Also it manages the FastScroller.</p>
- * This class is extended by {@link AnimatorAdapter}.
+ * 该类主要用于可选择的列表项
  */
 @SuppressWarnings({"unused", "unchecked", "ConstantConditions", "WeakerAccess"})
 public abstract class SelectableAdapter extends RecyclerView.Adapter {
 
     private static final String TAG = SelectableAdapter.class.getSimpleName();
 
-    /**
-     * Annotation interface for selection modes: {@link #IDLE}, {@link #SINGLE}, {@link #MULTI}
-     */
+    // 选择模式
     @SuppressLint("UniqueConstants")
     @IntDef({IDLE, SINGLE, MULTI})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Mode {
         /**
-         * - <b>IDLE:</b> Adapter will not keep track of selections.<br>
-         * - <b>SINGLE:</b> Select only one per time.<br>
-         * - <b>MULTI:</b> Multi selection will be activated.
+         * - <b>IDLE:</b> 适配器将不会跟踪选择<br>
+         * - <b>SINGLE:</b> 一次只能选择一项<br>
+         * - <b>MULTI:</b> 可以进行多项选择
          */
         int IDLE = 0, SINGLE = 1, MULTI = 2;
     }
@@ -56,14 +52,12 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
     protected RecyclerView mRecyclerView;
 
     /**
-     * Flag when fast scrolling is active.
-     * <p>Used to know if user is fast scrolling.</p>
+     * 是否处于快速滚动状态
      */
     protected boolean isFastScroll = false;
 
     /**
-     * ActionMode selection flag SelectAll.
-     * <p>Used when user click on selectAll action button in ActionMode.</p>
+     * 是否全选
      */
     protected boolean mSelectAll = false;
 
@@ -87,20 +81,12 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
     /* MAIN METHODS */
     /*--------------*/
 
-    /**
-     * {@inheritDoc}
-     * <p>Attaches the {@code FastScrollerDelegate} to the RecyclerView if necessary.</p>
-     */
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         mRecyclerView = recyclerView;
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>Detaches the {@code FastScrollerDelegate} from the RecyclerView if necessary.</p>
-     */
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
@@ -120,8 +106,6 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
      * LayoutManager must be already initialized in the RecyclerView.
      * <p>
      * return wrapper class for any non-conventional LayoutManagers or {@code null} if not initialized.
-     *
-     * @since 5.0.0-rc2
      */
     public IFlexibleLayoutManager getFlexibleLayoutManager() {
         if (mFlexibleLayoutManager == null) {
@@ -136,9 +120,9 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
     }
 
     /**
-     * Allow to use a custom LayoutManager.
+     * 允许使用自定义的LayoutManager
      *
-     * @param flexibleLayoutManager the custom LayoutManager suitable for FlexibleAdapter
+     * @param flexibleLayoutManager 适用于FlexibleAdapter的LayoutManager
      */
     public void setFlexibleLayoutManager(IFlexibleLayoutManager flexibleLayoutManager) {
         this.mFlexibleLayoutManager = flexibleLayoutManager;

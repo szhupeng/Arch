@@ -37,8 +37,8 @@ public class ItemTouchHelperCallback extends Callback {
     }
 
 	/*-----------------------*/
-	/* CONFIGURATION SETTERS */
-	/*-----------------------*/
+    /* CONFIGURATION SETTERS */
+    /*-----------------------*/
 	/* DRAG */
 	/*------*/
 
