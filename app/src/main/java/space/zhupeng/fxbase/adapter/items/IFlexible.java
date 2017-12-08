@@ -8,6 +8,7 @@ import android.view.View;
 import java.util.List;
 
 import space.zhupeng.fxbase.adapter.FlexibleAdapter;
+import space.zhupeng.fxbase.adapter.FlexibleViewHolder;
 
 /**
  * Basic interface to manage operations like enabling, selecting, hiding, filtering on items.
@@ -85,7 +86,7 @@ public interface IFlexible<VH extends RecyclerView.ViewHolder> {
 
 	/*--------------------*/
     /* SELECTABLE METHODS */
-	/*--------------------*/
+    /*--------------------*/
 
     /**
      * Checks if the item can be selected.
@@ -116,7 +117,7 @@ public interface IFlexible<VH extends RecyclerView.ViewHolder> {
     String getBubbleText(int position);
 
 	/*-------------------*/
-	/* TOUCHABLE METHODS */
+    /* TOUCHABLE METHODS */
 	/*-------------------*/
 
     boolean isDraggable();

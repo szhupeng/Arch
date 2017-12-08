@@ -68,7 +68,7 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
     protected boolean mLastItemInActionMode = false;
 
 	/*--------------*/
-    /* CONSTRUCTORS */
+    /*    构造器     */
     /*--------------*/
 
     public SelectableAdapter() {
@@ -78,7 +78,7 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
     }
 
 	/*--------------*/
-    /* MAIN METHODS */
+    /*    主函数     */
     /*--------------*/
 
     @Override
@@ -94,18 +94,14 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
         mFlexibleLayoutManager = null;
     }
 
-    /**
-     * @return the RecyclerView instance
-     */
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
     }
 
     /**
-     * Current instance of the wrapper class for LayoutManager suitable for FlexibleAdapter.
-     * LayoutManager must be already initialized in the RecyclerView.
+     * 适用于FlexibleAdapter的LayoutManager的包装类的实例
      * <p>
-     * return wrapper class for any non-conventional LayoutManagers or {@code null} if not initialized.
+     * 返回任何非常规布局管理器的包装类，如果未初始化，则返回空
      */
     public IFlexibleLayoutManager getFlexibleLayoutManager() {
         if (mFlexibleLayoutManager == null) {
@@ -129,16 +125,14 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
     }
 
     /**
-     * Sets the mode of the selection:
+     * 设置选择模式:
      * <ul>
-     * <li>{@link Mode#IDLE} Default. Configures the adapter so that no item can be selected;
-     * <li>{@link Mode#SINGLE} configures the adapter to react at the single tap over an item
-     * (previous selection is cleared automatically);
-     * <li>{@link Mode#MULTI} configures the adapter to save the position to the list of the
-     * selected items.
+     * <li>{@link Mode#IDLE} 默认值. 不可选;
+     * <li>{@link Mode#SINGLE} 单选
+     * <li>{@link Mode#MULTI} 多选
      * </ul>
      *
-     * @param mode one of {@link Mode#IDLE}, {@link Mode#SINGLE}, {@link Mode#MULTI}
+     * @param mode 值为{@link Mode#IDLE}, {@link Mode#SINGLE}, {@link Mode#MULTI}其中之一
      */
     public void setMode(@Mode int mode) {
         if (mMode == SINGLE && mode == IDLE)
@@ -148,9 +142,9 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
     }
 
     /**
-     * The current selection mode of the Adapter.
+     * 适配器当前选择模式
      *
-     * @return current mode
+     * @return 当前模式
      * @see Mode#IDLE
      * @see Mode#SINGLE
      * @see Mode#MULTI
@@ -161,7 +155,7 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
     }
 
     /**
-     * @return true if user clicks on SelectAll on action button in ActionMode.
+     * @return 如果全选则返回true
      */
     public boolean isSelectAll() {
         // Reset the flags with delay
@@ -170,8 +164,7 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
     }
 
     /**
-     * @return true if user returns to {@link Mode#IDLE} or {@link Mode#SINGLE} and no
-     * selection is active, false otherwise
+     * @return 如果选择模式为{@link Mode#IDLE}或{@link Mode#SINGLE}并且未选中任何列表项则返回true否则返回false
      */
     public boolean isLastItemInActionMode() {
         // Reset the flags with delay
@@ -180,7 +173,7 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
     }
 
     /**
-     * Resets to false the ActionMode flags: {@code SelectAll} and {@code LastItemInActionMode}.
+     * 将ActionMode标志重置为false: {@code SelectAll} 和 {@code LastItemInActionMode}.
      */
     private void resetActionModeFlags() {
         if (mSelectAll || mLastItemInActionMode) {
@@ -195,25 +188,25 @@ public abstract class SelectableAdapter extends RecyclerView.Adapter {
     }
 
     /**
-     * Indicates if the item, at the provided position, is selected.
+     * 判断是否给定位置的列表项被选中
      *
-     * @param position Position of the item to check.
-     * @return true if the item is selected, false otherwise.
+     * @param position 列表项的位置
+     * @return
      */
     public boolean isSelected(int position) {
         return mSelectedPositions.contains(position);
     }
 
     /**
-     * Checks if the current item has the property {@code selectable = true}.
+     * 检查当前列表项是否有属性 {@code selectable = true}.
      *
-     * @param position the current position of the item to check
-     * @return true if the item property </i>selectable</i> is true, false otherwise
+     * @param position 待检查的项的位置
+     * @return 如果列表项的属性</i>selectable</i>为true则返回true否则返回false
      */
     public abstract boolean isSelectable(int position);
 
     /**
-     * Toggles the selection status of the item at a given position.
+     * 在给定位置切换列表项的选择状态
      * <p>The behaviour depends on the selection mode previously set with {@link #setMode(int)}.</p>
      * The Activated State of the ItemView is automatically set in
      * {@link FlexibleViewHolder#toggleActivation()} called in {@code onClick} event

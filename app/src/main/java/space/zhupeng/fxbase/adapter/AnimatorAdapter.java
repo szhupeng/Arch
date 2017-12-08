@@ -69,9 +69,9 @@ public abstract class AnimatorAdapter extends SelectableAdapter {
     /**
      * Simple Constructor for Animator Adapter.
      */
-    AnimatorAdapter(boolean stableIds) {
+    AnimatorAdapter(boolean hasStableIds) {
         super();
-        setHasStableIds(stableIds);
+        setHasStableIds(hasStableIds);
 
         //Get notified when an item is changed (should skip animation)
         mAnimatorNotifierObserver = new AnimatorAdapterDataObserver();
@@ -80,7 +80,7 @@ public abstract class AnimatorAdapter extends SelectableAdapter {
 
 	/*-----------------------*/
     /* CONFIGURATION SETTERS */
-	/*-----------------------*/
+    /*-----------------------*/
 
     /**
      * @param animate true to notify this Adapter that initialization is started and so
@@ -116,10 +116,9 @@ public abstract class AnimatorAdapter extends SelectableAdapter {
     }
 
     /**
-     * If initial loading animation should use step delay between an item animation and the next.
-     * When false, all items are animated with no delay.
-     * <p>Better to disable when using Grid layouts.</p>
-     * Default value is {@code true}.
+     * 初始加载动画是否要在项与项之间使用步骤延迟，当设置为false的时候，所有列表项都会无延迟执行动画
+     * <p>使用网格布局时最好禁用</p>
+     * 默认值为 {@code true}.
      *
      * @param entryStep true to enable step delay, false otherwise
      * @return this AnimatorAdapter, so the call can be chained
@@ -223,11 +222,11 @@ public abstract class AnimatorAdapter extends SelectableAdapter {
     }
 
 	/*--------------*/
-	/* MAIN METHODS */
-	/*--------------*/
+    /* MAIN METHODS */
+    /*--------------*/
 
     /**
-     * Cancels any existing animations for given View. Useful when fling.
+     * 取消指定View的动画，当fling的时候有用
      */
     private void cancelExistingAnimation(final int hashCode) {
         Animator animator = mAnimators.get(hashCode);
@@ -235,9 +234,9 @@ public abstract class AnimatorAdapter extends SelectableAdapter {
     }
 
     /**
-     * Checks if at the provided position, the item is a Header or Footer.
+     * 检查给定位置的项是否Header或Footer
      *
-     * @param position the position to check
+     * @param position
      * @return true if it's a scrollable item
      */
     public abstract boolean isScrollableHeaderOrFooter(int position);
@@ -350,8 +349,8 @@ public abstract class AnimatorAdapter extends SelectableAdapter {
     }
 
 	/*---------------*/
-	/* INNER CLASSES */
-	/*---------------*/
+    /* INNER CLASSES */
+    /*---------------*/
 
     /**
      * Observer Class responsible to skip animation when items are notified to avoid
