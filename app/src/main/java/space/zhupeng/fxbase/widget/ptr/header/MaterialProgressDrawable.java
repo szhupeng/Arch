@@ -1,24 +1,18 @@
-/*
- * Copyright (C) 2014 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package space.zhupeng.fxbase.widget.ptr.header;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Path;
+import android.graphics.PixelFormat;
+import android.graphics.RadialGradient;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -26,12 +20,15 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.animation.*;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
 import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.Transformation;
 
 import java.util.ArrayList;
 
-import space.zhupeng.fxbase.widget.ptr.util.PtrLocalDisplay;
+import space.zhupeng.fxbase.utils.DensityUtils;
 
 /**
  * Fancy progress indicator for Material theme.
@@ -152,10 +149,10 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
     }
 
     private void setUp(final double diameter) {
-        PtrLocalDisplay.init(mParent.getContext());
-        final int shadowYOffset = PtrLocalDisplay.dp2px(Y_OFFSET);
-        final int shadowXOffset = PtrLocalDisplay.dp2px(X_OFFSET);
-        int mShadowRadius = PtrLocalDisplay.dp2px(SHADOW_RADIUS);
+        Context context = mParent.getContext();
+        final int shadowYOffset = DensityUtils.dp2px(context, Y_OFFSET);
+        final int shadowXOffset = DensityUtils.dp2px(context, X_OFFSET);
+        int mShadowRadius = DensityUtils.dp2px(context, SHADOW_RADIUS);
         OvalShape oval = new OvalShadow(mShadowRadius, (int) diameter);
         mShadow = new ShapeDrawable(oval);
         if (Build.VERSION.SDK_INT >= 11) {

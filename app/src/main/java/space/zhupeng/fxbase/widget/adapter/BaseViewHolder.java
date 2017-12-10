@@ -9,17 +9,50 @@ import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     private final SparseArray<View> mItemViews;
+
+    public Set<Integer> getNestViews() {
+        return mNestViews;
+    }
+
+    private final HashSet<Integer> mNestViews;
+    private final LinkedHashSet<Integer> mChildClickViewIds;
+    private final LinkedHashSet<Integer> mChildLongClickViewIds;
+
     private BaseAdapter mAdapter;
 
     public BaseViewHolder(final View itemView) {
         super(itemView);
         this.mItemViews = new SparseArray<>();
+        this.mChildClickViewIds = new LinkedHashSet<>();
+        this.mChildLongClickViewIds = new LinkedHashSet<>();
+        this.mNestViews = new HashSet<>();
+    }
+
+    private int getClickPosition() {
+        if (getLayoutPosition() >= mAdapter.getHeaderLayoutCount()) {
+            return getLayoutPosition() - mAdapter.getHeaderLayoutCount();
+        }
+        return 0;
+    }
+
+    public HashSet<Integer> getChildLongClickViewIds() {
+        return mChildLongClickViewIds;
+    }
+
+    public HashSet<Integer> getChildClickViewIds() {
+        return mChildClickViewIds;
     }
 
     public BaseViewHolder setText(@IdRes int id, CharSequence text) {
@@ -84,6 +117,71 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     protected final BaseViewHolder setAdapter(BaseAdapter adapter) {
         this.mAdapter = adapter;
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public BaseViewHolder addOnClickListener(@IdRes final int id) {
+        mChildClickViewIds.add(id);
+        final View view = findViewById(id);
+        if (view != null) {
+            if (!view.isClickable()) {
+                view.setClickable(true);
+            }
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mAdapter.getOnChildClickListener() != null) {
+                        mAdapter.getOnChildClickListener().onChildClick(mAdapter, v, getClickPosition());
+                    }
+                }
+            });
+        }
+
+        return this;
+    }
+
+    public BaseViewHolder setNestView(@IdRes int id) {
+        addOnClickListener(id);
+        addOnLongClickListener(id);
+        mNestViews.add(id);
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public BaseViewHolder addOnLongClickListener(@IdRes final int id) {
+        mChildLongClickViewIds.add(id);
+        final View view = findViewById(id);
+        if (view != null) {
+            if (!view.isLongClickable()) {
+                view.setLongClickable(true);
+            }
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return mAdapter.getOnChildLongClickListener() != null &&
+                            mAdapter.getOnChildLongClickListener().onChildLongClick(mAdapter, v, getClickPosition());
+                }
+            });
+        }
+        return this;
+    }
+
+    public BaseViewHolder setOnItemLongClickListener(@IdRes int id, AdapterView.OnItemLongClickListener listener) {
+        AdapterView view = findViewById(id);
+        view.setOnItemLongClickListener(listener);
+        return this;
+    }
+
+    public BaseViewHolder setOnItemSelectedClickListener(@IdRes int id, AdapterView.OnItemSelectedListener listener) {
+        AdapterView view = findViewById(id);
+        view.setOnItemSelectedListener(listener);
+        return this;
+    }
+
+    public BaseViewHolder setOnCheckedChangeListener(@IdRes int id, CompoundButton.OnCheckedChangeListener listener) {
+        CompoundButton view = findViewById(id);
+        view.setOnCheckedChangeListener(listener);
         return this;
     }
 

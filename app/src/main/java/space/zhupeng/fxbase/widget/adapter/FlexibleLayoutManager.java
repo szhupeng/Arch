@@ -1,4 +1,4 @@
-package space.zhupeng.fxbase.adapter.common;
+package space.zhupeng.fxbase.widget.adapter;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +9,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 /**
  * Internal wrapper class for all conventional LayoutManagers.
  */
-public class FlexibleLayoutManager implements IFlexibleLayoutManager {
+public class FlexibleLayoutManager {
 
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
@@ -41,7 +41,6 @@ public class FlexibleLayoutManager implements IFlexibleLayoutManager {
      *
      * @return one of {@link OrientationHelper#HORIZONTAL}, {@link OrientationHelper#VERTICAL}
      */
-    @Override
     public int getOrientation() {
         RecyclerView.LayoutManager layoutManager = getLayoutManager();
         if (layoutManager instanceof LinearLayoutManager) {
@@ -58,7 +57,6 @@ public class FlexibleLayoutManager implements IFlexibleLayoutManager {
      *
      * @return the span count
      */
-    @Override
     public int getSpanCount() {
         RecyclerView.LayoutManager layoutManager = getLayoutManager();
         if (layoutManager instanceof GridLayoutManager) {
@@ -77,7 +75,6 @@ public class FlexibleLayoutManager implements IFlexibleLayoutManager {
      * if there aren't any visible items.
      * @see #findFirstVisibleItemPosition()
      */
-    @Override
     public int findFirstCompletelyVisibleItemPosition() {
         RecyclerView.LayoutManager layoutManager = getLayoutManager();
         if (layoutManager instanceof StaggeredGridLayoutManager) {
@@ -95,7 +92,6 @@ public class FlexibleLayoutManager implements IFlexibleLayoutManager {
      * if there aren't any visible items.
      * @see #findFirstCompletelyVisibleItemPosition()
      */
-    @Override
     public int findFirstVisibleItemPosition() {
         RecyclerView.LayoutManager layoutManager = getLayoutManager();
         if (layoutManager instanceof StaggeredGridLayoutManager) {
@@ -113,7 +109,6 @@ public class FlexibleLayoutManager implements IFlexibleLayoutManager {
      * if there aren't any visible items.
      * @see #findLastVisibleItemPosition()
      */
-    @Override
     public int findLastCompletelyVisibleItemPosition() {
         RecyclerView.LayoutManager layoutManager = getLayoutManager();
         if (layoutManager instanceof StaggeredGridLayoutManager) {
@@ -131,7 +126,6 @@ public class FlexibleLayoutManager implements IFlexibleLayoutManager {
      * if there aren't any visible items.
      * @see #findLastCompletelyVisibleItemPosition()
      */
-    @Override
     public int findLastVisibleItemPosition() {
         RecyclerView.LayoutManager layoutManager = getLayoutManager();
         if (layoutManager instanceof StaggeredGridLayoutManager) {

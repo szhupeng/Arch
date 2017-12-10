@@ -1,8 +1,8 @@
 package space.zhupeng.fxbase.widget.adapter.entity;
 
-import java.io.Serializable;
+import android.os.Parcelable;
 
-public abstract class SectionEntity<T> implements Serializable {
+public abstract class SectionEntity<T> implements Parcelable {
     public boolean isHeader;
     public T t;
     public String header;

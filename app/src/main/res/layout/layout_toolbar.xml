@@ -16,46 +16,77 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        android:paddingLeft="@dimen/dp10"
+        android:paddingRight="@dimen/dp10">
 
         <TextView
             android:id="@+id/tv_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:background="?android:attr/selectableItemBackground"
             android:drawableLeft="@drawable/ic_back"
             android:drawablePadding="5dp"
             android:gravity="left"
             android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:text="返回"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_18" />
 
-        <TextView
-            android:id="@+id/tv_title"
+        <LinearLayout
+            android:id="@+id/ll_center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_toLeftOf="@+id/tv_right"
-            android:layout_toRightOf="@+id/tv_left"
             android:gravity="center"
-            android:text="标题"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_18" />
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dp10"
+            android:paddingRight="@dimen/dp10">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="标题"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_18" />
+
+            <TextView
+                android:id="@+id/tv_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="2dp"
+                android:text="小标题"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_14"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:drawablePadding="5dp"
-            android:gravity="right"
+            android:layout_toLeftOf="@+id/iv_right"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="右边"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_18" />
+
+        <ImageView
+            android:id="@+id/iv_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:src="@android:drawable/ic_menu_more" />
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>

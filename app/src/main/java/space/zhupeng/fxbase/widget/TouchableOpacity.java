@@ -41,9 +41,9 @@ public abstract class TouchableOpacity {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (MotionEvent.ACTION_DOWN == event.getAction()) {
-                        ViewCompat.setAlpha(v, activeOpacity());
+                        v.setAlpha(activeOpacity());
                     } else if (MotionEvent.ACTION_UP == event.getAction()) {
-                        ViewCompat.setAlpha(v, 1f);
+                        v.setAlpha(1f);
                     }
                     return false;
                 }

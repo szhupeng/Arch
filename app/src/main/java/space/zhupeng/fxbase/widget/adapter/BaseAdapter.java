@@ -401,6 +401,10 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
+    public int getDataItemCount() {
+        return mDataSet.size();
+    }
+
     @Override
     public int getItemCount() {
         return getHeaderLayoutCount() + mDataSet.size() + getFooterLayoutCount() + getLoadMoreViewCount();
@@ -548,7 +552,6 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     protected boolean isFixedViewType(int viewType) {
         return TYPE_HEADER_VIEW == viewType || TYPE_LOADMORE_VIEW == viewType || TYPE_FOOTER_VIEW == viewType;
     }
-
 
     public void setHeaderViewAsFlow(boolean asFlow) {
         this.isHeaderViewAsFlow = asFlow;
@@ -1119,6 +1122,22 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
 
     public void setOnChildLongClickListener(OnChildLongClickListener listener) {
         mOnChildLongClickListener = listener;
+    }
+
+    public OnItemClickListener getOnItemClickListener() {
+        return mOnItemClickListener;
+    }
+
+    public OnItemLongClickListener getOnItemLongClickListener() {
+        return mOnItemLongClickListener;
+    }
+
+    public OnChildClickListener getOnChildClickListener() {
+        return mOnChildClickListener;
+    }
+
+    public OnChildLongClickListener getOnChildLongClickListener() {
+        return mOnChildLongClickListener;
     }
 
     protected abstract int getItemLayoutResID(final int viewType);

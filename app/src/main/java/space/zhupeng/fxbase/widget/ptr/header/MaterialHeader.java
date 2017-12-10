@@ -11,11 +11,10 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
 import space.zhupeng.fxbase.widget.ptr.PtrFrameLayout;
-import space.zhupeng.fxbase.widget.ptr.PtrUIHandler;
 import space.zhupeng.fxbase.widget.ptr.PtrUIHandlerHook;
 import space.zhupeng.fxbase.widget.ptr.indicator.PtrIndicator;
 
-public class MaterialHeader extends View implements PtrUIHandler {
+public class MaterialHeader extends View implements PtrHeader {
 
     private MaterialProgressDrawable mDrawable;
     private float mScale = 1f;

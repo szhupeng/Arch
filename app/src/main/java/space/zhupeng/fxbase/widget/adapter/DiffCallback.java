@@ -1,4 +1,4 @@
-package space.zhupeng.fxbase.adapter.diff;
+package space.zhupeng.fxbase.widget.adapter;
 
 import android.support.v7.util.DiffUtil;
 

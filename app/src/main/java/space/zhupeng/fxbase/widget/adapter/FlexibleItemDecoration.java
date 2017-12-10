@@ -1,4 +1,4 @@
-package space.zhupeng.fxbase.adapter.common;
+package space.zhupeng.fxbase.widget.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,11 +20,6 @@ import android.view.View;
 import java.util.Arrays;
 import java.util.List;
 
-import space.zhupeng.fxbase.adapter.FlexibleAdapter;
-import space.zhupeng.fxbase.adapter.items.IFlexible;
-import space.zhupeng.fxbase.adapter.items.ISectionable;
-import space.zhupeng.fxbase.adapter.utils.FlexibleUtils;
-
 /**
  * This item decorator implements identical drawing technique of {@code DividerItemDecorator}
  * from Android API, and at the same time, it adds several useful functionalities:
@@ -40,9 +35,6 @@ import space.zhupeng.fxbase.adapter.utils.FlexibleUtils;
  * <li>Supports drawing the divider over or underneath the items.</li>
  * <li>Supports drawing the divider for specific viewTypes.</li>
  * </ul>
- * <b>Tip:</b> Call the method {@link FlexibleAdapter#invalidateItemDecorations(long)} to rebuild
- * the invalidated offsets due to the changes coming from events like moveItem or any layout
- * change that modifies the order of the items.
  */
 @SuppressWarnings({"WeakerAccess"})
 public class FlexibleItemDecoration extends RecyclerView.ItemDecoration {
@@ -172,7 +164,7 @@ public class FlexibleItemDecoration extends RecyclerView.ItemDecoration {
         if (parent.getLayoutManager() == null) {
             return;
         }
-        if (FlexibleUtils.getOrientation(parent) == RecyclerView.VERTICAL) {
+        if (new FlexibleLayoutManager(parent).getOrientation() == RecyclerView.VERTICAL) {
             drawVertical(c, parent);
         } else {
             drawHorizontal(c, parent);
@@ -253,19 +245,6 @@ public class FlexibleItemDecoration extends RecyclerView.ItemDecoration {
 	/*==============================*/
     /* OFFSET & EDGES CONFIGURATION */
     /*==============================*/
-
-    /**
-     * Adds an extra offset at the end of each section.
-     * <p>Works only with {@link FlexibleAdapter}.</p>
-     *
-     * @param sectionOffset the extra offset at the end of each section
-     * @return this FlexibleItemDecoration instance so the call can be chained
-     * @since 5.0.0-rc2
-     */
-    public FlexibleItemDecoration withSectionGapOffset(@IntRange(from = 0) int sectionOffset) {
-        mSectionOffset = (int) (context.getResources().getDisplayMetrics().density * sectionOffset);
-        return this;
-    }
 
     /**
      * Allows to disable the SectionGap after the last item.
@@ -542,8 +521,6 @@ public class FlexibleItemDecoration extends RecyclerView.ItemDecoration {
         }
 
         outRect.set(left, top, right, bottom);
-
-        applySectionGap(outRect, adapter, position, orientation);
     }
 
     @NonNull
@@ -575,30 +552,6 @@ public class FlexibleItemDecoration extends RecyclerView.ItemDecoration {
         // isLastRowOrColumn if one of the following condition is true
         return position == itemCount - 1 || nextPos == -1 || itemType != adapter.getItemViewType(nextPos) ||
                 nextRowPos == -1 || itemType != adapter.getItemViewType(nextRowPos);
-    }
-
-    @SuppressWarnings("unchecked")
-    private void applySectionGap(Rect outRect, RecyclerView.Adapter adapter, int position, int orientation) {
-        // Section Gap Offset
-        if (mSectionOffset > 0 && adapter instanceof FlexibleAdapter) {
-            FlexibleAdapter flexibleAdapter = (FlexibleAdapter) adapter;
-            IFlexible item = flexibleAdapter.getItem(position);
-
-            // - Only ISectionable items can finish with a gap and only if next item is a IHeader item
-            // - Important: the check must be done on the bottom of the section, otherwise the
-            //   sticky header will jump!
-            //Log.v("applySectionGap position=%s condition=%s", position, (position >= adapter.getItemCount() - mDividerOnLastItem));
-            if (item instanceof ISectionable &&
-                    (flexibleAdapter.isHeader(flexibleAdapter.getItem(position + 1)) ||
-                            position >= adapter.getItemCount() - mSectionGapOnLastItem)) {
-
-                if (orientation == RecyclerView.VERTICAL) {
-                    outRect.bottom += mSectionOffset;
-                } else {
-                    outRect.right += mSectionOffset;
-                }
-            }
-        }
     }
 
     private static class ItemDecoration {

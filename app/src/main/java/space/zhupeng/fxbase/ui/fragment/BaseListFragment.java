@@ -1,24 +1,25 @@
 package space.zhupeng.fxbase.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import space.zhupeng.fxbase.R;
-import space.zhupeng.fxbase.adapter.BaseAdapter;
 import space.zhupeng.fxbase.task.BaseExceptionAsyncTask;
 import space.zhupeng.fxbase.utils.DensityUtils;
+import space.zhupeng.fxbase.widget.adapter.BaseAdapter;
 import space.zhupeng.fxbase.widget.ptr.PtrDefaultHandler;
 import space.zhupeng.fxbase.widget.ptr.PtrFrameLayout;
 import space.zhupeng.fxbase.widget.ptr.header.MaterialHeader;
+import space.zhupeng.fxbase.widget.ptr.header.PtrHeader;
 
 /**
  * 展示列表的基类
@@ -26,7 +27,7 @@ import space.zhupeng.fxbase.widget.ptr.header.MaterialHeader;
  * @author zhupeng
  * @date 2017/1/14
  */
-public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder> extends BaseStateFragment implements AdapterView.OnItemClickListener {
+public abstract class BaseListFragment<T> extends BaseStateFragment implements BaseAdapter.OnItemClickListener {
 
     private static final int PAGE_START = 1;
     private static final int PAGE_SIZE = 15;
@@ -36,10 +37,6 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
 
     @BindView(R.id.rv_data_list)
     RecyclerView rvDataList;
-
-    private List<T> mDataList;
-    private List<T> mOldList;
-    private List<T> mMoreDataList;
 
     private int mPageIndex = PAGE_START;
 
@@ -51,17 +48,14 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
     }
 
     @Override
-    protected void initView(@Nullable Bundle savedInstanceState) {
+    protected void initView(View view, @Nullable Bundle savedInstanceState) {
+        super.initView(view, savedInstanceState);
+
         initRecyclerView();
 
-        final MaterialHeader header = new MaterialHeader(getActivity());
-        int[] colors = getResources().getIntArray(R.array.ptr_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, DensityUtils.dp2px(getActivity(), 10), 0, DensityUtils.dp2px(getActivity(), 10));
-
+        PtrHeader header = getPtrHeaderView();
         header.setPtrFrameLayout(mPtrFrameLayout);
-        mPtrFrameLayout.setHeaderView(header);
+        mPtrFrameLayout.setHeaderView((View) header);
         mPtrFrameLayout.addPtrUIHandler(header);
         mPtrFrameLayout.setEnabled(true);
         mPtrFrameLayout.setPtrHandler(new PtrDefaultHandler() {
@@ -72,6 +66,15 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
         });
     }
 
+    protected PtrHeader getPtrHeaderView() {
+        final MaterialHeader header = new MaterialHeader(getActivity());
+        int[] colors = getResources().getIntArray(R.array.ptr_colors);
+        header.setColorSchemeColors(colors);
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setPadding(0, DensityUtils.dp2px(getActivity(), 10), 0, DensityUtils.dp2px(getActivity(), 10));
+        return header;
+    }
+
     /**
      * 初始化RecyclerView
      * 可重写以实现网格布局和流式布局
@@ -80,6 +83,7 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rvDataList.setLayoutManager(llm);
+        rvDataList.setItemViewCacheSize(0);
         rvDataList.setHasFixedSize(true);
         rvDataList.setItemAnimator(new DefaultItemAnimator());
         final RecyclerView.ItemDecoration decoration = onCreateDecoration();
@@ -99,6 +103,18 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
         if (getUserVisibleHint()) {
             requestData();
         }
+    }
+
+    public void setAdapter(@NonNull final BaseAdapter adapter) {
+        this.mAdapter = adapter;
+        this.mAdapter.setOnLoadMoreListener(new BaseAdapter.OnLoadMoreListener() {
+            @Override
+            public void loadMore() {
+                toLoadMoreData();
+            }
+        }, rvDataList);
+        this.mAdapter.setOnItemClickListener(this);
+        this.rvDataList.setAdapter(adapter);
     }
 
     /**
@@ -129,30 +145,38 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
     /**
      * 分页加载更多列表数据
      */
-    private void toLoadMoreData() {
+    public void toLoadMoreData() {
         if (!toCheckNetwork()) {
-            onLoadMoreCompleted();
+            mAdapter.loadMoreFailed();
             return;
         }
 
         runOnUiThreadSafely(new Runnable() {
+
+            private List<T> mMoreData;
+
             @Override
             public void run() {
                 executeTask(new BaseExceptionAsyncTask(getActivity()) {
                     @Override
                     protected boolean doInBackground() throws Exception {
-                        loadMoreInBackground();
+                        mMoreData = toLoadData(mPageIndex + 1);
                         return true;
                     }
 
                     @Override
                     protected void onCompleted() {
-                        onLoadMoreCompleted();
+                        onLoadFinished();
                     }
 
                     @Override
                     protected void onSuccess() {
-                        onSuccessLoadMore();
+                        onSuccessLoadData(false, mMoreData);
+                    }
+
+                    @Override
+                    protected void onFailure() {
+                        onLoadMoreFailed();
                     }
                 });
             }
@@ -167,6 +191,8 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
     protected void toRefreshListData(final boolean showLoading) {
         executeTask(new BaseExceptionAsyncTask(getActivity()) {
 
+            private List<T> mNewData;
+
             @Override
             protected void onPreExecute() {
                 if (showLoading) showLoadingView();
@@ -174,18 +200,20 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
 
             @Override
             protected boolean doInBackground() throws Exception {
-                loadDataInBackground();
+                mPageIndex = PAGE_START;
+                mNewData = toLoadData(mPageIndex);
                 return true;
             }
 
             @Override
             protected void onCompleted() {
                 onLoadFinished();
+                mAdapter.setEnableLoadMore(true);
             }
 
             @Override
             protected void onSuccess() {
-                onSuccessLoadData();
+                onSuccessLoadData(true, mNewData);
             }
 
             @Override
@@ -195,26 +223,18 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
         });
     }
 
-    private void loadDataInBackground() {
-        this.mPageIndex = PAGE_START;
-        this.mOldList = this.mDataList;
-        this.mDataList = toLoadData(this.mPageIndex);
-    }
-
-    private void loadMoreInBackground() {
-        this.mMoreDataList = toLoadData(mPageIndex + 1);
-        this.mOldList = this.mDataList;
-        if (this.mMoreDataList != null) {
-            this.mDataList.addAll(this.mMoreDataList);
-        }
-    }
-
     /**
      * 加载更多数据完毕
      */
-    private void onLoadMoreCompleted() {
-        onLoadFinished();
-        // mPtrFrameLayout.loadMoreComplete(false);
+    private void onLoadMoreFailed() {
+        if (null == mAdapter) return;
+
+        runOnUiThreadSafely(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.loadMoreFailed();
+            }
+        });
     }
 
     /**
@@ -223,7 +243,9 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
      * @param enable
      */
     public void setLoadMoreEnabled(final boolean enable) {
-        // mPtrFrameLayout.setLoadMoreEnable(enable);
+        if (null == mAdapter) return;
+
+        mAdapter.setEnableLoadMore(enable);
     }
 
     protected RecyclerView.ItemDecoration onCreateDecoration() {
@@ -256,50 +278,32 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
         }
     }
 
-    protected void onSuccessLoadData() {
-        if (null == rvDataList) return;
+    protected void onSuccessLoadData(boolean isRefresh, final List<T> data) {
+        if (null == rvDataList || null == mAdapter) return;
 
-        if (null == mAdapter) {
-            mAdapter = new ListDataAdapter();
-            mAdapter.setOnItemClickListener(this);
-            rvDataList.setAdapter(mAdapter);
-        }
-
-        final int count = mDataList.size();
-        if (0 == count) {
+        final int size = data == null ? 0 : data.size();
+        if (isRefresh && 0 == size) {
             showEmptyView();
-            return;
+        } else {
+            showContentView();
         }
 
-        showContentView();
+        if (isRefresh) {
+            mAdapter.setData(data);
+        } else if (size > 0) {
+            mAdapter.addData(data);
+        }
 
-        final DiffUtil.Callback callback = obtainDiffCallback(mOldList, mDataList);
-        if (callback != null) {
-            DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
-            result.dispatchUpdatesTo(mAdapter);
+        if (size < PAGE_SIZE) {
+            mAdapter.loadMoreEnd(isRefresh);
         } else {
-            mAdapter.setData(mDataList);
-            mAdapter.notifyDataSetChanged();
+            mAdapter.loadMoreComplete();
+            mPageIndex++;
         }
     }
 
-    private void onSuccessLoadMore() {
-        if (null == mMoreDataList) return;
-
-        final int size = mMoreDataList.size();
-        if (0 == size) {
-            setLoadMoreEnabled(false);
-        } else if (size < getPageSize()) {
-            mPageIndex++;
-            setLoadMoreEnabled(false);
-        } else {
-            mPageIndex++;
-            setLoadMoreEnabled(true);
-        }
-
-        onLoadMoreCompleted();
-
-        onSuccessLoadData();
+    @Override
+    public void onItemClick(BaseAdapter adapter, View view, int position) {
     }
 
     /**
@@ -313,10 +317,6 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
         return null;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    }
-
     /**
      * 加载数据
      *
@@ -324,63 +324,4 @@ public abstract class BaseListFragment<T, VH extends BaseAdapter.BaseViewHolder>
      * @return
      */
     protected abstract List<T> toLoadData(final int pageIndex);
-
-    /**
-     * 根据位置获取视图类型
-     *
-     * @param position
-     * @return
-     */
-    protected int getItemType(final int position) {
-        return 0;
-    }
-
-    /**
-     * 根据视图类型获取布局对应的资源ID
-     *
-     * @param viewType
-     * @return
-     */
-    protected abstract int getItemLayoutId(final int viewType);
-
-    /**
-     * 创建视图容器
-     *
-     * @param view
-     * @param viewType
-     * @return
-     */
-    protected abstract VH onCreateItemViewHolder(final View view, final int viewType);
-
-    /**
-     * 绑定数据
-     *
-     * @param holder
-     * @param vo
-     * @param position
-     */
-    protected abstract void onBindItemViewHolder(VH holder, T vo, int position);
-
-    public class ListDataAdapter extends BaseAdapter<T, VH> {
-
-        @Override
-        public int getItemViewType(int position) {
-            return getItemType(position);
-        }
-
-        @Override
-        public int getItemLayoutResID(int viewType) {
-            return getItemLayoutId(viewType);
-        }
-
-        @Override
-        public VH onCreateViewHolder(View view, int viewType) {
-            return onCreateItemViewHolder(view, viewType);
-        }
-
-        @Override
-        public void onBindViewHolder(VH holder, T vo, int position) {
-            onBindItemViewHolder(holder, vo, position);
-        }
-    }
 }

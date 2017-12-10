@@ -41,7 +41,7 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
     private BaseAsyncTask mTask;
     protected Activity mParentActivity;
 
-    private Unbinder mUnbinder;
+    private Unbinder unbinder;
 
     @Override
     public void onAttach(Context context) {
@@ -54,7 +54,7 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(getLayoutResID(), container, false);
-        mUnbinder = ButterKnife.bind(this, root);
+        unbinder = ButterKnife.bind(this, root);
         return root;
     }
 
@@ -62,7 +62,7 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initView(savedInstanceState);
+        initView(view, savedInstanceState);
     }
 
     @Override
@@ -83,7 +83,7 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
         }
     }
 
-    protected void initView(@Nullable Bundle savedInstanceState) {
+    protected void initView(View view, @Nullable Bundle savedInstanceState) {
     }
 
     @Override
@@ -93,7 +93,7 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
         if (mPresenter != null) {
             mPresenter.detachView();
         }
-        mUnbinder.unbind();
+        unbinder.unbind();
     }
 
     public void showToast(@NonNull final CharSequence text) {

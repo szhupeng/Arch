@@ -4,6 +4,7 @@
     android:id="@+id/multi_state_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:msv_animateViewChanges="false"
     app:msv_emptyView="@layout/layout_empty"
     app:msv_errorView="@layout/layout_error"
     app:msv_loadingView="@layout/layout_loading"

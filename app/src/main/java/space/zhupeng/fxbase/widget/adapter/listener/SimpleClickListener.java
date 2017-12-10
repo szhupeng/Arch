@@ -173,7 +173,7 @@ public abstract class SimpleClickListener implements RecyclerView.OnItemTouchLis
                 mPressedView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 BaseViewHolder vh = (BaseViewHolder) recyclerView.getChildViewHolder(mPressedView);
                 if (!isHeaderOrFooterPosition(vh.getLayoutPosition())) {
-                    Set<Integer> longClickViewIds = vh.getItemChildLongClickViewIds();
+                    Set<Integer> longClickViewIds = vh.getChildLongClickViewIds();
                     Set<Integer> nestViewIds = vh.getNestViews();
                     if (longClickViewIds != null && longClickViewIds.size() > 0) {
                         for (Integer longClickViewId : longClickViewIds) {
