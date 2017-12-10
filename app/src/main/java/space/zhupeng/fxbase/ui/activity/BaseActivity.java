@@ -200,7 +200,7 @@ public abstract class BaseActivity<M, V extends BaseView, P extends BasePresente
     }
 
     @Override
-    public Loader<P> onCreateLoader(int id, Bundle args) {
+    public final Loader<P> onCreateLoader(int id, Bundle args) {
         return new PresenterLoader(this, new PresenterFactory<P>() {
             @Override
             public P create() {
@@ -214,12 +214,12 @@ public abstract class BaseActivity<M, V extends BaseView, P extends BasePresente
     }
 
     @Override
-    public void onLoadFinished(Loader<P> loader, P data) {
+    public final void onLoadFinished(Loader<P> loader, P data) {
         mPresenter = data;
     }
 
     @Override
-    public void onLoaderReset(Loader<P> loader) {
+    public final void onLoaderReset(Loader<P> loader) {
         mPresenter = null;
     }
 

@@ -9,6 +9,8 @@ import android.widget.PopupWindow;
 
 public class ToolTip implements PopupWindow.OnDismissListener {
 
+    private PopupWindow mPopupWindow;
+
     @Override
     public void onDismiss() {
 

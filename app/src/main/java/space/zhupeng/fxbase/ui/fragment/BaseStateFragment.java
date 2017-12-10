@@ -5,6 +5,8 @@ import android.view.View;
 
 import butterknife.BindView;
 import space.zhupeng.fxbase.R;
+import space.zhupeng.fxbase.mvp.presenter.BasePresenter;
+import space.zhupeng.fxbase.mvp.view.BaseView;
 import space.zhupeng.fxbase.widget.MultiStateView;
 
 /**
@@ -18,7 +20,7 @@ import space.zhupeng.fxbase.widget.MultiStateView;
  * @date 2017/1/14
  */
 
-public abstract class BaseStateFragment extends BaseFragment {
+public abstract class BaseStateFragment<M, V extends BaseView, P extends BasePresenter<M, V>> extends BaseFragment<M, V, P> {
 
     @Nullable
     @BindView(R.id.multi_state_view)
@@ -41,7 +43,15 @@ public abstract class BaseStateFragment extends BaseFragment {
 
         mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
 
-        attachEvent(mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR));
+        View view = mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR);
+        if (view != null) {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    rerequest();
+                }
+            });
+        }
     }
 
     protected void showLoadingView() {
@@ -51,10 +61,8 @@ public abstract class BaseStateFragment extends BaseFragment {
     }
 
     /**
-     * 对错误状态下的界面视图添加事件监听
-     *
-     * @param view
+     * 重新请求数据
      */
-    protected void attachEvent(final View view) {
+    protected void rerequest() {
     }
 }

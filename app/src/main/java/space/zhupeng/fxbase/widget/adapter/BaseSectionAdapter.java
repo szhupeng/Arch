@@ -1,7 +1,11 @@
 package space.zhupeng.fxbase.widget.adapter;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -30,7 +34,7 @@ public abstract class BaseSectionAdapter<T extends SectionEntity, VH extends Bas
     }
 
     @Override
-    public void onBindViewHolder(VH holder, int position) {
+    public final void onBindViewHolder(VH holder, int position) {
         switch (holder.getItemViewType()) {
             case TYPE_SECTION_HEADER:
                 setFullSpan(holder);
@@ -42,5 +46,17 @@ public abstract class BaseSectionAdapter<T extends SectionEntity, VH extends Bas
         }
     }
 
+    @Override
+    protected VH create(int viewType, View convertView, ViewGroup parent) {
+        if (TYPE_SECTION_HEADER == viewType) {
+            View view = LayoutInflater.from(context).inflate(getSectionHeadLayoutResID(), parent, false);
+            return super.onCreateBaseViewHolder(view);
+        }
+        return super.create(viewType, convertView, parent);
+    }
+
     protected abstract void convertHeader(VH holder, T item);
+
+    @LayoutRes
+    protected abstract int getSectionHeadLayoutResID();
 }

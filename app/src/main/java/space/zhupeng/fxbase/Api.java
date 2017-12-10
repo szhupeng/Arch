@@ -7,4 +7,5 @@ package space.zhupeng.fxbase;
 
 public interface Api {
     String GANK = "http://gank.io/api/random/data/Android/20";
+    String GANK2 = "http://gank.io/api/day/";
 }

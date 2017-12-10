@@ -160,7 +160,7 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
                 executeTask(new BaseExceptionAsyncTask(getActivity()) {
                     @Override
                     protected boolean doInBackground() throws Exception {
-                        mMoreData = toLoadData(mPageIndex + 1);
+                        mMoreData = toLoadData(mPageIndex);
                         return true;
                     }
 
@@ -304,6 +304,11 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
 
     @Override
     public void onItemClick(BaseAdapter adapter, View view, int position) {
+    }
+
+    @Override
+    protected void rerequest() {
+        requestData();
     }
 
     /**

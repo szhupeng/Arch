@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import space.zhupeng.fxbase.mvp.presenter.BasePresenter;
+import space.zhupeng.fxbase.mvp.view.BaseView;
 import space.zhupeng.fxbase.ui.ToolbarDelegate;
 import space.zhupeng.fxbase.ui.ToolbarDelegateImpl;
 
@@ -15,7 +17,7 @@ import space.zhupeng.fxbase.ui.ToolbarDelegateImpl;
  * @date 2017/9/4
  */
 
-public abstract class BaseToolbarFragment extends BaseFragment implements ToolbarDelegate, View.OnClickListener {
+public abstract class BaseToolbarFragment<M, V extends BaseView, P extends BasePresenter<M, V>> extends BaseFragment<M, V, P> implements ToolbarDelegate, View.OnClickListener {
 
     private ToolbarDelegateImpl mToolbarDelegate;
 

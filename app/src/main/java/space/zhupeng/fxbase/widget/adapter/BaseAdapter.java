@@ -357,21 +357,21 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     }
 
     @Override
-    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+    public final VH onCreateViewHolder(ViewGroup parent, int viewType) {
         VH holder = null;
         switch (viewType) {
             case TYPE_LOADMORE_VIEW:
-                holder = getLoadMoreView(parent, viewType);
+                holder = getLoadMoreView(parent);
                 break;
             case TYPE_HEADER_VIEW:
-                holder = onCreateBaseViewHolder(mHeaderLayout, viewType);
+                holder = onCreateBaseViewHolder(mHeaderLayout);
                 break;
             case TYPE_FOOTER_VIEW:
-                holder = onCreateBaseViewHolder(mFooterLayout, viewType);
+                holder = onCreateBaseViewHolder(mFooterLayout);
                 break;
             default:
                 View convertView = LayoutInflater.from(context).inflate(getItemLayoutResID(viewType), parent, false);
-                holder = onCreateBaseViewHolder(convertView, viewType);
+                holder = create(viewType, convertView, parent);
                 bindClickListener(holder);
         }
         holder.setAdapter(this);
@@ -441,9 +441,9 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return super.getItemViewType(position);
     }
 
-    private VH getLoadMoreView(ViewGroup parent, int viewType) {
+    private VH getLoadMoreView(ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(mLoadMoreView.getLayoutResID(), parent, false);
-        VH holder = onCreateBaseViewHolder(view, viewType);
+        VH holder = onCreateBaseViewHolder(view);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -658,7 +658,11 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         this.mFirstOnlyEnable = firstOnly;
     }
 
-    protected VH onCreateBaseViewHolder(View parent, int viewType) {
+    protected VH create(int viewType, View convertView, ViewGroup parent) {
+        return onCreateBaseViewHolder(convertView);
+    }
+
+    protected final VH onCreateBaseViewHolder(View parent) {
         Class temp = getClass();
         Class clazz = null;
         while (clazz == null && null != temp) {
@@ -724,13 +728,11 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
 
     @Nullable
     public View getViewByPosition(RecyclerView recyclerView, int position, @IdRes int id) {
-        if (recyclerView == null) {
-            return null;
-        }
+        if (null == recyclerView) return null;
+
         BaseViewHolder holder = (BaseViewHolder) recyclerView.findViewHolderForLayoutPosition(position);
-        if (holder == null) {
-            return null;
-        }
+        if (null == holder) return null;
+
         return holder.findViewById(id);
     }
 

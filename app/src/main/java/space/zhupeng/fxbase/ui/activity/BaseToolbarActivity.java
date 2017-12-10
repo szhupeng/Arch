@@ -2,10 +2,11 @@ package space.zhupeng.fxbase.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import space.zhupeng.fxbase.mvp.presenter.BasePresenter;
+import space.zhupeng.fxbase.mvp.view.BaseView;
 import space.zhupeng.fxbase.ui.ToolbarDelegate;
 import space.zhupeng.fxbase.ui.ToolbarDelegateImpl;
 import space.zhupeng.fxbase.utils.ActionModeHelper;
@@ -17,7 +18,7 @@ import space.zhupeng.fxbase.utils.ActionModeHelper;
  * @date 2017/1/14
  */
 
-public abstract class BaseToolbarActivity extends BaseActivity implements ToolbarDelegate, View.OnClickListener {
+public abstract class BaseToolbarActivity<M, V extends BaseView, P extends BasePresenter<M, V>> extends BaseActivity<M, V, P> implements ToolbarDelegate, View.OnClickListener {
 
     private ToolbarDelegateImpl mToolbarDelegate;
 
@@ -131,10 +132,6 @@ public abstract class BaseToolbarActivity extends BaseActivity implements Toolba
     @Override
     public void hideRightIcon() {
         mToolbarDelegate.hideRightIcon();
-    }
-
-    @Override
-    public void onLoadFinished(Loader loader, Object data) {
     }
 
     @Override
