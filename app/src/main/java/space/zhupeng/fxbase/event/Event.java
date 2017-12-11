@@ -56,7 +56,7 @@ public class Event<T extends Parcelable> implements Parcelable {
 
         @Override
         public Event[] newArray(int size) {
-            return new Event[0];
+            return new Event[size];
         }
     };
 

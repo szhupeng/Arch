@@ -122,7 +122,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         this.mDataSet = data == null ? new ArrayList<T>() : data;
     }
 
-    public void setData(@Nullable List<T> data) {
+    public final void setData(@Nullable List<T> data) {
         this.mDataSet = data == null ? new ArrayList<T>() : data;
         if (mOnLoadMoreListener != null) {
             mNextLoadEnable = true;
@@ -134,7 +134,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         notifyDataSetChanged();
     }
 
-    public void addData(@IntRange(from = 0) int position, @NonNull T data) {
+    public final void addData(@IntRange(from = 0) int position, @NonNull T data) {
         if (null == data) return;
 
         mDataSet.add(position, data);
@@ -142,7 +142,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         compatibilityDataSizeChanged(1);
     }
 
-    public void addData(@IntRange(from = 0) int position, @NonNull Collection<? extends T> data) {
+    public final void addData(@IntRange(from = 0) int position, @NonNull Collection<? extends T> data) {
         if (null == data) return;
 
         mDataSet.addAll(position, data);
@@ -150,7 +150,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         compatibilityDataSizeChanged(data.size());
     }
 
-    public void addData(@NonNull Collection<? extends T> data) {
+    public final void addData(@NonNull Collection<? extends T> data) {
         if (null == data) return;
 
         mDataSet.addAll(data);
@@ -158,7 +158,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         compatibilityDataSizeChanged(data.size());
     }
 
-    public void addData(@NonNull T data) {
+    public final void addData(@NonNull T data) {
         if (null == data) return;
 
         mDataSet.add(data);
@@ -174,7 +174,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         notifyItemRangeChanged(internalPosition, mDataSet.size() - internalPosition);
     }
 
-    public void setData(@IntRange(from = 0) int index, @NonNull T data) {
+    public final void setData(@IntRange(from = 0) int index, @NonNull T data) {
         mDataSet.set(index, data);
         notifyItemChanged(index + getHeaderLayoutCount());
     }
@@ -193,14 +193,14 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         isLoadingMore = false;
     }
 
-    public void setOnLoadMoreListener(OnLoadMoreListener listener, RecyclerView recyclerView) {
+    public final void setOnLoadMoreListener(OnLoadMoreListener listener, RecyclerView recyclerView) {
         openLoadMore(listener);
         if (getRecyclerView() == null) {
             mRecyclerView = recyclerView;
         }
     }
 
-    public void disableLoadMoreIfNotFullPage(RecyclerView recyclerView) {
+    public final void disableLoadMoreIfNotFullPage(RecyclerView recyclerView) {
         setEnableLoadMore(false);
         if (recyclerView == null) return;
         RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
@@ -244,7 +244,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return tmp;
     }
 
-    public int getLoadMoreViewCount() {
+    public final int getLoadMoreViewCount() {
         if (mOnLoadMoreListener == null || !mLoadMoreEnable) {
             return 0;
         }
@@ -262,15 +262,15 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
      *
      * @param view
      */
-    public void setLoadMoreView(LoadMoreView view) {
+    public final void setLoadMoreView(LoadMoreView view) {
         this.mLoadMoreView = view;
     }
 
-    public int getLoadMoreViewPosition() {
+    public final int getLoadMoreViewPosition() {
         return getHeaderLayoutCount() + mDataSet.size() + getFooterLayoutCount();
     }
 
-    public void loadMoreEnd() {
+    public final void loadMoreEnd() {
         loadMoreEnd(false);
     }
 
@@ -279,7 +279,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
      *
      * @param gone
      */
-    public void loadMoreEnd(boolean gone) {
+    public final void loadMoreEnd(boolean gone) {
         if (getLoadMoreViewCount() == 0) {
             return;
         }
@@ -294,7 +294,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    public void loadMoreComplete() {
+    public final void loadMoreComplete() {
         if (getLoadMoreViewCount() == 0) {
             return;
         }
@@ -304,7 +304,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         notifyItemChanged(getLoadMoreViewPosition());
     }
 
-    public void loadMoreFailed() {
+    public final void loadMoreFailed() {
         if (getLoadMoreViewCount() == 0) {
             return;
         }
@@ -313,7 +313,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         notifyItemChanged(getLoadMoreViewPosition());
     }
 
-    public void setEnableLoadMore(boolean enable) {
+    public final void setEnableLoadMore(boolean enable) {
         int oldLoadMoreCount = getLoadMoreViewCount();
         mLoadMoreEnable = enable;
         int newLoadMoreCount = getLoadMoreViewCount();
@@ -330,18 +330,18 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    public boolean isLoadMoreEnable() {
+    public final boolean isLoadMoreEnable() {
         return mLoadMoreEnable;
     }
 
-    public int getHeaderLayoutCount() {
+    public final int getHeaderLayoutCount() {
         if (mHeaderLayout == null || mHeaderLayout.getChildCount() == 0) {
             return 0;
         }
         return 1;
     }
 
-    public int getFooterLayoutCount() {
+    public final int getFooterLayoutCount() {
         if (mFooterLayout == null || mFooterLayout.getChildCount() == 0) {
             return 0;
         }
@@ -349,11 +349,12 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     }
 
     @Nullable
-    public T getItem(@IntRange(from = 0) int position) {
-        if (position < mDataSet.size())
+    public final T getItem(@IntRange(from = 0) int position) {
+        if (position < mDataSet.size()) {
             return mDataSet.get(position);
-        else
+        } else {
             return null;
+        }
     }
 
     @Override
@@ -401,17 +402,17 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    public int getDataItemCount() {
+    public final int getDataItemCount() {
         return mDataSet.size();
     }
 
     @Override
-    public int getItemCount() {
+    public final int getItemCount() {
         return getHeaderLayoutCount() + mDataSet.size() + getFooterLayoutCount() + getLoadMoreViewCount();
     }
 
     @Override
-    public int getItemViewType(int position) {
+    public final int getItemViewType(int position) {
         int numberOfHeaders = getHeaderLayoutCount();
         if (position < numberOfHeaders) {
             return TYPE_HEADER_VIEW;
@@ -433,7 +434,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     }
 
     @Override
-    public long getItemId(int position) {
+    public final long getItemId(int position) {
         return position;
     }
 
@@ -448,17 +449,17 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
             @Override
             public void onClick(View v) {
                 if (mLoadMoreView.getLoadMoreStatus() == LoadMoreView.STATUS_FAIL) {
-                    notifyLoadMoreToLoading();
+                    notifyToLoadMore();
                 }
                 if (mEnableLoadMoreEndClick && mLoadMoreView.getLoadMoreStatus() == LoadMoreView.STATUS_END) {
-                    notifyLoadMoreToLoading();
+                    notifyToLoadMore();
                 }
             }
         });
         return holder;
     }
 
-    public void setPreLoadNumber(int preLoadNumber) {
+    public final void setPreLoadNumber(int preLoadNumber) {
         if (preLoadNumber > 1) {
             mPreLoadNumber = preLoadNumber;
         }
@@ -490,7 +491,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    public void notifyLoadMoreToLoading() {
+    public final void notifyToLoadMore() {
         if (mLoadMoreView.getLoadMoreStatus() == LoadMoreView.STATUS_LOADING) {
             return;
         }
@@ -498,7 +499,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         notifyItemChanged(getLoadMoreViewPosition());
     }
 
-    public void enableLoadMoreEndClick(boolean enable) {
+    public final void enableLoadMoreEndClick(boolean enable) {
         mEnableLoadMoreEndClick = enable;
     }
 
@@ -513,7 +514,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    protected void setFullSpan(RecyclerView.ViewHolder holder) {
+    protected final void setFullSpan(RecyclerView.ViewHolder holder) {
         if (holder.itemView.getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams) {
             StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) holder
                     .itemView.getLayoutParams();
@@ -553,23 +554,23 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return TYPE_HEADER_VIEW == viewType || TYPE_LOADMORE_VIEW == viewType || TYPE_FOOTER_VIEW == viewType;
     }
 
-    public void setHeaderViewAsFlow(boolean asFlow) {
+    public final void setHeaderViewAsFlow(boolean asFlow) {
         this.isHeaderViewAsFlow = asFlow;
     }
 
-    public boolean isHeaderViewAsFlow() {
+    public final boolean isHeaderViewAsFlow() {
         return isHeaderViewAsFlow;
     }
 
-    public void setFooterViewAsFlow(boolean asFlow) {
+    public final void setFooterViewAsFlow(boolean asFlow) {
         this.isFooterViewAsFlow = asFlow;
     }
 
-    public boolean isFooterViewAsFlow() {
+    public final boolean isFooterViewAsFlow() {
         return isFooterViewAsFlow;
     }
 
-    public void setSpanSizeLookup(SpanSizeLookup spanSizeLookup) {
+    public final void setSpanSizeLookup(SpanSizeLookup spanSizeLookup) {
         this.mSpanSizeLookup = spanSizeLookup;
     }
 
@@ -616,7 +617,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    protected void startAnim(Animator anim, int index) {
+    protected final void startAnim(Animator anim, int index) {
         anim.setDuration(mDuration).start();
         anim.setInterpolator(mInterpolator);
     }
@@ -645,16 +646,16 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    public void openLoadAnimation(BaseAnimation animation) {
+    public final void openLoadAnimation(BaseAnimation animation) {
         this.mOpenAnimationEnable = true;
         this.mCustomAnimation = animation;
     }
 
-    public void openLoadAnimation() {
+    public final void openLoadAnimation() {
         this.mOpenAnimationEnable = true;
     }
 
-    public void isFirstOnly(boolean firstOnly) {
+    public final void isFirstOnly(boolean firstOnly) {
         this.mFirstOnlyEnable = firstOnly;
     }
 
@@ -727,7 +728,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     }
 
     @Nullable
-    public View getViewByPosition(RecyclerView recyclerView, int position, @IdRes int id) {
+    public final View getViewByPosition(RecyclerView recyclerView, int position, @IdRes int id) {
         if (null == recyclerView) return null;
 
         BaseViewHolder holder = (BaseViewHolder) recyclerView.findViewHolderForLayoutPosition(position);
@@ -736,23 +737,23 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return holder.findViewById(id);
     }
 
-    public LinearLayout getHeaderLayout() {
+    public final LinearLayout getHeaderLayout() {
         return mHeaderLayout;
     }
 
-    public LinearLayout getFooterLayout() {
+    public final LinearLayout getFooterLayout() {
         return mFooterLayout;
     }
 
-    public int addHeaderView(View header) {
+    public final int addHeaderView(View header) {
         return addHeaderView(header, -1);
     }
 
-    public int addHeaderView(View header, int index) {
+    public final int addHeaderView(View header, int index) {
         return addHeaderView(header, index, LinearLayout.VERTICAL);
     }
 
-    public int addHeaderView(View header, int index, int orientation) {
+    public final int addHeaderView(View header, int index, int orientation) {
         if (mHeaderLayout == null) {
             mHeaderLayout = new LinearLayout(header.getContext());
             if (orientation == LinearLayout.VERTICAL) {
@@ -774,15 +775,15 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return index;
     }
 
-    public int setHeaderView(View header) {
+    public final int setHeaderView(View header) {
         return setHeaderView(header, 0, LinearLayout.VERTICAL);
     }
 
-    public int setHeaderView(View header, int index) {
+    public final int setHeaderView(View header, int index) {
         return setHeaderView(header, index, LinearLayout.VERTICAL);
     }
 
-    public int setHeaderView(View header, int index, int orientation) {
+    public final int setHeaderView(View header, int index, int orientation) {
         if (mHeaderLayout == null || mHeaderLayout.getChildCount() <= index) {
             return addHeaderView(header, index, orientation);
         } else {
@@ -792,15 +793,15 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    public int addFooterView(View footer) {
+    public final int addFooterView(View footer) {
         return addFooterView(footer, -1, LinearLayout.VERTICAL);
     }
 
-    public int addFooterView(View footer, int index) {
+    public final int addFooterView(View footer, int index) {
         return addFooterView(footer, index, LinearLayout.VERTICAL);
     }
 
-    public int addFooterView(View footer, int index, int orientation) {
+    public final int addFooterView(View footer, int index, int orientation) {
         if (mFooterLayout == null) {
             mFooterLayout = new LinearLayout(footer.getContext());
             if (orientation == LinearLayout.VERTICAL) {
@@ -825,15 +826,15 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return index;
     }
 
-    public int setFooterView(View header) {
+    public final int setFooterView(View header) {
         return setFooterView(header, 0, LinearLayout.VERTICAL);
     }
 
-    public int setFooterView(View header, int index) {
+    public final int setFooterView(View header, int index) {
         return setFooterView(header, index, LinearLayout.VERTICAL);
     }
 
-    public int setFooterView(View header, int index, int orientation) {
+    public final int setFooterView(View header, int index, int orientation) {
         if (mFooterLayout == null || mFooterLayout.getChildCount() <= index) {
             return addFooterView(header, index, orientation);
         } else {
@@ -843,7 +844,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    public void removeHeaderView(View header) {
+    public final void removeHeaderView(View header) {
         if (getHeaderLayoutCount() == 0) return;
 
         mHeaderLayout.removeView(header);
@@ -852,7 +853,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    public void removeFooterView(View footer) {
+    public final void removeFooterView(View footer) {
         if (getFooterLayoutCount() == 0) return;
 
         mFooterLayout.removeView(footer);
@@ -864,14 +865,14 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    public void removeAllHeaderView() {
+    public final void removeAllHeaderView() {
         if (getHeaderLayoutCount() == 0) return;
 
         mHeaderLayout.removeAllViews();
         notifyItemRemoved(0);
     }
 
-    public void removeAllFooterView() {
+    public final void removeAllFooterView() {
         if (getFooterLayoutCount() == 0) return;
 
         mFooterLayout.removeAllViews();
@@ -881,7 +882,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    private int getFooterViewPosition() {
+    private final int getFooterViewPosition() {
         //Return to footer view notify position
         return getHeaderLayoutCount() + mDataSet.size();
     }
@@ -905,7 +906,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     }
 
     @SuppressWarnings("unchecked")
-    public int expand(@IntRange(from = 0) int position, boolean animate, boolean shouldNotify) {
+    public final int expand(@IntRange(from = 0) int position, boolean animate, boolean shouldNotify) {
         position -= getHeaderLayoutCount();
 
         IExpandable expandable = getExpandableItem(position);
@@ -937,15 +938,15 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return subItemCount;
     }
 
-    public int expand(@IntRange(from = 0) int position, boolean animate) {
+    public final int expand(@IntRange(from = 0) int position, boolean animate) {
         return expand(position, animate, true);
     }
 
-    public int expand(@IntRange(from = 0) int position) {
+    public final int expand(@IntRange(from = 0) int position) {
         return expand(position, true, true);
     }
 
-    public int expandAll(int position, boolean animate, boolean notify) {
+    public final int expandAll(int position, boolean animate, boolean notify) {
         position -= getHeaderLayoutCount();
 
         T endItem = null;
@@ -986,11 +987,11 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return count;
     }
 
-    public int expandAll(int position, boolean init) {
+    public final int expandAll(int position, boolean init) {
         return expandAll(position, true, !init);
     }
 
-    public void expandAll() {
+    public final void expandAll() {
         for (int i = mDataSet.size() - 1 + getHeaderLayoutCount(); i >= getHeaderLayoutCount(); i--) {
             expandAll(i, false, false);
         }
@@ -1024,7 +1025,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return subItemCount;
     }
 
-    public int collapse(@IntRange(from = 0) int position, boolean animate, boolean notify) {
+    public final int collapse(@IntRange(from = 0) int position, boolean animate, boolean notify) {
         position -= getHeaderLayoutCount();
 
         IExpandable expandable = getExpandableItem(position);
@@ -1045,11 +1046,11 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return subItemCount;
     }
 
-    public int collapse(@IntRange(from = 0) int position) {
+    public final int collapse(@IntRange(from = 0) int position) {
         return collapse(position, true, true);
     }
 
-    public int collapse(@IntRange(from = 0) int position, boolean animate) {
+    public final int collapse(@IntRange(from = 0) int position, boolean animate) {
         return collapse(position, animate, true);
     }
 
@@ -1065,7 +1066,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return list != null && list.size() > 0;
     }
 
-    public boolean isExpandable(T item) {
+    public final boolean isExpandable(T item) {
         return item != null && item instanceof IExpandable;
     }
 
@@ -1078,7 +1079,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
     }
 
-    public int getParentPosition(@NonNull T item) {
+    public final int getParentPosition(@NonNull T item) {
         int position = getItemPosition(item);
         if (position == -1) {
             return -1;
@@ -1110,35 +1111,35 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return -1;
     }
 
-    public void setOnItemClickListener(@Nullable OnItemClickListener listener) {
+    public final void setOnItemClickListener(@Nullable OnItemClickListener listener) {
         mOnItemClickListener = listener;
     }
 
-    public void setOnChildClickListener(OnChildClickListener listener) {
+    public final void setOnChildClickListener(OnChildClickListener listener) {
         mOnChildClickListener = listener;
     }
 
-    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+    public final void setOnItemLongClickListener(OnItemLongClickListener listener) {
         mOnItemLongClickListener = listener;
     }
 
-    public void setOnChildLongClickListener(OnChildLongClickListener listener) {
+    public final void setOnChildLongClickListener(OnChildLongClickListener listener) {
         mOnChildLongClickListener = listener;
     }
 
-    public OnItemClickListener getOnItemClickListener() {
+    public final OnItemClickListener getOnItemClickListener() {
         return mOnItemClickListener;
     }
 
-    public OnItemLongClickListener getOnItemLongClickListener() {
+    public final OnItemLongClickListener getOnItemLongClickListener() {
         return mOnItemLongClickListener;
     }
 
-    public OnChildClickListener getOnChildClickListener() {
+    public final OnChildClickListener getOnChildClickListener() {
         return mOnChildClickListener;
     }
 
-    public OnChildLongClickListener getOnChildLongClickListener() {
+    public final OnChildLongClickListener getOnChildLongClickListener() {
         return mOnChildLongClickListener;
     }
 

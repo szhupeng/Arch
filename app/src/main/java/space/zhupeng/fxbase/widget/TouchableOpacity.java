@@ -51,10 +51,11 @@ public abstract class TouchableOpacity {
             return;
         }
 
-
         ViewCompat.setBackground(view, sld);
     }
 
     @FloatRange(from = 0.0, to = 1.0)
-    protected abstract float activeOpacity();
+    protected float activeOpacity() {
+        return 0.5f;
+    }
 }

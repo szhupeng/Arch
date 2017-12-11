@@ -22,10 +22,6 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     private final SparseArray<View> mItemViews;
 
-    public Set<Integer> getNestViews() {
-        return mNestViews;
-    }
-
     private final HashSet<Integer> mNestViews;
     private final LinkedHashSet<Integer> mChildClickViewIds;
     private final LinkedHashSet<Integer> mChildLongClickViewIds;
@@ -38,6 +34,10 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         this.mChildClickViewIds = new LinkedHashSet<>();
         this.mChildLongClickViewIds = new LinkedHashSet<>();
         this.mNestViews = new HashSet<>();
+    }
+
+    public Set<Integer> getNestViews() {
+        return mNestViews;
     }
 
     private int getClickPosition() {

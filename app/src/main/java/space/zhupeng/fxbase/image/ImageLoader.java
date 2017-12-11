@@ -24,7 +24,7 @@ public final class ImageLoader {
     public <T extends ImageConfig> void clear(Context context, T config) {
         this.mStrategy.clear(context, config);
     }
-    
+
     public void setLoadImgStrategy(BaseImageLoaderStrategy strategy) {
         this.mStrategy = strategy;
     }

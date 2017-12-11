@@ -3,7 +3,10 @@ package space.zhupeng.fxbase.ui.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.View;
+
+import java.lang.reflect.Method;
 
 import space.zhupeng.fxbase.mvp.presenter.BasePresenter;
 import space.zhupeng.fxbase.mvp.view.BaseView;
@@ -160,6 +163,38 @@ public abstract class BaseToolbarActivity<M, V extends BaseView, P extends BaseP
     }
 
     protected void onRightIconClick() {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (getContextMenuResID() != 0) {
+            getMenuInflater().inflate(getContextMenuResID(), menu);
+            return true;
+        } else {
+            return super.onCreateOptionsMenu(menu);
+        }
+    }
+
+    /**
+     * 通过反射，设置menu显示自定义icon
+     *
+     * @param featureId
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if (getContextMenuResID() != 0 && menu != null) {
+            if (menu.getClass().getSimpleName().equalsIgnoreCase("MenuBuilder")) {
+                try {
+                    Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+                    m.setAccessible(true);
+                    m.invoke(menu, true);
+                } catch (Exception e) {
+                }
+            }
+        }
+        return super.onMenuOpened(featureId, menu);
     }
 
     protected int getContextMenuResID() {

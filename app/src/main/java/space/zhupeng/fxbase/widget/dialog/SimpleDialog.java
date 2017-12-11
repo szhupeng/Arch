@@ -2,8 +2,11 @@ package space.zhupeng.fxbase.widget.dialog;
 
 import android.view.View;
 
+import space.zhupeng.fxbase.R;
+
 /**
- * Created by zhupeng on 2017/12/4.
+ * @author zhupeng
+ * @date 2016/12/4
  */
 
 public class SimpleDialog extends BaseDialogFragment {
@@ -15,6 +18,6 @@ public class SimpleDialog extends BaseDialogFragment {
 
     @Override
     protected int getLayoutId() {
-        return 0;
+        return R.layout.dialog_simple;
     }
 }

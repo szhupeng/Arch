@@ -17,10 +17,9 @@ public class EventDispatcher {
     }
 
     public static void dispatch(Context context, Event event) {
-        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(context);
         Intent intent = new Intent();
         intent.putExtra("code", event.getCode());
         intent.putExtra("data", event.getData());
-        manager.sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }

@@ -1,4 +1,4 @@
-package space.zhupeng.fxbase.widget.adapter;
+package space.zhupeng.fxbase.widget.adapter.manager;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;

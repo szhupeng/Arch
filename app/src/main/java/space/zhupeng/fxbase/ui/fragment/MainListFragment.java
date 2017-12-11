@@ -24,21 +24,20 @@ import okhttp3.Request;
 import okhttp3.Response;
 import space.zhupeng.fxbase.Api;
 import space.zhupeng.fxbase.R;
-import space.zhupeng.fxbase.mvp.presenter.BasePresenter;
-import space.zhupeng.fxbase.vo.Gank;
 import space.zhupeng.fxbase.vo.GankVo;
 import space.zhupeng.fxbase.widget.adapter.BaseAdapter;
-import space.zhupeng.fxbase.widget.adapter.BaseSectionAdapter;
+import space.zhupeng.fxbase.widget.adapter.BaseMultiItemAdapter;
 import space.zhupeng.fxbase.widget.adapter.BaseViewHolder;
 import space.zhupeng.fxbase.widget.adapter.FlexibleItemDecoration;
-import space.zhupeng.fxbase.widget.adapter.entity.SectionEntity;
+import space.zhupeng.fxbase.widget.adapter.entity.AbstractExpandableItem;
+import space.zhupeng.fxbase.widget.adapter.entity.MultiItemEntity;
 
 /**
  * @author zhupeng
  * @date 2017/9/11
  */
 
-public class MainListFragment extends BaseListFragment<SectionEntity<Gank>> {
+public class MainListFragment extends BaseListFragment<MultiItemEntity> {
 
     @Override
     protected RecyclerView.ItemDecoration onCreateDecoration() {
@@ -79,13 +78,50 @@ public class MainListFragment extends BaseListFragment<SectionEntity<Gank>> {
 //    }
 
 
-    @Override
-    protected BasePresenter createPresenter() {
-        return super.createPresenter();
-    }
+//    @Override
+//    protected List<SectionEntity<Gank>> toLoadData(int pageIndex) {
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.set(2015, 7, 6);
+//        calendar.add(Calendar.DAY_OF_MONTH, pageIndex - 1);
+//        String url = new StringBuilder(Api.GANK2)
+//                .append(calendar.get(Calendar.YEAR))
+//                .append("/")
+//                .append(calendar.get(Calendar.MONTH) + 1)
+//                .append("/")
+//                .append(calendar.get(Calendar.DAY_OF_MONTH))
+//                .toString();
+//        Request request = new Request.Builder().url(url).build();
+//        Call call = new OkHttpClient().newCall(request);
+//        try {
+//            Response response = call.execute();
+//            if (response.isSuccessful()) {
+//                String json = response.body().string();
+//                Gson gson = new Gson();
+//                GankVo<JsonObject> data = gson.fromJson(json, new TypeToken<GankVo<JsonObject>>() {
+//                }.getType());
+//                List<SectionEntity<Gank>> result = new ArrayList<>();
+//                for (String key : data.category) {
+//                    result.add(new SectionEntity<Gank>(true, key));
+//                    JsonArray array = data.results.getAsJsonArray(key);
+//                    Iterator iterator = array.iterator();
+//                    while (iterator.hasNext()) {
+//                        JsonElement je = (JsonElement) iterator.next();
+//                        Gank gank = gson.fromJson(je, Gank.class);
+//                        result.add(new SectionEntity<Gank>(gank));
+//                    }
+//                }
+//                return result;
+//            } else {
+//                throw new IOException("Unexpected code " + response);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     @Override
-    protected List<SectionEntity<Gank>> toLoadData(int pageIndex) {
+    protected List<MultiItemEntity> toLoadData(int pageIndex) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2015, 7, 6);
         calendar.add(Calendar.DAY_OF_MONTH, pageIndex - 1);
@@ -105,16 +141,19 @@ public class MainListFragment extends BaseListFragment<SectionEntity<Gank>> {
                 Gson gson = new Gson();
                 GankVo<JsonObject> data = gson.fromJson(json, new TypeToken<GankVo<JsonObject>>() {
                 }.getType());
-                List<SectionEntity<Gank>> result = new ArrayList<>();
+                List<MultiItemEntity> result = new ArrayList<>();
                 for (String key : data.category) {
-                    result.add(new SectionEntity<Gank>(true, key));
+                    LevelCategory category = new LevelCategory(key);
                     JsonArray array = data.results.getAsJsonArray(key);
                     Iterator iterator = array.iterator();
                     while (iterator.hasNext()) {
                         JsonElement je = (JsonElement) iterator.next();
-                        Gank gank = gson.fromJson(je, Gank.class);
-                        result.add(new SectionEntity<Gank>(gank));
+                        LevelDetail detail = gson.fromJson(je, LevelDetail.class);
+                        LevelDesc desc = new LevelDesc(detail.desc);
+                        desc.addSubItem(detail);
+                        category.addSubItem(desc);
                     }
+                    result.add(category);
                 }
                 return result;
             } else {
@@ -125,6 +164,7 @@ public class MainListFragment extends BaseListFragment<SectionEntity<Gank>> {
         }
         return null;
     }
+
 
 //    public static class GankAdapter extends BaseAdapter<Gank.GankData, BaseViewHolder> {
 //
@@ -145,32 +185,155 @@ public class MainListFragment extends BaseListFragment<SectionEntity<Gank>> {
 //        }
 //    }
 
-    public static class GankAdapter extends BaseSectionAdapter<SectionEntity<Gank>, BaseViewHolder> {
+//    public static class GankAdapter extends BaseSectionAdapter<SectionEntity<Gank>, BaseViewHolder> {
+//
+//        public GankAdapter(Context context) {
+//            super(context);
+//        }
+//
+//        @Override
+//        protected void convertHeader(BaseViewHolder holder, SectionEntity<Gank> item) {
+//            holder.setText(R.id.tv_head, item.header);
+//        }
+//
+//        @Override
+//        protected int getSectionHeadLayoutResID() {
+//            return R.layout.layout_header;
+//        }
+//
+//        @Override
+//        protected int getItemLayoutResID(int viewType) {
+//            return R.layout.item_gank;
+//        }
+//
+//        @Override
+//        protected void convert(BaseViewHolder holder, SectionEntity<Gank> item) {
+//            holder.setText(R.id.tv_desc, item.data.desc);
+//            holder.setText(R.id.tv_author, new StringBuilder("作者：").append(item.data.who));
+//            holder.setText(R.id.tv_create_time, new StringBuilder("发布时间：").append(item.data.publishedAt.substring(0, 10)));
+//        }
+//    }
+
+    public static class GankAdapter extends BaseMultiItemAdapter<MultiItemEntity, BaseViewHolder> {
+
+        public static final int TYPE_CATEGORY_LEVEL = 0;
+        public static final int TYPE_DESC_LEVEL = 1;
+        public static final int TYPE_DETAIL_LEVEL = 2;
 
         public GankAdapter(Context context) {
             super(context);
         }
 
         @Override
-        protected void convertHeader(BaseViewHolder holder, SectionEntity<Gank> item) {
-            holder.setText(R.id.tv_head, item.header);
-        }
-
-        @Override
-        protected int getSectionHeadLayoutResID() {
-            return R.layout.layout_header;
-        }
-
-        @Override
         protected int getItemLayoutResID(int viewType) {
-            return R.layout.item_gank;
+            if (TYPE_CATEGORY_LEVEL == viewType) {
+                return R.layout.layout_header;
+            } else if (TYPE_DESC_LEVEL == viewType) {
+                return R.layout.layout_sub;
+            } else if (TYPE_DETAIL_LEVEL == viewType) {
+                return R.layout.item_gank;
+            }
+            return 0;
         }
 
         @Override
-        protected void convert(BaseViewHolder holder, SectionEntity<Gank> item) {
-            holder.setText(R.id.tv_desc, item.data.desc);
-            holder.setText(R.id.tv_author, new StringBuilder("作者：").append(item.data.who));
-            holder.setText(R.id.tv_create_time, new StringBuilder("发布时间：").append(item.data.publishedAt.substring(0, 10)));
+        protected void convert(final BaseViewHolder holder, MultiItemEntity item) {
+            if (TYPE_CATEGORY_LEVEL == holder.getItemViewType()) {
+                final LevelCategory category = (LevelCategory) item;
+                holder.setText(R.id.tv_head, category.title);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int pos = holder.getAdapterPosition();
+                        if (category.isExpanded()) {
+                            collapse(pos);
+                        } else {
+                            expand(pos);
+                        }
+                    }
+                });
+            } else if (TYPE_DESC_LEVEL == holder.getItemViewType()) {
+                final LevelDesc desc = (LevelDesc) item;
+                holder.setText(R.id.tv_subhead, desc.title);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = holder.getAdapterPosition();
+                        if (desc.isExpanded()) {
+                            collapse(pos, false);
+                        } else {
+                            expand(pos, false);
+                        }
+                    }
+                });
+
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int pos = holder.getAdapterPosition();
+                        remove(pos);
+                        return true;
+                    }
+                });
+            } else {
+                final LevelDetail detail = (LevelDetail) item;
+                holder.setText(R.id.tv_desc, detail.desc);
+                holder.setText(R.id.tv_author, new StringBuilder("作者：").append(detail.who));
+                holder.setText(R.id.tv_create_time, new StringBuilder("发布时间：").append(detail.publishedAt.substring(0, 10)));
+            }
+        }
+    }
+
+    public static class LevelCategory extends AbstractExpandableItem<LevelDesc> implements MultiItemEntity {
+        public String title;
+
+        public LevelCategory(String title) {
+            this.title = title;
+        }
+
+        @Override
+        public int getItemType() {
+            return GankAdapter.TYPE_CATEGORY_LEVEL;
+        }
+
+        @Override
+        public int getLevel() {
+            return 0;
+        }
+    }
+
+    public static class LevelDesc extends AbstractExpandableItem<LevelDetail> implements MultiItemEntity {
+        public String title;
+
+        public LevelDesc(String title) {
+            this.title = title;
+        }
+
+        @Override
+        public int getItemType() {
+            return GankAdapter.TYPE_DESC_LEVEL;
+        }
+
+        @Override
+        public int getLevel() {
+            return 1;
+        }
+    }
+
+    public static class LevelDetail implements MultiItemEntity {
+        public String _id;
+        public String createdAt;
+        public String desc;
+        public String publishedAt;
+        public String source;
+        public String type;
+        public String url;
+        public boolean used;
+        public String who;
+
+        @Override
+        public int getItemType() {
+            return GankAdapter.TYPE_DETAIL_LEVEL;
         }
     }
 }

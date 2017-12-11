@@ -87,6 +87,6 @@
             android:layout_centerVertical="true"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:src="@android:drawable/ic_menu_more" />
+            android:src="@android:drawable/arrow_down_float" />
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>

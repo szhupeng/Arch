@@ -2,12 +2,18 @@ package space.zhupeng.fxbase.widget.dialog;
 
 import android.view.View;
 
+import space.zhupeng.fxbase.R;
+import space.zhupeng.fxbase.ui.List;
+
 /**
- * Created by zhupeng on 2017/12/4.
+ * @author zhupeng
+ * @date 2016/12/4
  */
 
-public class ListDialog extends BaseDialogFragment {
-    
+public class ListDialog<T> extends BaseDialogFragment {
+
+    private List<T> mDataList;
+
     @Override
     protected void initView(View view) {
 
@@ -15,6 +21,6 @@ public class ListDialog extends BaseDialogFragment {
 
     @Override
     protected int getLayoutId() {
-        return 0;
+        return R.layout.dialog_list;
     }
 }

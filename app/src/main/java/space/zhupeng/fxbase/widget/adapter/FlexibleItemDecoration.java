@@ -20,6 +20,8 @@ import android.view.View;
 import java.util.Arrays;
 import java.util.List;
 
+import space.zhupeng.fxbase.widget.adapter.manager.FlexibleLayoutManager;
+
 /**
  * This item decorator implements identical drawing technique of {@code DividerItemDecorator}
  * from Android API, and at the same time, it adds several useful functionalities:
