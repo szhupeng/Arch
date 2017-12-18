@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.view.View;
 import android.view.Window;
@@ -24,23 +23,11 @@ public abstract class BaseDialog extends Dialog {
     protected Activity mActivity;
 
     public BaseDialog(@NonNull Context context) {
-        super(context, R.style.BaseDialog);
-
-        mActivity = (Activity) context;
-
-        init();
+        this(context, R.style.BaseDialog);
     }
 
     public BaseDialog(@NonNull Context context, @StyleRes int themeResId) {
         super(context, themeResId);
-
-        mActivity = (Activity) context;
-
-        init();
-    }
-
-    protected BaseDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
 
         mActivity = (Activity) context;
 

@@ -13,5 +13,10 @@
     <dimen name="text_size_12">12sp</dimen>
     <dimen name="text_size_10">10sp</dimen>
 
+    <dimen name="dp15">15dp</dimen>
+    <dimen name="dp12">12dp</dimen>
     <dimen name="dp10">10dp</dimen>
+    <dimen name="dp5">5dp</dimen>
+
+    <dimen name="custom_dialog_width">260dp</dimen>
 </resources>

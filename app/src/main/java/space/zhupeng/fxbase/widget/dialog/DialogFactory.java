@@ -37,8 +37,8 @@ public class DialogFactory {
     }
 
     public static void showSimpleDialog(FragmentManager fm, @LayoutRes int viewId) {
-        SimpleDialog dialog = new SimpleDialog();
-        dialog.show(fm);
+//        SimpleDialog dialog = new SimpleDialog();
+//        dialog.show(fm);
     }
 
     public static void showListDialog(FragmentManager fm, @LayoutRes int viewId) {

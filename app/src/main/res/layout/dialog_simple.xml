@@ -1,6 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="@dimen/custom_dialog_width"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_material_design"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="20dp">
 
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp10"
+        android:text="标题"
+        android:textColor="@color/main_black"
+        android:textSize="@dimen/text_size_20"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp5"
+        android:paddingLeft="@dimen/dp15"
+        android:paddingRight="@dimen/dp15"
+        android:text="这个是弹出提示框的主体信息部分"
+        android:textColor="@color/main_black"
+        android:textSize="@dimen/text_size_16" />
+
+    <TextView
+        android:id="@+id/tv_subtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/dp15"
+        android:paddingRight="@dimen/dp15"
+        android:text="这个可以放小提示文字"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/text_size_12" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="18dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#d4d4d4" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btn_negative"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_size_18" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#d4d4d4" />
+
+        <TextView
+            android:id="@+id/btn_positive"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="@string/confirm"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_18" />
+    </LinearLayout>
 </LinearLayout>

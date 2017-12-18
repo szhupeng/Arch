@@ -39,6 +39,7 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
     RecyclerView rvDataList;
 
     private int mPageIndex = PAGE_START;
+    private boolean isFirstRequest = true;
 
     private BaseAdapter mAdapter;
 
@@ -100,7 +101,7 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
     public void onResume() {
         super.onResume();
 
-        if (getUserVisibleHint()) {
+        if (getUserVisibleHint() && isFirstRequest) {
             requestData();
         }
     }
@@ -139,6 +140,7 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
             return;
         }
 
+        isFirstRequest = false;
         toRefreshListData(false);
     }
 

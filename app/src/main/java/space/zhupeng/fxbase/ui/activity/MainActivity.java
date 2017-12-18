@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import space.zhupeng.fxbase.R;
+import space.zhupeng.fxbase.widget.dialog.SimpleDialog;
 
 public class MainActivity extends BaseToolbarActivity {
 
@@ -24,6 +25,12 @@ public class MainActivity extends BaseToolbarActivity {
         setCenterTitle("干货集中营");
         hideLeft();
         hideRightText();
-        hideRightIcon();
+//        hideRightIcon();
+    }
+
+    @Override
+    protected void onRightIconClick() {
+        SimpleDialog dialog = new SimpleDialog(this);
+        dialog.show();
     }
 }

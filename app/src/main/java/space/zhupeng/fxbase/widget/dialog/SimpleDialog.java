@@ -1,6 +1,7 @@
 package space.zhupeng.fxbase.widget.dialog;
 
-import android.view.View;
+import android.content.Context;
+import android.support.annotation.NonNull;
 
 import space.zhupeng.fxbase.R;
 
@@ -9,15 +10,14 @@ import space.zhupeng.fxbase.R;
  * @date 2016/12/4
  */
 
-public class SimpleDialog extends BaseDialogFragment {
+public class SimpleDialog extends BaseDialog {
 
-    @Override
-    protected void initView(View view) {
-
+    public SimpleDialog(@NonNull Context context) {
+        super(context);
     }
 
     @Override
-    protected int getLayoutId() {
+    protected int getLayoutResID() {
         return R.layout.dialog_simple;
     }
 }

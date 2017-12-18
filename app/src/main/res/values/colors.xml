@@ -6,4 +6,8 @@
 
     <color name="progress">#3F51B5</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#DDDDDD</color>
+
+    <color name="main_black">#333333</color>
 </resources>

@@ -26,7 +26,7 @@ import space.zhupeng.fxbase.R;
 public class ToolbarDelegateImpl implements ToolbarDelegate {
 
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    Toolbar toolbar;
 
     @Nullable
     @BindView(R.id.tv_left)
@@ -70,8 +70,8 @@ public class ToolbarDelegateImpl implements ToolbarDelegate {
 
     @Override
     public void setToolbar(AppCompatActivity activity) {
-        if (mToolbar != null) {
-            activity.setSupportActionBar(mToolbar);
+        if (toolbar != null) {
+            activity.setSupportActionBar(toolbar);
         }
     }
 
@@ -248,7 +248,7 @@ public class ToolbarDelegateImpl implements ToolbarDelegate {
     }
 
     public Toolbar getToolbar() {
-        return mToolbar;
+        return toolbar;
     }
 
     public boolean isLeftClicked(final int id) {
