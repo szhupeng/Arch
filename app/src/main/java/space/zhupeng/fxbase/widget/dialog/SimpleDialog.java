@@ -2,6 +2,7 @@ package space.zhupeng.fxbase.widget.dialog;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.widget.TextView;
 
 import space.zhupeng.fxbase.R;
 
@@ -10,11 +11,11 @@ import space.zhupeng.fxbase.R;
  * @date 2016/12/4
  */
 
-public class SimpleDialog extends BaseDialog {
+public class SimpleDialog extends BaseDialogFragment {
 
-    public SimpleDialog(@NonNull Context context) {
-        super(context);
-    }
+    private TextView tvTitle;
+    private TextView tvMessage;
+
 
     @Override
     protected int getLayoutResID() {

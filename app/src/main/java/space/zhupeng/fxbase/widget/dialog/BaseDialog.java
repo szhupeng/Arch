@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -36,11 +37,13 @@ public abstract class BaseDialog extends Dialog {
 
     protected void init() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         if (getLayoutResID() > 0) {
             setContentView(getLayoutResID());
         }
 
-        setWindowAttributes(1f, -1f, -1f);
+        final int width = getContext().getResources().getDimensionPixelSize(R.dimen.custom_dialog_width);
+        setWindowAttributes(width);
         setCanceledOnTouchOutside(false);
 
         initView();
@@ -54,24 +57,16 @@ public abstract class BaseDialog extends Dialog {
         }
     }
 
-    protected void setWindowAttributes(float width) {
-        setWindowAttributes(1f, width, -1f);
+    protected void setWindowAttributes(int width) {
+        setWindowAttributes(1f, width, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    protected void setWindowAttributes(float alpha, float width, float height) {
+    protected void setWindowAttributes(float alpha, int width, int height) {
         Window window = getWindow();
         WindowManager.LayoutParams attributes = window.getAttributes();
         attributes.alpha = alpha;
-        if (width > 0) {
-            attributes.width = dp2px(width);
-        } else {
-            attributes.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        }
-        if (height > 0) {
-            attributes.height = dp2px(height);
-        } else {
-            attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        }
+        attributes.width = width;
+        attributes.height = height;
         window.setAttributes(attributes);
     }
 

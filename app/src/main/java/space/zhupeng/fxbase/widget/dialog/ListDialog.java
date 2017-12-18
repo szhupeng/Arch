@@ -20,7 +20,7 @@ public class ListDialog<T> extends BaseDialogFragment {
     }
 
     @Override
-    protected int getLayoutId() {
+    protected int getLayoutResID() {
         return R.layout.dialog_list;
     }
 }

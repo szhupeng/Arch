@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/custom_dialog_width"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_material_design"
     android:gravity="center_horizontal"
@@ -12,7 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/dp10"
-        android:text="标题"
         android:textColor="@color/main_black"
         android:textSize="@dimen/text_size_20"
         android:textStyle="bold" />
@@ -24,7 +23,6 @@
         android:paddingBottom="@dimen/dp5"
         android:paddingLeft="@dimen/dp15"
         android:paddingRight="@dimen/dp15"
-        android:text="这个是弹出提示框的主体信息部分"
         android:textColor="@color/main_black"
         android:textSize="@dimen/text_size_16" />
 
@@ -34,7 +32,6 @@
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/dp15"
         android:paddingRight="@dimen/dp15"
-        android:text="这个可以放小提示文字"
         android:textColor="@color/gray"
         android:textSize="@dimen/text_size_12" />
 

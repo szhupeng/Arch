@@ -3,9 +3,9 @@ package space.zhupeng.fxbase.widget.dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.annotation.StyleRes;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -28,10 +28,6 @@ public class MaterialProgressDialog extends BaseDialog {
         super(context, R.style.MaterialProgressDialog);
     }
 
-    public MaterialProgressDialog(@NonNull Context context, @StyleRes int themeResId) {
-        super(context, themeResId);
-    }
-
     @Override
     protected void init() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -39,7 +35,7 @@ public class MaterialProgressDialog extends BaseDialog {
             setContentView(getLayoutResID());
         }
 
-        setWindowAttributes(ALPHA, -1f, -1f);
+        setWindowAttributes(ALPHA, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setCanceledOnTouchOutside(false);
         setCancelable(false);
 
@@ -49,25 +45,24 @@ public class MaterialProgressDialog extends BaseDialog {
     public void setMessage(CharSequence message) {
         if (TextUtils.isEmpty(message)) {
             tvMessage.setVisibility(View.GONE);
-            setWindowAttributes(ALPHA, -1f, -1f);
+            setWindowAttributes(ALPHA, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         } else {
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText(message);
-            setWindowAttributes(ALPHA, 260f, -1f);
+            setWindowAttributes(ALPHA, dp2px(260f), ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 
     public void setMessage(@StringRes int resId) {
         if (0 == resId) {
             tvMessage.setVisibility(View.GONE);
-            setWindowAttributes(ALPHA, -1f, -1f);
+            setWindowAttributes(ALPHA, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         } else {
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText(resId);
-            setWindowAttributes(ALPHA, 260f, -1f);
+            setWindowAttributes(ALPHA, dp2px(260f), ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
-
 
     @Override
     protected void initView() {

@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import space.zhupeng.fxbase.R;
-import space.zhupeng.fxbase.widget.dialog.SimpleDialog;
+import space.zhupeng.fxbase.widget.dialog.BottomSheet;
 
 public class MainActivity extends BaseToolbarActivity {
 
@@ -30,7 +30,7 @@ public class MainActivity extends BaseToolbarActivity {
 
     @Override
     protected void onRightIconClick() {
-        SimpleDialog dialog = new SimpleDialog(this);
-        dialog.show();
+        BottomSheet dialog = BottomSheet.newInstance(R.layout.dialog_simple);
+        dialog.show(getSupportFragmentManager(),"");
     }
 }

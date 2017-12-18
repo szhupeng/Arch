@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 
@@ -15,13 +16,13 @@ import space.zhupeng.fxbase.R;
  * @date 2017/12/7
  */
 
-public class BottomSheetDialog extends BottomSheetDialogFragment {
+public class BottomSheet extends BottomSheetDialogFragment {
 
     public static final String ARG_LAYOUT = "layout";
 
-    private android.support.design.widget.BottomSheetDialog mBottomSheetDialog;
+    private BottomSheetDialog mBottomSheetDialog;
 
-    public static BottomSheetDialog newInstance(@LayoutRes int layoutResID) {
+    public static BottomSheet newInstance(@LayoutRes int layoutResID) {
         return newInstance(layoutResID, null);
     }
 
@@ -32,8 +33,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
      * @param fragment    target fragment
      * @return a new instance of BottomSheetSectionDialog
      */
-    public static BottomSheetDialog newInstance(@LayoutRes int layoutResId, @Nullable Fragment fragment) {
-        BottomSheetDialog bottomSheetFragment = new BottomSheetDialog();
+    public static BottomSheet newInstance(@LayoutRes int layoutResId, @Nullable Fragment fragment) {
+        BottomSheet bottomSheetFragment = new BottomSheet();
         Bundle args = new Bundle();
         args.putInt(ARG_LAYOUT, layoutResId);
         bottomSheetFragment.setArguments(args);
@@ -44,7 +45,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mBottomSheetDialog = new android.support.design.widget.BottomSheetDialog(getActivity(), R.style.AppTheme_BottomSheetDialog);
+        mBottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.AppTheme_BottomSheet);
         mBottomSheetDialog.setContentView(getArguments().getInt(ARG_LAYOUT));
 
         initViews();

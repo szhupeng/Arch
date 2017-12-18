@@ -30,6 +30,11 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="MaterialProgressDialog" parent="@android:style/Theme.Dialog">
@@ -41,7 +46,7 @@
         <item name="android:windowBackground">@drawable/bg_material_design</item>
     </style>
 
-    <style name="AppTheme.BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="AppTheme.BottomSheet" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="colorControlActivated">@color/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
