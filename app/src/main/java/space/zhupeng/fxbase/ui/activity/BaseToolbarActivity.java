@@ -167,8 +167,8 @@ public abstract class BaseToolbarActivity<M, V extends BaseView, P extends BaseP
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (getContextMenuResID() != 0) {
-            getMenuInflater().inflate(getContextMenuResID(), menu);
+        if (getContextMenuResId() != 0) {
+            getMenuInflater().inflate(getContextMenuResId(), menu);
             return true;
         } else {
             return super.onCreateOptionsMenu(menu);
@@ -184,7 +184,7 @@ public abstract class BaseToolbarActivity<M, V extends BaseView, P extends BaseP
      */
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
-        if (getContextMenuResID() != 0 && menu != null) {
+        if (getContextMenuResId() != 0 && menu != null) {
             if (menu.getClass().getSimpleName().equalsIgnoreCase("MenuBuilder")) {
                 try {
                     Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
@@ -197,7 +197,7 @@ public abstract class BaseToolbarActivity<M, V extends BaseView, P extends BaseP
         return super.onMenuOpened(featureId, menu);
     }
 
-    protected int getContextMenuResID() {
+    protected int getContextMenuResId() {
         return 0;
     }
 

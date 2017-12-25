@@ -44,7 +44,6 @@ public class BaseWebActivity extends BaseToolbarActivity {
     @BindView(R.id.rl_root)
     protected RelativeLayout rlRoot;
 
-    @BindView(R.id.web_view)
     protected WebView mWebView;
 
     @Nullable
@@ -75,7 +74,7 @@ public class BaseWebActivity extends BaseToolbarActivity {
     }
 
     @Override
-    protected int getLayoutResID() {
+    protected int getLayoutResId() {
         return R.layout.activity_base_web;
     }
 
@@ -88,7 +87,13 @@ public class BaseWebActivity extends BaseToolbarActivity {
             return;
         }
 
-        final String url = intent.getStringExtra(EXTRA_URL);
+        mWebView = new WebView(getApplicationContext());
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+        lp.addRule(RelativeLayout.BELOW, R.id.toolbar);
+        rlRoot.addView(mWebView, rlRoot.indexOfChild(pbLoading), lp);
+
+        mUrl = intent.getStringExtra(EXTRA_URL);
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onReceivedTitle(WebView view, String title) {
@@ -106,7 +111,7 @@ public class BaseWebActivity extends BaseToolbarActivity {
             }
         });
 
-        loadHtml(url);
+        loadHtml(mUrl);
     }
 
     private void loadHtml(final String url) {

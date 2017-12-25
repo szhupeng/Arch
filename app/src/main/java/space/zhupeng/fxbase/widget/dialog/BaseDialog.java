@@ -1,11 +1,12 @@
 package space.zhupeng.fxbase.widget.dialog;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
+import android.support.v7.app.AppCompatDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -19,7 +20,7 @@ import space.zhupeng.fxbase.utils.DensityUtils;
  * @date 2017/3/27
  */
 
-public abstract class BaseDialog extends Dialog {
+public abstract class BaseDialog extends AppCompatDialog {
 
     protected Activity mActivity;
 
@@ -36,10 +37,10 @@ public abstract class BaseDialog extends Dialog {
     }
 
     protected void init() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        if (getLayoutResID() > 0) {
-            setContentView(getLayoutResID());
+        if (getLayoutResId() > 0) {
+            setContentView(getLayoutResId());
         }
 
         final int width = getContext().getResources().getDimensionPixelSize(R.dimen.custom_dialog_width);
@@ -77,10 +78,10 @@ public abstract class BaseDialog extends Dialog {
     protected void initView() {
     }
 
-    protected <T extends View> T findView(int id) {
+    protected <T extends View> T findView(@IdRes int id) {
         return (T) findViewById(id);
     }
 
     @LayoutRes
-    protected abstract int getLayoutResID();
+    protected abstract int getLayoutResId();
 }

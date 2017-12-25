@@ -31,8 +31,8 @@ public class MaterialProgressDialog extends BaseDialog {
     @Override
     protected void init() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        if (getLayoutResID() > 0) {
-            setContentView(getLayoutResID());
+        if (getLayoutResId() > 0) {
+            setContentView(getLayoutResId());
         }
 
         setWindowAttributes(ALPHA, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -70,7 +70,7 @@ public class MaterialProgressDialog extends BaseDialog {
     }
 
     @Override
-    protected int getLayoutResID() {
+    protected int getLayoutResId() {
         return R.layout.dialog_material_progress;
     }
 }

@@ -6,11 +6,13 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,12 +29,14 @@ import space.zhupeng.fxbase.R;
  * @date 2016/12/11
  */
 
-public abstract class BaseDialogFragment extends DialogFragment {
+public abstract class BaseDialogFragment extends AppCompatDialogFragment {
 
     protected Bundle mArgs;
     protected Activity mActivity;
     private int width;
     private int gravity = Gravity.CENTER;
+
+    private View mRootView;
 
     protected static <T extends BaseDialogFragment> T newInstance(Class<T> cls, Bundle args) {
         T fragment = null;
@@ -62,12 +66,13 @@ public abstract class BaseDialogFragment extends DialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        View root = inflater.inflate(getLayoutResID(), null);
+        mRootView = inflater.inflate(getLayoutResId(), container, false);
         initialize();
-        initView(root);
-        return root;
+        initView(savedInstanceState);
+        bindEvent();
+        return mRootView;
     }
 
     private void initialize() {
@@ -115,9 +120,15 @@ public abstract class BaseDialogFragment extends DialogFragment {
     /**
      * 初始化对话框视图
      *
-     * @param view
+     * @param savedInstanceState
      */
-    protected void initView(View view) {
+    protected void initView(@Nullable Bundle savedInstanceState) {
+    }
+
+    /**
+     * 绑定事件监听
+     */
+    protected void bindEvent() {
     }
 
     /**
@@ -127,7 +138,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
     }
 
     @LayoutRes
-    protected abstract int getLayoutResID();
+    protected abstract int getLayoutResId();
 
     @StyleRes
     protected int getAnimStyles() {
@@ -140,6 +151,12 @@ public abstract class BaseDialogFragment extends DialogFragment {
             //防止窗体句柄泄漏
             super.dismiss();
         }
+    }
+
+    protected <T extends View> T findView(@IdRes int id) {
+        if (null == mRootView) return null;
+
+        return (T) mRootView.findViewById(id);
     }
 
     public void show(FragmentManager manager) {

@@ -42,6 +42,7 @@ import space.zhupeng.fxbase.widget.adapter.loadmore.SimpleLoadMoreView;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
+@SuppressWarnings("all")
 public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends RecyclerView.Adapter<VH> {
 
     public static final int TYPE_HEADER_VIEW = 0x00000111;
@@ -371,7 +372,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
                 holder = onCreateBaseViewHolder(mFooterLayout);
                 break;
             default:
-                View convertView = LayoutInflater.from(context).inflate(getItemLayoutResID(viewType), parent, false);
+                View convertView = LayoutInflater.from(context).inflate(getItemLayoutResId(viewType), parent, false);
                 holder = create(viewType, convertView, parent);
                 bindClickListener(holder);
         }
@@ -1143,7 +1144,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return mOnChildLongClickListener;
     }
 
-    protected abstract int getItemLayoutResID(final int viewType);
+    protected abstract int getItemLayoutResId(final int viewType);
 
     protected abstract void convert(final VH holder, final T item);
 

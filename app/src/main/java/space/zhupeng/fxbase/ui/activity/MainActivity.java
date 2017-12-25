@@ -2,6 +2,7 @@ package space.zhupeng.fxbase.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.TextView;
 
 import space.zhupeng.fxbase.R;
 import space.zhupeng.fxbase.widget.dialog.BottomSheet;
@@ -9,7 +10,7 @@ import space.zhupeng.fxbase.widget.dialog.BottomSheet;
 public class MainActivity extends BaseToolbarActivity {
 
     @Override
-    protected int getLayoutResID() {
+    protected int getLayoutResId() {
         return R.layout.activity_main;
     }
 
@@ -25,12 +26,30 @@ public class MainActivity extends BaseToolbarActivity {
         setCenterTitle("干货集中营");
         hideLeft();
         hideRightText();
-//        hideRightIcon();
+//      hideRightIcon();
     }
 
     @Override
     protected void onRightIconClick() {
-        BottomSheet dialog = BottomSheet.newInstance(R.layout.dialog_simple);
-        dialog.show(getSupportFragmentManager(),"");
+//        BottomSheet dialog = new SimpleDialog();
+//        dialog.show(getSupportFragmentManager());
+        BaseWebActivity.toHere(getActivity(), "http://www.baidu.com/", null, 0);
+    }
+
+    public static class SimpleDialog extends BottomSheet {
+        @Override
+        protected int getLayoutResId() {
+            return R.layout.dialog_simple;
+        }
+
+        @Override
+        protected void initViews(@Nullable Bundle savedInstanceState) {
+            super.initViews(savedInstanceState);
+
+            TextView tvTitle = findView(R.id.tv_title);
+            tvTitle.setText("底部标题");
+            TextView tvMessage = findView(R.id.tv_message);
+            tvMessage.setText("这是信息布冯");
+        }
     }
 }

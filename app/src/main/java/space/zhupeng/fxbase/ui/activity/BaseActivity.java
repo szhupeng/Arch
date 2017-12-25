@@ -58,8 +58,8 @@ public abstract class BaseActivity<M, V extends BaseView, P extends BasePresente
 
         tintStatusBar();
 
-        if (getLayoutResID() > 0) {
-            setContentView(getLayoutResID());
+        if (getLayoutResId() > 0) {
+            setContentView(getLayoutResId());
         }
 
         ButterKnife.bind(this);
@@ -272,5 +272,5 @@ public abstract class BaseActivity<M, V extends BaseView, P extends BasePresente
     }
 
     @LayoutRes
-    protected abstract int getLayoutResID();
+    protected abstract int getLayoutResId();
 }

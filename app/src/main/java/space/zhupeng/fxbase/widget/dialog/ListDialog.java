@@ -1,6 +1,7 @@
 package space.zhupeng.fxbase.widget.dialog;
 
-import android.view.View;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import space.zhupeng.fxbase.R;
 import space.zhupeng.fxbase.ui.List;
@@ -15,12 +16,12 @@ public class ListDialog<T> extends BaseDialogFragment {
     private List<T> mDataList;
 
     @Override
-    protected void initView(View view) {
-
+    protected void initView(@Nullable Bundle savedInstanceState) {
+        super.initView(savedInstanceState);
     }
 
     @Override
-    protected int getLayoutResID() {
+    protected int getLayoutResId() {
         return R.layout.dialog_list;
     }
 }

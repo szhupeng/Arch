@@ -44,7 +44,7 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
     private BaseAdapter mAdapter;
 
     @Override
-    protected int getLayoutResID() {
+    protected int getLayoutResId() {
         return R.layout.fragment_list;
     }
 

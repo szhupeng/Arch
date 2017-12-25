@@ -53,7 +53,7 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(getLayoutResID(), container, false);
+        View root = inflater.inflate(getLayoutResId(), container, false);
         unbinder = ButterKnife.bind(this, root);
         return root;
     }
@@ -232,5 +232,5 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
     }
 
     @LayoutRes
-    protected abstract int getLayoutResID();
+    protected abstract int getLayoutResId();
 }

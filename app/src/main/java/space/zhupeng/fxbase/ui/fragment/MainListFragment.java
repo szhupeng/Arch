@@ -225,7 +225,7 @@ public class MainListFragment extends BaseListFragment<MultiItemEntity> {
         }
 
         @Override
-        protected int getItemLayoutResID(int viewType) {
+        protected int getItemLayoutResId(int viewType) {
             if (TYPE_CATEGORY_LEVEL == viewType) {
                 return R.layout.layout_header;
             } else if (TYPE_DESC_LEVEL == viewType) {
