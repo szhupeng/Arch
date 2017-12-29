@@ -33,7 +33,7 @@ public class MainActivity extends BaseToolbarActivity {
     protected void onRightIconClick() {
 //        BottomSheet dialog = new SimpleDialog();
 //        dialog.show(getSupportFragmentManager());
-        BaseWebActivity.toHere(getActivity(), "http://www.baidu.com/", null, 0);
+//        BaseWebActivity.toHere(getActivity(), "http://www.baidu.com/", null, 0);
     }
 
     public static class SimpleDialog extends BottomSheet {

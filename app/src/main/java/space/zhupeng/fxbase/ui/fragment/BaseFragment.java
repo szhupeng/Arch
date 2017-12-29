@@ -18,6 +18,7 @@ import java.util.concurrent.Executor;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import space.zhupeng.fxbase.mvp.model.BaseModel;
 import space.zhupeng.fxbase.mvp.presenter.BasePresenter;
 import space.zhupeng.fxbase.mvp.presenter.PresenterFactory;
 import space.zhupeng.fxbase.mvp.presenter.PresenterLoader;
@@ -33,7 +34,7 @@ import space.zhupeng.fxbase.widget.dialog.DialogFactory;
  * @date 2017/1/14
  */
 
-public abstract class BaseFragment<M, V extends BaseView, P extends BasePresenter<M, V>> extends XFragment implements BaseView, LoaderManager.LoaderCallbacks<P> {
+public abstract class BaseFragment<M extends BaseModel, V extends BaseView, P extends BasePresenter<M, V>> extends XFragment implements BaseView, LoaderManager.LoaderCallbacks<P> {
 
     private static final int LOADER_ID = 200;
 
@@ -93,7 +94,11 @@ public abstract class BaseFragment<M, V extends BaseView, P extends BasePresente
         if (mPresenter != null) {
             mPresenter.detachView();
         }
-        unbinder.unbind();
+
+        if (unbinder != null && unbinder != Unbinder.EMPTY) {
+            unbinder.unbind();
+            unbinder = null;
+        }
     }
 
     public void showToast(@NonNull final CharSequence text) {

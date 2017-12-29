@@ -12,8 +12,6 @@ import android.view.View;
 
 public interface ToolbarDelegate {
 
-    void setToolbar(AppCompatActivity activity);
-
     void bindClickEvent(View.OnClickListener listener);
 
     void setLeft(AppCompatActivity activity, @DrawableRes int resId);

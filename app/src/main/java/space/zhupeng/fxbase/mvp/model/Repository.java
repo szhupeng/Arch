@@ -10,6 +10,10 @@ import java.util.List;
 
 public class Repository<T> {
 
+    public interface RepositoryObserver {
+        void onRepositoryChanged();
+    }
+
     private final List<RepositoryObserver> mObservers = new ArrayList<>(1);
 
     protected T mCachedData;

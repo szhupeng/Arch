@@ -3,13 +3,17 @@ package space.zhupeng.fxbase.utils;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * 通用工具方法
@@ -22,6 +26,26 @@ public final class Utils {
 
     private Utils() {
         throw new UnsupportedOperationException("this method can't be called");
+    }
+
+    /**
+     * 判断Activity是否被销毁
+     *
+     * @param activity
+     * @return
+     */
+    public static boolean isActivityDestroyed(final Activity activity) {
+        if (null == activity) return true;
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            return activity.isDestroyed();
+        }
+
+        if (activity instanceof AppCompatActivity) {
+            return ((AppCompatActivity) activity).getSupportFragmentManager().isDestroyed();
+        }
+
+        return activity.isFinishing();
     }
 
     /**
@@ -147,7 +171,7 @@ public final class Utils {
      * @param defValue
      * @return
      */
-    private String getAppMetaData(Context context, String key, String defValue) {
+    private static String getAppMetaData(Context context, String key, String defValue) {
         Bundle bundle = getAppMetaDataBundle(context.getPackageManager(), context.getPackageName());
         if (bundle != null && bundle.containsKey(key)) {
             return bundle.getString(key);
@@ -162,7 +186,7 @@ public final class Utils {
      * @param packageName
      * @return
      */
-    private Bundle getAppMetaDataBundle(PackageManager packageManager, String packageName) {
+    private static Bundle getAppMetaDataBundle(PackageManager packageManager, String packageName) {
         Bundle bundle = null;
         try {
             ApplicationInfo ai = packageManager.getApplicationInfo(packageName,
@@ -172,5 +196,38 @@ public final class Utils {
             e.printStackTrace();
         }
         return bundle;
+    }
+
+    /**
+     * 调用系统相机拍照
+     *
+     * @param activity    当前activity
+     * @param imageUri    拍照后照片存储路径
+     * @param requestCode 请求码
+     */
+    public static void takePicture(Activity activity, Uri imageUri, int requestCode) {
+        //调用系统相机
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
+        }
+        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        //将拍照结果保存至photo_file的Uri中，不保留在相册中
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        if (activity != null) {
+            activity.startActivityForResult(intent, requestCode);
+        }
+    }
+
+    /**
+     * 打开系统相册
+     *
+     * @param activity    当前activity
+     * @param requestCode 请求码
+     */
+    public static void openAlbum(Activity activity, int requestCode) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        activity.startActivityForResult(intent, requestCode);
     }
 }

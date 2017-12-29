@@ -5,6 +5,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +26,7 @@ import space.zhupeng.fxbase.R;
 
 public class ToolbarDelegateImpl implements ToolbarDelegate {
 
+    @Nullable
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -54,12 +56,18 @@ public class ToolbarDelegateImpl implements ToolbarDelegate {
 
     private Unbinder unbinder;
 
-    public ToolbarDelegateImpl(AppCompatActivity activity) {
+    public ToolbarDelegateImpl(AppCompatActivity activity, Toolbar toolbar) {
         unbinder = ButterKnife.bind(this, activity);
+
+        setToolbar(activity, toolbar);
     }
 
-    public ToolbarDelegateImpl(@NonNull Object target, @NonNull View source) {
+    public ToolbarDelegateImpl(@NonNull Object target, @NonNull View source, Toolbar toolbar) {
         unbinder = ButterKnife.bind(target, source);
+
+        if (target instanceof Fragment) {
+            setToolbar((AppCompatActivity) ((Fragment) target).getActivity(), toolbar);
+        }
     }
 
     public void unbind() {
@@ -68,8 +76,7 @@ public class ToolbarDelegateImpl implements ToolbarDelegate {
         }
     }
 
-    @Override
-    public void setToolbar(AppCompatActivity activity) {
+    private void setToolbar(AppCompatActivity activity, Toolbar toolbar) {
         if (toolbar != null) {
             activity.setSupportActionBar(toolbar);
         }

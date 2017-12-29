@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import butterknife.ButterKnife;
 import space.zhupeng.fxbase.R;
 import space.zhupeng.fxbase.manager.StatusBarTintManager;
+import space.zhupeng.fxbase.mvp.model.BaseModel;
 import space.zhupeng.fxbase.mvp.presenter.BasePresenter;
 import space.zhupeng.fxbase.mvp.presenter.PresenterFactory;
 import space.zhupeng.fxbase.mvp.presenter.PresenterLoader;
@@ -38,7 +39,7 @@ import space.zhupeng.fxbase.widget.dialog.DialogFactory;
  * @date 2017/1/14
  */
 @SuppressWarnings("deprecation")
-public abstract class BaseActivity<M, V extends BaseView, P extends BasePresenter<M, V>> extends XActivity implements BaseView, LoaderManager.LoaderCallbacks<P> {
+public abstract class BaseActivity<M extends BaseModel, V extends BaseView, P extends BasePresenter<M, V>> extends XActivity implements BaseView, LoaderManager.LoaderCallbacks<P> {
 
     private static final int LOADER_ID = 100;
 

@@ -9,7 +9,7 @@ import android.support.v4.content.AsyncTaskLoader;
  * @date 2017/9/10
  */
 
-public abstract class MvpLoader<T> extends AsyncTaskLoader<T> implements RepositoryObserver {
+public abstract class MvpLoader<T> extends AsyncTaskLoader<T> implements Repository.RepositoryObserver {
 
     private Repository mRepository;
 

@@ -1,5 +1,6 @@
 package space.zhupeng.fxbase.ui.activity;
 
+import space.zhupeng.fxbase.mvp.model.BaseModel;
 import space.zhupeng.fxbase.mvp.presenter.BasePresenter;
 import space.zhupeng.fxbase.mvp.view.BaseView;
 
@@ -10,6 +11,6 @@ import space.zhupeng.fxbase.mvp.view.BaseView;
  * @date 2017/1/14
  */
 
-public abstract class BaseTabActivity<M, V extends BaseView, P extends BasePresenter<M, V>> extends BaseToolbarActivity<M, V, P> {
+public abstract class BaseTabActivity<M extends BaseModel, V extends BaseView, P extends BasePresenter<M, V>> extends BaseToolbarActivity<M, V, P> {
 
 }
