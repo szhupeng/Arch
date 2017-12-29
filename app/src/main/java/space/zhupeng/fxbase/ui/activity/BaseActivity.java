@@ -1,6 +1,7 @@
 package space.zhupeng.fxbase.ui.activity;
 
 import android.annotation.TargetApi;
+import android.arch.lifecycle.LifecycleObserver;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -53,6 +54,7 @@ public abstract class BaseActivity<M extends BaseModel, V extends BaseView, P ex
         if (factory != null) {
             LayoutInflaterCompat.setFactory(getLayoutInflater(), factory);
         }
+
         super.onCreate(savedInstanceState);
 
         doBeforeSetView();

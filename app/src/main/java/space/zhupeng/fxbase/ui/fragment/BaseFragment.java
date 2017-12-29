@@ -1,6 +1,7 @@
 package space.zhupeng.fxbase.ui.fragment;
 
 import android.app.Activity;
+import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;

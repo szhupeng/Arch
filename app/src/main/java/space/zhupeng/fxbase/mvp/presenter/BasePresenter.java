@@ -32,7 +32,6 @@ public class BasePresenter<M extends BaseModel, V extends BaseView> implements P
     public void attachView(V view) {
         this.mView = view;
 
-        //将 LifecycleObserver 注册给 LifecycleOwner 后 @OnLifecycleEvent 才可以正常使用
         if (mView != null && mView instanceof LifecycleOwner) {
             ((LifecycleOwner) mView).getLifecycle().addObserver(this);
             if (mModel != null && mModel instanceof LifecycleObserver) {
