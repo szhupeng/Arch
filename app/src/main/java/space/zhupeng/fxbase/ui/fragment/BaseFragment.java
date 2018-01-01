@@ -1,9 +1,9 @@
 package space.zhupeng.fxbase.ui.fragment;
 
 import android.app.Activity;
-import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,7 +37,7 @@ import space.zhupeng.fxbase.widget.dialog.DialogFactory;
 
 public abstract class BaseFragment<M extends BaseModel, V extends BaseView, P extends BasePresenter<M, V>> extends XFragment implements BaseView, LoaderManager.LoaderCallbacks<P> {
 
-    private static final int LOADER_ID = 200;
+    private static final int ID_PRESENTER_LOADER = 200;
 
     protected P mPresenter;
     private BaseAsyncTask mTask;
@@ -71,9 +71,14 @@ public abstract class BaseFragment<M extends BaseModel, V extends BaseView, P ex
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+        initLoaders(getLoaderManager());
 
         fetchData();
+    }
+
+    @CallSuper
+    protected void initLoaders(LoaderManager manager) {
+        manager.initLoader(ID_PRESENTER_LOADER, null, this);
     }
 
     @Override
@@ -147,8 +152,9 @@ public abstract class BaseFragment<M extends BaseModel, V extends BaseView, P ex
         DialogFactory.dismissDialog();
     }
 
+    @CallSuper
     @Override
-    public final Loader<P> onCreateLoader(int id, Bundle args) {
+    public Loader<P> onCreateLoader(int id, Bundle args) {
         return new PresenterLoader(getActivity(), new PresenterFactory<P>() {
             @Override
             public P create() {
@@ -161,14 +167,20 @@ public abstract class BaseFragment<M extends BaseModel, V extends BaseView, P ex
         return null;
     }
 
+    @CallSuper
     @Override
     public final void onLoadFinished(Loader<P> loader, P data) {
-        mPresenter = data;
+        if (ID_PRESENTER_LOADER == loader.getId()) {
+            mPresenter = data;
+        }
     }
 
+    @CallSuper
     @Override
     public final void onLoaderReset(Loader<P> loader) {
-        mPresenter = null;
+        if (ID_PRESENTER_LOADER == loader.getId()) {
+            mPresenter = null;
+        }
     }
 
     @Override

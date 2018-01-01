@@ -3,6 +3,8 @@ package space.zhupeng.fxbase.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +31,8 @@ import space.zhupeng.fxbase.widget.ptr.header.PtrHeader;
  */
 public abstract class BaseListFragment<T> extends BaseStateFragment implements BaseAdapter.OnItemClickListener {
 
+    private static final int ID_DATASET_LOADER = 300;
+
     private static final int PAGE_START = 1;
     private static final int PAGE_SIZE = 15;
 
@@ -46,6 +50,13 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
     @Override
     protected int getLayoutResId() {
         return R.layout.fragment_list;
+    }
+
+    @Override
+    protected void initLoaders(LoaderManager manager) {
+        super.initLoaders(manager);
+
+        manager.initLoader(ID_DATASET_LOADER, null, this);
     }
 
     @Override
@@ -142,6 +153,14 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
 
         isFirstRequest = false;
         toRefreshListData(false);
+    }
+
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
+        if (ID_DATASET_LOADER == id) {
+
+        }
+        return super.onCreateLoader(id, args);
     }
 
     /**

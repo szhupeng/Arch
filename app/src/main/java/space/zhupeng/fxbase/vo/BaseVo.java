@@ -1,12 +1,19 @@
 package space.zhupeng.fxbase.vo;
 
-import java.io.Serializable;
+import android.os.Parcelable;
 
 /**
  * @author zhupeng
  * @date 2017/8/19
  */
 
-public interface BaseVo extends Serializable {
-    public static final long serialVersionUID = -7060210544600464481L;
+public abstract class BaseVo implements Parcelable {
+
+    public BaseVo() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 }
