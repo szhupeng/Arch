@@ -1,8 +1,6 @@
 package space.zhupeng.fxbase.manager;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
