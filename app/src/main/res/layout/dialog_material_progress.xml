@@ -8,7 +8,7 @@
     android:orientation="horizontal"
     android:padding="28dp">
 
-    <space.zhupeng.fxbase.widget.MaterialProgressBar
+    <space.zhupeng.arch.widget.MaterialProgressBar
         android:layout_width="35dp"
         android:layout_height="35dp"
         app:barColor="@color/colorPrimary"
