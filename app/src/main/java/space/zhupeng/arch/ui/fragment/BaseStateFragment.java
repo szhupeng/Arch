@@ -5,7 +5,7 @@ import android.view.View;
 
 import butterknife.BindView;
 import space.zhupeng.arch.R;
-import space.zhupeng.arch.mvp.model.BaseModel;
+import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.view.BaseView;
 import space.zhupeng.arch.widget.MultiStateView;
@@ -21,7 +21,7 @@ import space.zhupeng.arch.widget.MultiStateView;
  * @date 2017/1/14
  */
 
-public abstract class BaseStateFragment<M extends BaseModel, V extends BaseView, P extends BasePresenter<M, V>> extends BaseToolbarFragment<M, V, P> {
+public abstract class BaseStateFragment<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends BaseToolbarFragment<M, V, P> {
 
     @Nullable
     @BindView(R.id.multi_state_view)

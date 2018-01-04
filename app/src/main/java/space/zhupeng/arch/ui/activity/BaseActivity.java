@@ -1,7 +1,6 @@
 package space.zhupeng.arch.ui.activity;
 
 import android.annotation.TargetApi;
-import android.arch.lifecycle.LifecycleObserver;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +9,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.Loader;
@@ -23,7 +23,7 @@ import android.view.WindowManager;
 import butterknife.ButterKnife;
 import space.zhupeng.arch.R;
 import space.zhupeng.arch.manager.StatusBarTintManager;
-import space.zhupeng.arch.mvp.model.BaseModel;
+import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.presenter.PresenterFactory;
 import space.zhupeng.arch.mvp.presenter.PresenterLoader;
@@ -40,9 +40,9 @@ import space.zhupeng.arch.widget.dialog.DialogFactory;
  * @date 2017/1/14
  */
 @SuppressWarnings("deprecation")
-public abstract class BaseActivity<M extends BaseModel, V extends BaseView, P extends BasePresenter<M, V>> extends XActivity implements BaseView, LoaderManager.LoaderCallbacks<P> {
+public abstract class BaseActivity<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends XActivity implements BaseView, LoaderManager.LoaderCallbacks<P> {
 
-    private static final int LOADER_ID = 100;
+    private static final int ID_PRESENTER_LOADER = 100;
 
     protected final Handler mHandler = new Handler(Looper.getMainLooper());
 
@@ -67,7 +67,7 @@ public abstract class BaseActivity<M extends BaseModel, V extends BaseView, P ex
 
         ButterKnife.bind(this);
 
-        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(ID_PRESENTER_LOADER, null, this);
 
         initView(savedInstanceState);
 
@@ -160,6 +160,16 @@ public abstract class BaseActivity<M extends BaseModel, V extends BaseView, P ex
         }
     }
 
+    public void showSnackbar(final String message) {
+        final View view = getWindow().getDecorView().findViewById(android.R.id.content);
+        runOnUiThreadSafely(new Runnable() {
+            @Override
+            public void run() {
+                Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     @Override
     public void showToast(@NonNull final CharSequence text) {
         if (TextUtils.isEmpty(text)) return;
@@ -218,12 +228,16 @@ public abstract class BaseActivity<M extends BaseModel, V extends BaseView, P ex
 
     @Override
     public final void onLoadFinished(Loader<P> loader, P data) {
-        mPresenter = data;
+        if (ID_PRESENTER_LOADER == loader.getId()) {
+            mPresenter = data;
+        }
     }
 
     @Override
     public final void onLoaderReset(Loader<P> loader) {
-        mPresenter = null;
+        if (ID_PRESENTER_LOADER == loader.getId()) {
+            mPresenter = null;
+        }
     }
 
     @Override
@@ -232,7 +246,7 @@ public abstract class BaseActivity<M extends BaseModel, V extends BaseView, P ex
     }
 
     @Override
-    public void bindData() {
+    public void bindData(Object data) {
     }
 
     /**

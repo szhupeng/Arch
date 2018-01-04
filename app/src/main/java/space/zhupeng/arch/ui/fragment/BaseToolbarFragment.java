@@ -8,7 +8,7 @@ import android.view.View;
 
 import butterknife.BindView;
 import space.zhupeng.arch.R;
-import space.zhupeng.arch.mvp.model.BaseModel;
+import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.view.BaseView;
 import space.zhupeng.arch.ui.ToolbarDelegate;
@@ -21,7 +21,7 @@ import space.zhupeng.arch.ui.ToolbarDelegateImpl;
  * @date 2017/9/4
  */
 
-public abstract class BaseToolbarFragment<M extends BaseModel, V extends BaseView, P extends BasePresenter<M, V>> extends BaseFragment<M, V, P> implements ToolbarDelegate, View.OnClickListener {
+public abstract class BaseToolbarFragment<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends BaseFragment<M, V, P> implements ToolbarDelegate, View.OnClickListener {
 
     @Nullable
     @BindView(R.id.toolbar)

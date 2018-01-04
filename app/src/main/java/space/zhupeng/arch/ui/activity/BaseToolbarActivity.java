@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 
 import butterknife.BindView;
 import space.zhupeng.arch.R;
-import space.zhupeng.arch.mvp.model.BaseModel;
+import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.view.BaseView;
 import space.zhupeng.arch.ui.ToolbarDelegate;
@@ -26,7 +26,7 @@ import space.zhupeng.arch.utils.ActionModeHelper;
  * @date 2017/1/14
  */
 
-public abstract class BaseToolbarActivity<M extends BaseModel, V extends BaseView, P extends BasePresenter<M, V>> extends BaseActivity<M, V, P> implements ToolbarDelegate, View.OnClickListener {
+public abstract class BaseToolbarActivity<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends BaseActivity<M, V, P> implements ToolbarDelegate, View.OnClickListener {
 
     @Nullable
     @BindView(R.id.toolbar)

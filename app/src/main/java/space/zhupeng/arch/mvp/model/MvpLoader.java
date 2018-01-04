@@ -11,9 +11,9 @@ import android.support.v4.content.AsyncTaskLoader;
 
 public abstract class MvpLoader<T> extends AsyncTaskLoader<T> implements Repository.RepositoryObserver {
 
-    private Repository mRepository;
+    private Repository<T> mRepository;
 
-    public MvpLoader(Context context, @NonNull Repository repository) {
+    public MvpLoader(Context context, @NonNull Repository<T> repository) {
         super(context);
         if (null == repository)
             throw new NullPointerException("The repository passed to MvpLoader cannot be null");
@@ -22,7 +22,7 @@ public abstract class MvpLoader<T> extends AsyncTaskLoader<T> implements Reposit
 
     @Override
     public T loadInBackground() {
-        return toLoadData();
+        return mRepository.toLoadData();
     }
 
     @Override
@@ -40,7 +40,7 @@ public abstract class MvpLoader<T> extends AsyncTaskLoader<T> implements Reposit
     protected void onStartLoading() {
         // Deliver any previously loaded data immediately if available.
         if (mRepository.isCachedDataAvailable()) {
-            deliverResult((T) mRepository.getCachedData());
+            deliverResult(mRepository.getCachedData());
         }
 
         // Begin monitoring the underlying data source.
@@ -69,6 +69,4 @@ public abstract class MvpLoader<T> extends AsyncTaskLoader<T> implements Reposit
             forceLoad();
         }
     }
-
-    protected abstract T toLoadData();
 }

@@ -3,8 +3,9 @@ package space.zhupeng.arch.widget.dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 import space.zhupeng.arch.R;
-import space.zhupeng.arch.ui.List;
 
 /**
  * @author zhupeng

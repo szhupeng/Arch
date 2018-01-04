@@ -1,5 +1,6 @@
 package space.zhupeng.arch.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class MainActivity extends BaseToolbarActivity {
 //        BottomSheet dialog = new SimpleDialog();
 //        dialog.show(getSupportFragmentManager());
 //        BaseWebActivity.toHere(getActivity(), "http://www.baidu.com/", null, 0);
+        startActivity(new Intent(this, TabActivity.class));
     }
 
     public static class SimpleDialog extends BottomSheet {

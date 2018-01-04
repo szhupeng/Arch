@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-import space.zhupeng.arch.mvp.model.BaseModel;
 import space.zhupeng.arch.mvp.model.MvpLoader;
+import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.view.BaseView;
 
 /**
@@ -15,7 +15,7 @@ import space.zhupeng.arch.mvp.view.BaseView;
  * @date 2017/9/10
  */
 
-public class LoaderPresenter<T, M extends BaseModel, V extends BaseView> extends BasePresenter<M, V> implements LoaderManager.LoaderCallbacks<T> {
+public class LoaderPresenter<T, M extends Repository, V extends BaseView> extends BasePresenter<M, V> implements LoaderManager.LoaderCallbacks<T> {
 
     private static final int ID_MVP_LOADER = 300;
 

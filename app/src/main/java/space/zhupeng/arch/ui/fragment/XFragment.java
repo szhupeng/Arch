@@ -65,10 +65,19 @@ public abstract class XFragment extends Fragment {
         fetchData();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (getUserVisibleHint()) {
+            setUserVisibleHint(true);
+        }
+    }
+
     /**
      * 懒加载数据
      */
-    abstract void loadDataLazily();
+    protected abstract void loadDataLazily();
 
     final void fetchData() {
         fetchData(false);

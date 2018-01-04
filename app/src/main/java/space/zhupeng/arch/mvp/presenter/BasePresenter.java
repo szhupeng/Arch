@@ -9,7 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.SupportActivity;
 import android.view.View;
 
-import space.zhupeng.arch.mvp.model.BaseModel;
+import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.view.BaseView;
 
 /**
@@ -19,13 +19,13 @@ import space.zhupeng.arch.mvp.view.BaseView;
  * @date 2017/8/18
  */
 
-public class BasePresenter<M extends BaseModel, V extends BaseView> implements Presenter<V>, LifecycleObserver {
+public class BasePresenter<M extends Repository, V extends BaseView> implements Presenter<V>, LifecycleObserver {
 
-    protected M mModel;
+    protected M mRepository;
     protected V mView;
 
-    public BasePresenter(M model) {
-        this.mModel = model;
+    public BasePresenter(M repository) {
+        this.mRepository = repository;
     }
 
     @Override
@@ -34,8 +34,8 @@ public class BasePresenter<M extends BaseModel, V extends BaseView> implements P
 
         if (mView != null && mView instanceof LifecycleOwner) {
             ((LifecycleOwner) mView).getLifecycle().addObserver(this);
-            if (mModel != null && mModel instanceof LifecycleObserver) {
-                ((LifecycleOwner) mView).getLifecycle().addObserver(mModel);
+            if (mRepository != null && mRepository instanceof LifecycleObserver) {
+                ((LifecycleOwner) mView).getLifecycle().addObserver(mRepository);
             }
         }
     }

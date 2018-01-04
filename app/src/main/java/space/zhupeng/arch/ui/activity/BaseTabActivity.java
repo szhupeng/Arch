@@ -6,12 +6,15 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+
+import java.util.List;
 
 import butterknife.BindView;
 import space.zhupeng.arch.R;
-import space.zhupeng.arch.mvp.model.BaseModel;
+import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.view.BaseView;
 
@@ -22,7 +25,7 @@ import space.zhupeng.arch.mvp.view.BaseView;
  * @date 2017/1/14
  */
 
-public abstract class BaseTabActivity<M extends BaseModel, V extends BaseView, P extends BasePresenter<M, V>> extends BaseToolbarActivity<M, V, P> implements TabLayout.OnTabSelectedListener {
+public abstract class BaseTabActivity<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends BaseToolbarActivity<M, V, P> implements TabLayout.OnTabSelectedListener {
 
     @BindView(R.id.layout_tabs_bar)
     TabLayout mTabLayout;
@@ -40,14 +43,22 @@ public abstract class BaseTabActivity<M extends BaseModel, V extends BaseView, P
     protected void initView(@Nullable Bundle savedInstanceState) {
         super.initView(savedInstanceState);
 
-        setupTabLayout(mTabLayout);
-
-        mTabLayout.setupWithViewPager(vpTabContent);
+        vpTabContent.setAdapter(getPagerAdapter());
+        vpTabContent.setOffscreenPageLimit(2);
         mTabLayout.addOnTabSelectedListener(this);
+        mTabLayout.setupWithViewPager(vpTabContent);
+
+        setupTabLayout(mTabLayout);
     }
 
     protected void setupTabLayout(TabLayout tabLayout) {
     }
+
+    protected PagerAdapter getPagerAdapter() {
+        return new TabPagerAdapter(getSupportFragmentManager(), buildUpTabs());
+    }
+
+    protected abstract List<Tab> buildUpTabs();
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
@@ -61,20 +72,47 @@ public abstract class BaseTabActivity<M extends BaseModel, V extends BaseView, P
     public void onTabReselected(TabLayout.Tab tab) {
     }
 
-    public static class TabFragment extends FragmentPagerAdapter {
+    public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
-        public TabFragment(FragmentManager fm) {
+        private List<Tab> mTabs;
+
+        public TabPagerAdapter(FragmentManager fm, List<Tab> tabs) {
             super(fm);
+            this.mTabs = tabs;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return null;
+            final Tab tab = mTabs.get(position);
+            return Fragment.instantiate(getActivity(), tab.cls.getName(), tab.args);
         }
 
         @Override
         public int getCount() {
-            return 0;
+            if (null == mTabs) return 0;
+            return mTabs.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mTabs.get(position).title;
+        }
+    }
+
+    public static class Tab {
+        public CharSequence title;
+        public Class<? extends Fragment> cls;
+        public Bundle args;
+
+        public Tab(CharSequence title, Class<? extends Fragment> cls) {
+            this.title = title;
+            this.cls = cls;
+        }
+
+        public Tab(CharSequence title, Class<? extends Fragment> cls, Bundle args) {
+            this.title = title;
+            this.cls = cls;
+            this.args = args;
         }
     }
 }

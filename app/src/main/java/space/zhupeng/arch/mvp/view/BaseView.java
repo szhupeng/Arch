@@ -31,5 +31,5 @@ public interface BaseView {
 
     void loadData();
 
-    void bindData();
+    void bindData(Object data);
 }

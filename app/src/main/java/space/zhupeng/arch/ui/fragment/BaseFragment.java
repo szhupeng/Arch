@@ -8,6 +8,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
@@ -19,7 +20,7 @@ import java.util.concurrent.Executor;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import space.zhupeng.arch.mvp.model.BaseModel;
+import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.presenter.PresenterFactory;
 import space.zhupeng.arch.mvp.presenter.PresenterLoader;
@@ -35,7 +36,7 @@ import space.zhupeng.arch.widget.dialog.DialogFactory;
  * @date 2017/1/14
  */
 
-public abstract class BaseFragment<M extends BaseModel, V extends BaseView, P extends BasePresenter<M, V>> extends XFragment implements BaseView, LoaderManager.LoaderCallbacks<P> {
+public abstract class BaseFragment<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends XFragment implements BaseView, LoaderManager.LoaderCallbacks<P> {
 
     private static final int ID_PRESENTER_LOADER = 200;
 
@@ -105,6 +106,16 @@ public abstract class BaseFragment<M extends BaseModel, V extends BaseView, P ex
             unbinder.unbind();
             unbinder = null;
         }
+    }
+
+    public void showSnackbar(final String message) {
+        final View view = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+        runOnUiThreadSafely(new Runnable() {
+            @Override
+            public void run() {
+                Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void showToast(@NonNull final CharSequence text) {
@@ -184,7 +195,7 @@ public abstract class BaseFragment<M extends BaseModel, V extends BaseView, P ex
     }
 
     @Override
-    final void loadDataLazily() {
+    protected final void loadDataLazily() {
         loadData();
     }
 
@@ -193,7 +204,7 @@ public abstract class BaseFragment<M extends BaseModel, V extends BaseView, P ex
     }
 
     @Override
-    public void bindData() {
+    public void bindData(Object data) {
     }
 
     /**
@@ -233,7 +244,7 @@ public abstract class BaseFragment<M extends BaseModel, V extends BaseView, P ex
      *
      * @return
      */
-    protected final boolean toCheckNetwork() {
+    protected final boolean isNetworkAvailable() {
         if (getActivity() == null) {
             return false;
         }
@@ -243,10 +254,6 @@ public abstract class BaseFragment<M extends BaseModel, V extends BaseView, P ex
             return false;
         }
         return true;
-    }
-
-    protected <T extends View> T findView(int id) {
-        return (T) getView().findViewById(id);
     }
 
     @LayoutRes

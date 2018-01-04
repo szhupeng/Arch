@@ -3,19 +3,20 @@ package space.zhupeng.arch.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 import butterknife.BindView;
 import space.zhupeng.arch.R;
 import space.zhupeng.arch.task.BaseExceptionAsyncTask;
+import space.zhupeng.arch.utils.DataUtils;
 import space.zhupeng.arch.utils.DensityUtils;
 import space.zhupeng.arch.widget.adapter.BaseAdapter;
 import space.zhupeng.arch.widget.ptr.PtrDefaultHandler;
@@ -31,8 +32,6 @@ import space.zhupeng.arch.widget.ptr.header.PtrHeader;
  */
 public abstract class BaseListFragment<T> extends BaseStateFragment implements BaseAdapter.OnItemClickListener {
 
-    private static final int ID_DATASET_LOADER = 300;
-
     private static final int PAGE_START = 1;
     private static final int PAGE_SIZE = 15;
 
@@ -43,20 +42,15 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
     RecyclerView rvDataList;
 
     private int mPageIndex = PAGE_START;
-    private boolean isFirstRequest = true;
 
     private BaseAdapter mAdapter;
+
+    private List<T> mDataSource;
+    private boolean isRefresh = false;
 
     @Override
     protected int getLayoutResId() {
         return R.layout.fragment_list;
-    }
-
-    @Override
-    protected void initLoaders(LoaderManager manager) {
-        super.initLoaders(manager);
-
-        manager.initLoader(ID_DATASET_LOADER, null, this);
     }
 
     @Override
@@ -76,6 +70,15 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
                 toRefreshList();
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (mDataSource != null && !mDataSource.isEmpty()) {
+            outState.putString("json-data", new Gson().toJson(mDataSource));
+        }
     }
 
     protected PtrHeader getPtrHeaderView() {
@@ -108,13 +111,17 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
         return mAdapter.getItemCount();
     }
 
+    /**
+     * 请求列表数据
+     */
     @Override
-    public void onResume() {
-        super.onResume();
-
-        if (getUserVisibleHint() && isFirstRequest) {
-            requestData();
+    public void loadData() {
+        if (!isNetworkAvailable()) {
+            if (0 == getItemCount()) showErrorView();
+            return;
         }
+
+        toRefreshListData(true);
     }
 
     public void setAdapter(@NonNull final BaseAdapter adapter) {
@@ -130,44 +137,23 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
     }
 
     /**
-     * 请求列表数据
-     */
-    public void requestData() {
-        if (!toCheckNetwork()) {
-            if (0 == getItemCount()) showErrorView();
-            return;
-        }
-
-        toRefreshListData(true);
-    }
-
-    /**
      * 刷新列表数据
      */
     public void toRefreshList() {
-        if (!toCheckNetwork()) {
+        if (!isNetworkAvailable()) {
             onLoadFinished();
             showErrorView();
             return;
         }
 
-        isFirstRequest = false;
         toRefreshListData(false);
-    }
-
-    @Override
-    public Loader onCreateLoader(int id, Bundle args) {
-        if (ID_DATASET_LOADER == id) {
-
-        }
-        return super.onCreateLoader(id, args);
     }
 
     /**
      * 分页加载更多列表数据
      */
     public void toLoadMoreData() {
-        if (!toCheckNetwork()) {
+        if (!isNetworkAvailable()) {
             mAdapter.loadMoreFailed();
             return;
         }
@@ -192,7 +178,8 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
 
                     @Override
                     protected void onSuccess() {
-                        onSuccessLoadData(false, mMoreData);
+                        isRefresh = false;
+                        bindData(mMoreData);
                     }
 
                     @Override
@@ -212,8 +199,6 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
     protected void toRefreshListData(final boolean showLoading) {
         executeTask(new BaseExceptionAsyncTask(getActivity()) {
 
-            private List<T> mNewData;
-
             @Override
             protected void onPreExecute() {
                 if (showLoading) showLoadingView();
@@ -222,7 +207,7 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
             @Override
             protected boolean doInBackground() throws Exception {
                 mPageIndex = PAGE_START;
-                mNewData = toLoadData(mPageIndex);
+                mDataSource = toLoadData(mPageIndex);
                 return true;
             }
 
@@ -234,7 +219,8 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
 
             @Override
             protected void onSuccess() {
-                onSuccessLoadData(true, mNewData);
+                isRefresh = true;
+                bindData(mDataSource);
             }
 
             @Override
@@ -299,10 +285,29 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
         }
     }
 
-    protected void onSuccessLoadData(boolean isRefresh, final List<T> data) {
+    /**
+     * 子类中的onActivityCreated中调用
+     *
+     * @param savedInstanceState
+     * @param cls
+     */
+    protected void bindSavedData(@Nullable Bundle savedInstanceState, Class<? extends T> cls) {
+        if (savedInstanceState != null && savedInstanceState.containsKey("json-data")) {
+            String jsonData = savedInstanceState.getString("json-data");
+            isRefresh = true;
+            bindData(DataUtils.getObjectList(jsonData, cls));
+        } else {
+            fetchData(true);
+        }
+    }
+
+    @Override
+    public void bindData(Object data) {
         if (null == rvDataList || null == mAdapter) return;
 
-        final int size = data == null ? 0 : data.size();
+        List<T> ds = (List<T>) data;
+
+        final int size = ds == null ? 0 : ds.size();
         if (isRefresh && 0 == size) {
             showEmptyView();
         } else {
@@ -310,9 +315,9 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
         }
 
         if (isRefresh) {
-            mAdapter.setData(data);
+            mAdapter.setData(ds);
         } else if (size > 0) {
-            mAdapter.addData(data);
+            mAdapter.addData(ds);
         }
 
         if (size < PAGE_SIZE) {
@@ -329,7 +334,7 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
 
     @Override
     protected void rerequest() {
-        requestData();
+        loadData();
     }
 
     /**

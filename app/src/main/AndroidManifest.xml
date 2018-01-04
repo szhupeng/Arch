@@ -28,6 +28,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.activity.TabActivity" />
+
         <activity
             android:name=".ui.activity.BaseWebActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

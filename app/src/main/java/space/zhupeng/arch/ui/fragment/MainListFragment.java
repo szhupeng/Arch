@@ -55,8 +55,14 @@ public class MainListFragment extends BaseListFragment<MultiItemEntity> {
         setAdapter(adapter);
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-//    @Override
+//        bindSavedData(savedInstanceState, LevelCategory.class);
+    }
+
+    //    @Override
 //    protected List<GankVo.GankData> toLoadData(int pageIndex) {
 //        Request request = new Request.Builder().url(Api.GANK2).build();
 //        Call call = new OkHttpClient().newCall(request);
