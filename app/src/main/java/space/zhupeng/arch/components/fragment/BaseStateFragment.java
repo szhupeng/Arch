@@ -1,4 +1,4 @@
-package space.zhupeng.arch.ui.fragment;
+package space.zhupeng.arch.components.fragment;
 
 import android.support.annotation.Nullable;
 import android.view.View;

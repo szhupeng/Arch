@@ -1,88 +1,74 @@
-package space.zhupeng.arch.manager;
+package space.zhupeng.arch;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.support.annotation.IntDef;
-import android.support.annotation.IntRange;
-import android.support.annotation.RestrictTo;
-import android.support.design.widget.Snackbar;
-import android.view.View;
+import android.os.Bundle;
+import android.support.multidex.MultiDex;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
-import static android.support.design.widget.Snackbar.LENGTH_INDEFINITE;
-import static android.support.design.widget.Snackbar.LENGTH_LONG;
-import static android.support.design.widget.Snackbar.LENGTH_SHORT;
-
 /**
- * 管理所有的activity
- *
  * @author zhupeng
- * @date 2017/9/16
+ * @date 2018/1/4
  */
 
-public class ActivityManager {
+public class AppDelegate implements AppLifecycle {
 
-    @RestrictTo(LIBRARY_GROUP)
-    @IntDef({LENGTH_INDEFINITE, LENGTH_SHORT, LENGTH_LONG})
-    @IntRange(from = 1)
-    @Retention(RetentionPolicy.SOURCE)
-    @interface Duration {
-    }
-
-    private Application mAppContext;
-    private List<Activity> mActivities;
+    private LinkedList<Activity> mActivities;
     private Activity mCurrentActivity;
 
-    public ActivityManager(Application application) {
-        this.mAppContext = application;
+    @Override
+    public void attachBaseContext(Context base) {
+        MultiDex.install(base);
     }
 
-    /**
-     * 让前台的activity,使用Snackbar显示文本提示
-     *
-     * @param message
-     * @param duration
-     */
-    public void showSnackbar(final String message, @Duration int duration) {
-        if (null == mCurrentActivity) {
-            throw new NullPointerException("The variable mActivities in ActivityManager is null when you call removeActivity(int)");
-        }
-        final View view = mCurrentActivity.getWindow().getDecorView().findViewById(android.R.id.content);
-        Snackbar.make(view, message, duration).show();
+    @Override
+    public void onCreate(Application application) {
+        mActivities = new LinkedList<>();
+
+        application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                mCurrentActivity = activity;
+                mActivities.add(activity);
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+                mActivities.remove(activity);
+            }
+        });
     }
 
-    /**
-     * 释放资源
-     */
-    public void release() {
-        mActivities.clear();
-        mActivities = null;
-        mCurrentActivity = null;
-        mAppContext = null;
+    @Override
+    public void onTerminate(Application application) {
     }
 
-    /**
-     * 设置当前可见的activity
-     *
-     * @param activity
-     */
-    public void setCurrentActivity(Activity activity) {
-        this.mCurrentActivity = activity;
-    }
-
-    /**
-     * 获取在前台activity
-     *
-     * @return
-     */
     public Activity getCurrentActivity() {
         return mCurrentActivity;
     }
@@ -106,54 +92,6 @@ public class ActivityManager {
         return mActivities;
     }
 
-
-    /**
-     * 添加activity到集合
-     */
-    public void addActivity(Activity activity) {
-        if (null == mActivities) {
-            mActivities = new LinkedList<>();
-        }
-        synchronized (ActivityManager.class) {
-            if (!mActivities.contains(activity)) {
-                mActivities.add(activity);
-            }
-        }
-    }
-
-    /**
-     * 移除集合里的指定的activity实例
-     *
-     * @param activity
-     */
-    public void removeActivity(Activity activity) {
-        if (mActivities == null) {
-            throw new NullPointerException("The variable mActivities in ActivityManager is null when you call removeActivity(int)");
-        }
-        synchronized (ActivityManager.class) {
-            if (mActivities.contains(activity)) {
-                mActivities.remove(activity);
-            }
-        }
-    }
-
-    /**
-     * 移除集合里的指定位置的activity
-     *
-     * @param index
-     */
-    public Activity removeActivity(final int index) {
-        if (null == mActivities) {
-            throw new NullPointerException("The variable mActivities in ActivityManager is null when you call removeActivity(int)");
-        }
-        synchronized (ActivityManager.class) {
-            if (index > 0 && index < mActivities.size()) {
-                return mActivities.remove(index);
-            }
-        }
-        return null;
-    }
-
     /**
      * 关闭指定的Activity类的所有的实例
      *
@@ -170,7 +108,6 @@ public class ActivityManager {
             }
         }
     }
-
 
     /**
      * 指定的activity实例是否存活
@@ -272,19 +209,27 @@ public class ActivityManager {
         }
     }
 
-
     /**
      * 退出应用程序
      */
-    public void exitApp() {
+    public void exitApp(Context context) {
         try {
             killAll();
             release();
-            android.app.ActivityManager mgr = (android.app.ActivityManager) mAppContext.getSystemService(Context.ACTIVITY_SERVICE);
-            mgr.killBackgroundProcesses(mAppContext.getPackageName());
+            ActivityManager mgr = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            mgr.killBackgroundProcesses(context.getPackageName());
             System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 释放资源
+     */
+    public void release() {
+        mActivities.clear();
+        mActivities = null;
+        mCurrentActivity = null;
     }
 }

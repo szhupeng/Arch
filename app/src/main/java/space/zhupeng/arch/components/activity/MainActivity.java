@@ -1,4 +1,4 @@
-package space.zhupeng.arch.ui.activity;
+package space.zhupeng.arch.components.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

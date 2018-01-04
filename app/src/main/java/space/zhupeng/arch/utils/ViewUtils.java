@@ -7,7 +7,8 @@ import android.util.TypedValue;
 import android.view.View;
 
 /**
- * Created by zhupeng on 2017/12/29.
+ * @author zhupeng
+ * @date 2017/12/29
  */
 
 public class ViewUtils {

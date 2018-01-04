@@ -13,13 +13,14 @@ import android.support.v4.content.LocalBroadcastManager;
 
 public class EventDispatcher {
 
+    public static final String ACTION_EVENT = "intent.action.event";
+
     private EventDispatcher() {
     }
 
     public static void dispatch(Context context, Event event) {
-        Intent intent = new Intent();
-        intent.putExtra("code", event.getCode());
-        intent.putExtra("data", event.getData());
+        Intent intent = new Intent(ACTION_EVENT);
+        intent.putExtra("event", event);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }

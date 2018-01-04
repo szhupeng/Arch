@@ -1,4 +1,4 @@
-package space.zhupeng.arch.ui;
+package space.zhupeng.arch.components;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;

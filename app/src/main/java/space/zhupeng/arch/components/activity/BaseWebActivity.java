@@ -1,4 +1,4 @@
-package space.zhupeng.arch.ui.activity;
+package space.zhupeng.arch.components.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

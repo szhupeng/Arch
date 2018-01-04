@@ -11,7 +11,7 @@
 
     <fragment
         android:id="@+id/fragment_main"
-        android:name="space.zhupeng.arch.ui.fragment.MainListFragment"
+        android:name="space.zhupeng.arch.components.fragment.MainListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

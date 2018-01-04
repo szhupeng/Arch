@@ -1,6 +1,4 @@
-package space.zhupeng.arch.ui.fragment;
-
-import android.support.v4.content.Loader;
+package space.zhupeng.arch.components.fragment;
 
 /**
  * @author zhupeng
@@ -12,9 +10,5 @@ public class BaseWebFragment extends BaseToolbarFragment {
     @Override
     protected int getLayoutResId() {
         return 0;
-    }
-
-    @Override
-    public void onLoadFinished(Loader loader, Object data) {
     }
 }

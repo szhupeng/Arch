@@ -1,4 +1,4 @@
-package space.zhupeng.arch.ui.fragment;
+package space.zhupeng.arch.components.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,8 +11,8 @@ import space.zhupeng.arch.R;
 import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.view.BaseView;
-import space.zhupeng.arch.ui.ToolbarDelegate;
-import space.zhupeng.arch.ui.ToolbarDelegateImpl;
+import space.zhupeng.arch.components.ToolbarDelegate;
+import space.zhupeng.arch.components.ToolbarDelegateImpl;
 
 /**
  * 如果项目使用的是单Activity多Fragment，建议继承此类

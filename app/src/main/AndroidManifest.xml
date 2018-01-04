@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,7 +19,7 @@
             android:value="2.1" />
         <!-- ############## -->
 
-        <activity android:name=".ui.activity.MainActivity">
+        <activity android:name=".components.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,13 +27,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.TabActivity" />
+        <activity android:name=".components.activity.TabActivity" />
 
         <activity
-            android:name=".ui.activity.BaseWebActivity"
+            android:name=".components.activity.BaseWebActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
-            android:process=":remoteWeb" />
+            android:process=":tools" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
