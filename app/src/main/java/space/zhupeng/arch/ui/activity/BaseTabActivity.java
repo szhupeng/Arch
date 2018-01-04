@@ -33,6 +33,8 @@ public abstract class BaseTabActivity<M extends Repository, V extends BaseView, 
     @BindView(R.id.vp_tab_content)
     ViewPager vpTabContent;
 
+    private PagerAdapter mPagerAdapter;
+
     @Override
     protected int getLayoutResId() {
         return R.layout.activity_base_tab;
@@ -44,7 +46,7 @@ public abstract class BaseTabActivity<M extends Repository, V extends BaseView, 
         super.initView(savedInstanceState);
 
         vpTabContent.setAdapter(getPagerAdapter());
-        vpTabContent.setOffscreenPageLimit(2);
+        vpTabContent.setOffscreenPageLimit(getOffscreenPageLimit());
         mTabLayout.addOnTabSelectedListener(this);
         mTabLayout.setupWithViewPager(vpTabContent);
 
@@ -56,6 +58,10 @@ public abstract class BaseTabActivity<M extends Repository, V extends BaseView, 
 
     protected PagerAdapter getPagerAdapter() {
         return new TabPagerAdapter(getSupportFragmentManager(), buildUpTabs());
+    }
+
+    protected int getOffscreenPageLimit() {
+        return 2;
     }
 
     protected abstract List<Tab> buildUpTabs();
