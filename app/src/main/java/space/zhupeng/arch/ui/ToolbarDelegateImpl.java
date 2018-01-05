@@ -3,7 +3,6 @@ package space.zhupeng.arch.ui;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -14,9 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import space.zhupeng.arch.R;
 
 /**
@@ -26,53 +22,34 @@ import space.zhupeng.arch.R;
 
 public class ToolbarDelegateImpl implements ToolbarDelegate {
 
-    @Nullable
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-
-    @Nullable
-    @BindView(R.id.tv_left)
-    TextView tvLeft;
-
-    @Nullable
-    @BindView(R.id.ll_center)
-    LinearLayout llCenter;
-
-    @Nullable
-    @BindView(R.id.tv_title)
-    TextView tvTitle;
-
-    @Nullable
-    @BindView(R.id.tv_subtitle)
-    TextView tvSubtitle;
-
-    @Nullable
-    @BindView(R.id.tv_right)
-    TextView tvRight;
-
-    @Nullable
-    @BindView(R.id.iv_right)
-    ImageView ivRight;
-
-    private Unbinder unbinder;
+    private TextView tvLeft;
+    private LinearLayout llCenter;
+    private TextView tvTitle;
+    private TextView tvSubtitle;
+    private TextView tvRight;
+    private ImageView ivRight;
 
     public ToolbarDelegateImpl(AppCompatActivity activity, Toolbar toolbar) {
-        unbinder = ButterKnife.bind(this, activity);
+        tvLeft = activity.findViewById(R.id.tv_left);
+        llCenter = activity.findViewById(R.id.ll_center);
+        tvTitle = activity.findViewById(R.id.tv_title);
+        tvSubtitle = activity.findViewById(R.id.tv_subtitle);
+        tvRight = activity.findViewById(R.id.tv_right);
+        ivRight = activity.findViewById(R.id.iv_right);
 
         setToolbar(activity, toolbar);
     }
 
     public ToolbarDelegateImpl(@NonNull Object target, @NonNull View source, Toolbar toolbar) {
-        unbinder = ButterKnife.bind(target, source);
+        tvLeft = source.findViewById(R.id.tv_left);
+        llCenter = source.findViewById(R.id.ll_center);
+        tvTitle = source.findViewById(R.id.tv_title);
+        tvSubtitle = source.findViewById(R.id.tv_subtitle);
+        tvRight = source.findViewById(R.id.tv_right);
+        ivRight = source.findViewById(R.id.iv_right);
 
         if (target instanceof Fragment) {
             setToolbar((AppCompatActivity) ((Fragment) target).getActivity(), toolbar);
-        }
-    }
-
-    public void unbind() {
-        if (unbinder != null) {
-            unbinder.unbind();
         }
     }
 
@@ -252,10 +229,6 @@ public class ToolbarDelegateImpl implements ToolbarDelegate {
         if (view.getVisibility() != visibility) {
             view.setVisibility(visibility);
         }
-    }
-
-    public Toolbar getToolbar() {
-        return toolbar;
     }
 
     public boolean isLeftClicked(final int id) {

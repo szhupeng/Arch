@@ -105,7 +105,12 @@ public class BaseWebFragment extends BaseToolbarFragment {
         mUrl = args.getString(EXTRA_URL);
         mWebView.setWebChromeClient(getWebChromeClient());
 
-        loadHtml(mUrl);
+        mWebView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadHtml(mUrl);
+            }
+        }, 200);
     }
 
     protected WebChromeClient getWebChromeClient() {
@@ -211,7 +216,7 @@ public class BaseWebFragment extends BaseToolbarFragment {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (KeyEvent.KEYCODE_BACK == keyCode && mWebView.canGoBack()) {
+        if (KeyEvent.KEYCODE_BACK == keyCode && mWebView != null && mWebView.canGoBack()) {
             mWebView.goBack();
             return true;
         }

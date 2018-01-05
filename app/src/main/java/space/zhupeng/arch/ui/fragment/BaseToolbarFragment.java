@@ -209,15 +209,6 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
-    @CallSuper
-    @Override
-    public void onDestroy() {
-        if (mToolbarDelegate != null) {
-            mToolbarDelegate.unbind();
-        }
-        super.onDestroy();
-    }
-
     protected void onLeftClick() {
         getActivity().finish();
     }

@@ -239,12 +239,4 @@ public abstract class BaseToolbarActivity<M extends Repository, V extends BaseVi
     protected int getContextMenuResId() {
         return 0;
     }
-
-    @Override
-    protected void onDestroy() {
-        if (mToolbarDelegate != null) {
-            mToolbarDelegate.unbind();
-        }
-        super.onDestroy();
-    }
 }

@@ -29,11 +29,11 @@ public abstract class XActivity extends AppCompatActivity {
     protected XFragment mCurrentFragment;
 
     public void pushFragment(final XFragment fragment) {
-        pushFragment(fragment, null, true);
+        pushFragment(fragment, null, false);
     }
 
     public void pushFragment(final XFragment fragment, final Object data) {
-        pushFragment(fragment, data, true);
+        pushFragment(fragment, data, false);
     }
 
     public void pushFragment(final XFragment fragment, final Object data, final boolean addToBackStack) {
@@ -92,8 +92,12 @@ public abstract class XActivity extends AppCompatActivity {
         }
     }
 
+    public void pushFragment(final Class<? extends XFragment> cls) {
+        pushFragment(cls, null, false);
+    }
+
     public void pushFragment(final Class<? extends XFragment> cls, final Object data) {
-        pushFragment(cls, data, true);
+        pushFragment(cls, data, false);
     }
 
     public void pushFragment(final Class<? extends XFragment> cls, final Object data, final boolean addToBackStack) {
@@ -215,13 +219,19 @@ public abstract class XActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mCurrentFragment != null && mCurrentFragment.onKeyDown(keyCode, event)) {
-            return true;
+        if (mCurrentFragment != null) {
+            if (mCurrentFragment.onKeyDown(keyCode, event)) {
+                return true;
+            }
         } else {
             List<Fragment> fragments = getSupportFragmentManager().getFragments();
             for (Fragment fragment : fragments) {
                 if (fragment instanceof XFragment && fragment.isVisible()) {
-                    return ((XFragment) fragment).onKeyDown(keyCode, event);
+                    if (((XFragment) fragment).onKeyDown(keyCode, event)) {
+                        return true;
+                    } else {
+                        break;
+                    }
                 }
             }
         }
