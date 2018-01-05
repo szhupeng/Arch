@@ -1,4 +1,4 @@
-package space.zhupeng.arch.components.activity;
+package space.zhupeng.arch.ui.fragment;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -12,7 +12,6 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
-import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.KeyEvent;
@@ -40,10 +39,21 @@ import space.zhupeng.arch.utils.Utils;
 
 /**
  * @author zhupeng
- * @date 2017/11/1
+ * @date 2017/12/26
  */
 
-public class BaseWebActivity extends BaseToolbarActivity {
+public class BaseWebFragment extends BaseToolbarFragment {
+
+    public static BaseWebFragment newInstance(@NonNull String url, String jsFile) {
+        Bundle args = new Bundle();
+        args.putString(EXTRA_URL, url);
+        if (!TextUtils.isEmpty(jsFile)) {
+            args.putString(EXTRA_JS_FILE, jsFile);
+        }
+        BaseWebFragment fragment = new BaseWebFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     private final static int RC_TAKE_PHOTO = 100;
 
@@ -68,47 +78,31 @@ public class BaseWebActivity extends BaseToolbarActivity {
     protected File mPhotoFile = new File(Environment.getExternalStorageDirectory().getPath() + "/" + SystemClock.currentThreadTimeMillis() + ".jpg");
     protected Uri mImageUri;
 
-    /**
-     * @param activity
-     * @param url         链接
-     * @param jsFile      放于assets目录下需要加载的js文件名
-     * @param requestCode
-     */
-    public static void toHere(@NonNull Activity activity, @NonNull String url, String jsFile, int requestCode) {
-        Intent intent = new Intent(activity, BaseWebActivity.class);
-        intent.putExtra(EXTRA_URL, url);
-        if (!TextUtils.isEmpty(jsFile)) {
-            intent.putExtra(EXTRA_JS_FILE, jsFile);
-        }
-
-        if (requestCode > 0) {
-            activity.startActivityForResult(intent, requestCode);
-        } else {
-            activity.startActivity(intent);
-        }
-    }
-
     @Override
     protected int getLayoutResId() {
-        return R.layout.activity_base_web;
+        return R.layout.fragment_base_web;
     }
 
     @Override
-    protected void initView(@Nullable Bundle savedInstanceState) {
-        super.initView(savedInstanceState);
+    protected void initView(View view, @Nullable Bundle savedInstanceState) {
+        super.initView(view, savedInstanceState);
 
-        final Intent intent = getIntent();
-        if (null == intent) {
-            return;
+        Bundle args = getArguments();
+        if (null == args) {
+            if (mPassedData != null) {
+                args = (Bundle) mPassedData;
+            } else {
+                return;
+            }
         }
 
-        mWebView = new WebView(getApplicationContext());
+        mWebView = new WebView(getActivity().getApplicationContext());
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT);
         lp.addRule(RelativeLayout.BELOW, R.id.toolbar);
         rlRoot.addView(mWebView, rlRoot.indexOfChild(pbLoading), lp);
 
-        mUrl = intent.getStringExtra(EXTRA_URL);
+        mUrl = args.getString(EXTRA_URL);
         mWebView.setWebChromeClient(getWebChromeClient());
 
         loadHtml(mUrl);
@@ -161,19 +155,25 @@ public class BaseWebActivity extends BaseToolbarActivity {
     private void injectJavaScript() {
         InputStream input;
         try {
-            input = getAssets().open(mJsFile);
+            input = getResources().getAssets().open(mJsFile);
             byte[] buffer = new byte[input.available()];
             input.read(buffer);
             input.close();
             String encoded = Base64.encodeToString(buffer, Base64.NO_WRAP);
-            mWebView.loadUrl("javascript:(function() {" +
-                    "var parent = document.getElementsByTagName('head').item(0);" +
-                    "var script = document.createElement('script');" +
-                    "script.type = 'text/javascript';" +
-                    // Tell the browser to BASE64-decode the string into your script !!!
-                    "script.innerHTML = window.atob('" + encoded + "');" +
-                    "parent.appendChild(script)" +
-                    "})()");
+            final String trigger = new StringBuilder("javascript:(function() {")
+                    .append("var parent = document.getElementsByTagName('head').item(0);")
+                    .append("var script = document.createElement('script');")
+                    .append("script.type = 'text/javascript';")
+                    .append("script.innerHTML = window.atob('")
+                    .append(encoded)
+                    .append("');")
+                    .append("parent.appendChild(script)")
+                    .append("})()").toString();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                mWebView.evaluateJavascript(trigger, null);
+            } else {
+                mWebView.loadUrl(trigger);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -181,7 +181,7 @@ public class BaseWebActivity extends BaseToolbarActivity {
 
     private void setCookie() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            CookieSyncManager.createInstance(this);
+            CookieSyncManager.createInstance(getActivity());
         }
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
@@ -210,10 +210,6 @@ public class BaseWebActivity extends BaseToolbarActivity {
     }
 
     @Override
-    public void onLoadFinished(Loader loader, Object data) {
-    }
-
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == keyCode && mWebView.canGoBack()) {
             mWebView.goBack();
@@ -224,13 +220,15 @@ public class BaseWebActivity extends BaseToolbarActivity {
 
     // 在onPause时重新加载页面，可以达到暂停音视频播放目的
     @Override
-    protected void onPause() {
-        mWebView.reload();
+    public void onPause() {
+        if (mWebView != null) {
+            mWebView.reload();
+        }
         super.onPause();
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         if (rlRoot != null) {
             rlRoot.removeView(mWebView);
         }
@@ -246,12 +244,12 @@ public class BaseWebActivity extends BaseToolbarActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (RC_TAKE_PHOTO == requestCode) {
             if (null == mUploadMessage && null == mLollipopUploadCallback) return;
-            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+            Uri result = data == null || resultCode != Activity.RESULT_OK ? null : data.getData();
             if (mLollipopUploadCallback != null) {
                 onLollipopActivityResult(requestCode, resultCode, data);
             } else if (mUploadMessage != null) {
@@ -295,10 +293,10 @@ public class BaseWebActivity extends BaseToolbarActivity {
     private void takePhoto() {
         mImageUri = Uri.fromFile(mPhotoFile);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mImageUri = FileProvider.getUriForFile(BaseWebActivity.this, getPackageName() + ".fileprovider", mPhotoFile);//通过FileProvider创建一个content类型的Uri
+            mImageUri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".fileprovider", mPhotoFile);//通过FileProvider创建一个content类型的Uri
 
         }
-        Utils.takePicture(BaseWebActivity.this, mImageUri, RC_TAKE_PHOTO);
+        Utils.takePicture(getActivity(), mImageUri, RC_TAKE_PHOTO);
     }
 
     protected void callSystemResources() {
@@ -339,11 +337,13 @@ public class BaseWebActivity extends BaseToolbarActivity {
 
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
-            if (newProgress == 100) {
-                pbLoading.setVisibility(View.GONE);
-            } else {
-                pbLoading.setVisibility(View.VISIBLE);
-                pbLoading.setProgress(newProgress);
+            if (pbLoading != null) {
+                if (newProgress == 100) {
+                    pbLoading.setVisibility(View.GONE);
+                } else {
+                    pbLoading.setVisibility(View.VISIBLE);
+                    pbLoading.setProgress(newProgress);
+                }
             }
         }
     }

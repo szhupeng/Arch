@@ -1,4 +1,4 @@
-package space.zhupeng.arch.components.fragment;
+package space.zhupeng.arch.ui.fragment;
 
 import android.app.Activity;
 import android.content.Context;

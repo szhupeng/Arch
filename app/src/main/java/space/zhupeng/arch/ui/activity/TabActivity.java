@@ -1,9 +1,9 @@
-package space.zhupeng.arch.components.activity;
+package space.zhupeng.arch.ui.activity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import space.zhupeng.arch.components.fragment.MainListFragment;
+import space.zhupeng.arch.ui.fragment.MainListFragment;
 
 /**
  * Created by zhupeng on 2018/1/3.

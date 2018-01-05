@@ -1,4 +1,4 @@
-package space.zhupeng.arch.components.activity;
+package space.zhupeng.arch.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -15,8 +15,8 @@ import space.zhupeng.arch.R;
 import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.view.BaseView;
-import space.zhupeng.arch.components.ToolbarDelegate;
-import space.zhupeng.arch.components.ToolbarDelegateImpl;
+import space.zhupeng.arch.ui.ToolbarDelegate;
+import space.zhupeng.arch.ui.ToolbarDelegateImpl;
 import space.zhupeng.arch.utils.ActionModeHelper;
 
 /**

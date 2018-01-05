@@ -19,7 +19,7 @@
             android:value="2.1" />
         <!-- ############## -->
 
-        <activity android:name=".components.activity.MainActivity">
+        <activity android:name=".ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,10 +27,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".components.activity.TabActivity" />
+        <activity android:name=".ui.activity.TabActivity" />
 
         <activity
-            android:name=".components.activity.BaseWebActivity"
+            android:name=".ui.activity.BaseWebActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:process=":tools" />

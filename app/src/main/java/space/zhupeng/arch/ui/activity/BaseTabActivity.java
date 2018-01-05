@@ -1,4 +1,4 @@
-package space.zhupeng.arch.components.activity;
+package space.zhupeng.arch.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;

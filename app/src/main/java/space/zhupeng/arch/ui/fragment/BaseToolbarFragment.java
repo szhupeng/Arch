@@ -1,6 +1,7 @@
-package space.zhupeng.arch.components.fragment;
+package space.zhupeng.arch.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,8 +12,8 @@ import space.zhupeng.arch.R;
 import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.view.BaseView;
-import space.zhupeng.arch.components.ToolbarDelegate;
-import space.zhupeng.arch.components.ToolbarDelegateImpl;
+import space.zhupeng.arch.ui.ToolbarDelegate;
+import space.zhupeng.arch.ui.ToolbarDelegateImpl;
 
 /**
  * 如果项目使用的是单Activity多Fragment，建议继承此类
@@ -29,6 +30,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
 
     private ToolbarDelegateImpl mToolbarDelegate;
 
+    @CallSuper
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
@@ -39,6 +41,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void bindClickEvent(View.OnClickListener listener) {
         if (mToolbarDelegate != null) {
@@ -46,6 +49,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void setLeft(AppCompatActivity activity, int resId) {
         if (mToolbarDelegate != null) {
@@ -53,6 +57,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void setLeft(CharSequence text) {
         if (mToolbarDelegate != null) {
@@ -60,6 +65,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void setLeft(AppCompatActivity activity, int resId, CharSequence text) {
         if (mToolbarDelegate != null) {
@@ -67,6 +73,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void setCenterTitle(CharSequence title) {
         if (mToolbarDelegate != null) {
@@ -74,6 +81,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void setCenterTitle(AppCompatActivity activity, int resId) {
         if (mToolbarDelegate != null) {
@@ -81,6 +89,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void setCenterSubtitle(CharSequence subtitle) {
         if (mToolbarDelegate != null) {
@@ -88,6 +97,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void setCenterSubtitle(CharSequence subtitle, float size) {
         if (mToolbarDelegate != null) {
@@ -95,6 +105,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void setCenterSubtitle(CharSequence subtitle, float size, int color) {
         if (mToolbarDelegate != null) {
@@ -102,6 +113,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void setRightText(CharSequence text) {
         if (mToolbarDelegate != null) {
@@ -109,6 +121,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void setRightIcon(int resId) {
         if (mToolbarDelegate != null) {
@@ -116,6 +129,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void showLeft() {
         if (mToolbarDelegate != null) {
@@ -123,6 +137,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void hideLeft() {
         if (mToolbarDelegate != null) {
@@ -130,6 +145,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void showCenter() {
         if (mToolbarDelegate != null) {
@@ -137,6 +153,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void hideCenter() {
         if (mToolbarDelegate != null) {
@@ -144,6 +161,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void showRightText() {
         if (mToolbarDelegate != null) {
@@ -151,6 +169,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void hideRightText() {
         if (mToolbarDelegate != null) {
@@ -158,6 +177,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void showRightIcon() {
         if (mToolbarDelegate != null) {
@@ -165,6 +185,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void hideRightIcon() {
         if (mToolbarDelegate != null) {
@@ -172,6 +193,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void onClick(View v) {
         if (null == mToolbarDelegate) return;
@@ -187,6 +209,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
         }
     }
 
+    @CallSuper
     @Override
     public void onDestroy() {
         if (mToolbarDelegate != null) {

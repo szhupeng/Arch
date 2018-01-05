@@ -1,4 +1,4 @@
-package space.zhupeng.arch.components.fragment;
+package space.zhupeng.arch.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

@@ -1,4 +1,4 @@
-package space.zhupeng.arch.components.activity;
+package space.zhupeng.arch.ui.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -9,40 +9,38 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
+
+import java.util.List;
 
 import space.zhupeng.arch.R;
 import space.zhupeng.arch.analysis.Analysis;
 import space.zhupeng.arch.anim.FragmentAnimation;
 import space.zhupeng.arch.anim.Transition;
-import space.zhupeng.arch.components.fragment.XFragment;
+import space.zhupeng.arch.ui.fragment.XFragment;
 
 /**
  * @author zhupeng
  * @date 2016/12/12
  */
-
 @SuppressWarnings("all")
 public abstract class XActivity extends AppCompatActivity {
 
     protected XFragment mCurrentFragment;
 
-    protected void pushFragment(final Class<? extends XFragment> cls, final Object data) {
-        pushFragment(cls, data, true);
+    public void pushFragment(final XFragment fragment) {
+        pushFragment(fragment, null, true);
     }
 
-    protected void pushFragment(final Class<? extends XFragment> cls, final Object data, final boolean addToBackStack) {
-        if (null == cls) {
-            return;
-        }
+    public void pushFragment(final XFragment fragment, final Object data) {
+        pushFragment(fragment, data, true);
+    }
 
+    public void pushFragment(final XFragment fragment, final Object data, final boolean addToBackStack) {
         try {
-            final String fname = cls.getName();
+            final String fname = fragment.getClass().getName();
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            XFragment fragment = (XFragment) fm.findFragmentByTag(fname);
-            if (null == fragment) {
-                fragment = (XFragment) Fragment.instantiate(this, fname);
-            }
 
             if (this.mCurrentFragment != null && this.mCurrentFragment != fragment) {
                 ft.hide(this.mCurrentFragment);
@@ -94,15 +92,39 @@ public abstract class XActivity extends AppCompatActivity {
         }
     }
 
-    protected void replaceFragment(Class<? extends XFragment> cls, Object data) {
+    public void pushFragment(final Class<? extends XFragment> cls, final Object data) {
+        pushFragment(cls, data, true);
+    }
+
+    public void pushFragment(final Class<? extends XFragment> cls, final Object data, final boolean addToBackStack) {
         if (null == cls) {
             return;
         }
 
+        XFragment fragment;
+        try {
+            final String fname = cls.getName();
+            FragmentManager fm = getSupportFragmentManager();
+            fragment = (XFragment) fm.findFragmentByTag(fname);
+            if (null == fragment) {
+                fragment = (XFragment) Fragment.instantiate(this, fname);
+            }
+        } catch (Exception e) {
+            Analysis.reportError(this, e);
+            return;
+        }
+
+        pushFragment(fragment, data, addToBackStack);
+    }
+
+    public void replaceFragment(final XFragment fragment) {
+        replaceFragment(fragment, null);
+    }
+
+    public void replaceFragment(final XFragment fragment, final Object data) {
         try {
             FragmentManager fm = this.getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            XFragment fragment = cls.newInstance();
             fragment.setData(data);
             if (fm.getBackStackEntryCount() > 0) {
                 Transition transition = fragment.onCreateTransition();
@@ -141,6 +163,22 @@ public abstract class XActivity extends AppCompatActivity {
         }
     }
 
+    public void replaceFragment(final Class<? extends XFragment> cls, final Object data) {
+        if (null == cls) {
+            return;
+        }
+
+        XFragment fragment;
+        try {
+            fragment = cls.newInstance();
+        } catch (Exception e) {
+            Analysis.reportError(this, e);
+            return;
+        }
+
+        replaceFragment(fragment, data);
+    }
+
     /**
      * 所有fragment切换动画
      *
@@ -167,7 +205,27 @@ public abstract class XActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (mCurrentFragment != null) {
             mCurrentFragment.onActivityResult(requestCode, resultCode, data);
+        } else {
+            List<Fragment> fragments = getSupportFragmentManager().getFragments();
+            for (Fragment fragment : fragments) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mCurrentFragment != null && mCurrentFragment.onKeyDown(keyCode, event)) {
+            return true;
+        } else {
+            List<Fragment> fragments = getSupportFragmentManager().getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof XFragment && fragment.isVisible()) {
+                    return ((XFragment) fragment).onKeyDown(keyCode, event);
+                }
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

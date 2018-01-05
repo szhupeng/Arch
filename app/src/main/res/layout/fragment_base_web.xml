@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_root"
+    style="@style/FitsSystemStyle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_toolbar" />
+
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_below="@+id/toolbar"
+        android:progressDrawable="@drawable/bg_web_progress" />
+</RelativeLayout>

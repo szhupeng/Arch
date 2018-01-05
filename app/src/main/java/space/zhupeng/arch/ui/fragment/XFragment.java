@@ -1,8 +1,9 @@
-package space.zhupeng.arch.components.fragment;
+package space.zhupeng.arch.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 
 import java.lang.reflect.Field;
 
@@ -88,6 +89,10 @@ public abstract class XFragment extends Fragment {
             loadDataLazily();
             isDataLoaded = true;
         }
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return false;
     }
 
     @Override

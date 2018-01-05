@@ -1,4 +1,4 @@
-package space.zhupeng.arch.components;
+package space.zhupeng.arch.web;
 
 import android.app.Service;
 import android.content.Intent;

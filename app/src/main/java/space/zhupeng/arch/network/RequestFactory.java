@@ -1,6 +1,6 @@
 package space.zhupeng.arch.network;
 
-import space.zhupeng.arch.network.impl.OkhttpRequest;
+import space.zhupeng.arch.network.impl.OkHttpRequest;
 
 /**
  * @author zhupeng
@@ -10,6 +10,6 @@ import space.zhupeng.arch.network.impl.OkhttpRequest;
 public final class RequestFactory {
 
     public static Request getRequest() {
-        return new OkhttpRequest();
+        return new OkHttpRequest();
     }
 }

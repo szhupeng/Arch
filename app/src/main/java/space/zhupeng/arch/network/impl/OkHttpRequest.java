@@ -16,11 +16,11 @@ import space.zhupeng.arch.network.Request;
  * @date 2016/12/21
  */
 
-public class OkhttpRequest implements Request {
+public class OkHttpRequest implements Request {
 
     private OkHttpClient mOkHttpClient;
 
-    public OkhttpRequest() {
+    public OkHttpRequest() {
         mOkHttpClient = new OkHttpClient();
     }
 

@@ -1,11 +1,12 @@
-package space.zhupeng.arch.components.activity;
+package space.zhupeng.arch.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import space.zhupeng.arch.R;
+import space.zhupeng.arch.ui.fragment.BaseWebFragment;
+import space.zhupeng.arch.ui.fragment.MainListFragment;
 import space.zhupeng.arch.widget.dialog.BottomSheet;
 
 public class MainActivity extends BaseToolbarActivity {
@@ -28,6 +29,7 @@ public class MainActivity extends BaseToolbarActivity {
         hideLeft();
         hideRightText();
 //      hideRightIcon();
+        pushFragment(MainListFragment.class, null);
     }
 
     @Override
@@ -35,7 +37,9 @@ public class MainActivity extends BaseToolbarActivity {
 //        BottomSheet dialog = new SimpleDialog();
 //        dialog.show(getSupportFragmentManager());
 //        BaseWebActivity.toHere(getActivity(), "http://www.baidu.com/", null, 0);
-        startActivity(new Intent(this, TabActivity.class));
+//        startActivity(new Intent(this, TabActivity.class));
+
+        BaseWebActivity.toHere(getActivity(), "http://www.baidu.com/", null, 0);
     }
 
     public static class SimpleDialog extends BottomSheet {
