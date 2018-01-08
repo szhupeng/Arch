@@ -65,4 +65,8 @@
         </attr>
         <attr name="fastScrollerIgnoreTouchesOutsideHandle" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="BottomNavigationBar">
+        <attr name="badge" format="reference" />
+    </declare-styleable>
 </resources>

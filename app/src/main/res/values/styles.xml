@@ -14,7 +14,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="FitsSystemStyle">
+    <style name="MaterialUiStyle">
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:clipToPadding">false</item>
         <item name="android:background">@color/white</item>

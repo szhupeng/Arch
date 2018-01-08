@@ -2,18 +2,32 @@ package space.zhupeng.arch.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import space.zhupeng.arch.R;
 import space.zhupeng.arch.ui.fragment.BaseWebFragment;
 import space.zhupeng.arch.ui.fragment.MainListFragment;
 import space.zhupeng.arch.widget.dialog.BottomSheet;
 
-public class MainActivity extends BaseToolbarActivity {
+public class MainActivity extends BaseBottomBarActivity {
 
     @Override
-    protected int getLayoutResId() {
-        return R.layout.activity_main;
+    protected int getBottomMenuResId() {
+        return R.menu.menu;
+    }
+
+    @Override
+    protected List<Fragment> getFragments() {
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(new MainListFragment());
+        fragments.add(BaseWebFragment.newInstance("http://www.baidu.com", null));
+        fragments.add(new MainListFragment());
+        fragments.add(BaseWebFragment.newInstance("http://www.baidu.com", null));
+        return fragments;
     }
 
     @Override
@@ -29,7 +43,7 @@ public class MainActivity extends BaseToolbarActivity {
         hideLeft();
         hideRightText();
 //      hideRightIcon();
-        pushFragment(MainListFragment.class, null);
+//        pushFragment(MainListFragment.class, null);
     }
 
     @Override

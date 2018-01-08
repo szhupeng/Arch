@@ -14,7 +14,8 @@ import static space.zhupeng.arch.ui.fragment.BaseWebFragment.EXTRA_JS_FILE;
 import static space.zhupeng.arch.ui.fragment.BaseWebFragment.EXTRA_URL;
 
 /**
- * Created by zhupeng on 2018/1/5.
+ * @author zhupeng
+ * @date 2018/1/5
  */
 
 public class BaseWebActivity extends BaseActivity {
