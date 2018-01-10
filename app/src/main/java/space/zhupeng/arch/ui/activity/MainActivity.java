@@ -1,8 +1,10 @@
 package space.zhupeng.arch.ui.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import space.zhupeng.arch.R;
 import space.zhupeng.arch.ui.fragment.BaseWebFragment;
 import space.zhupeng.arch.ui.fragment.MainListFragment;
 import space.zhupeng.arch.widget.dialog.BottomSheet;
+import space.zhupeng.arch.widget.tooltip.ToolTip;
 
 public class MainActivity extends BaseBottomBarActivity {
 
@@ -53,7 +56,16 @@ public class MainActivity extends BaseBottomBarActivity {
 //        BaseWebActivity.toHere(getActivity(), "http://www.baidu.com/", null, 0);
 //        startActivity(new Intent(this, TabActivity.class));
 
-        BaseWebActivity.toHere(getActivity(), "http://www.baidu.com/", null, 0);
+//        BaseWebActivity.toHere(getActivity(), "http://www.baidu.com/", null, 0);
+        TextView textView = new TextView(this);
+        textView.setText("哈哈哈");
+        textView.setTextColor(Color.WHITE);
+        ToolTip.make(getActivity())
+                .anchor(mToolbar)
+                .setContentView(textView)
+                .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary))
+                .showArrow(true)
+                .show();
     }
 
     public static class SimpleDialog extends BottomSheet {

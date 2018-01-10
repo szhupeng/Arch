@@ -1,4 +1,4 @@
-package space.zhupeng.arch.network;
+package space.zhupeng.arch.net;
 
 /**
  * @author zhupeng

@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion project.ANDROID_BUILD_SDK_VERSION as int
-    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
         applicationId "space.zhupeng.arch"
-        minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION as int
-        targetSdkVersion project.ANDROID_BUILD_TARGET_SDK_VERSION as int
-        versionCode project.VERSION_CODE as int
-        versionName project.VERSION_NAME
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
     }
 
     buildTypes {
@@ -23,13 +23,18 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile "com.android.support:appcompat-v7:${APPCOMPAT_VERSION}"
-    compile "com.android.support:design:${APPCOMPAT_VERSION}"
-    compile "com.android.support:cardview-v7:${APPCOMPAT_VERSION}"
-    compile "com.android.support:support-v4:${APPCOMPAT_VERSION}"
-    compile "com.android.support:multidex:1.0.1"
-    compile 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    compile 'com.google.code.gson:gson:2.8.2'
-    compile 'com.squareup.okhttp3:okhttp:3.9.1'
+    compile rootProject.ext.dependencies.appcompatV7
+    compile rootProject.ext.dependencies.design
+    compile rootProject.ext.dependencies.cardview
+    compile rootProject.ext.dependencies.supportV4
+    implementation rootProject.ext.dependencies.lifecycle
+    annotationProcessor rootProject.ext.dependencies.lifecycleCompiler
+    compile rootProject.ext.dependencies.multidex
+    compile rootProject.ext.dependencies.butterknife
+    annotationProcessor rootProject.ext.dependencies.butterknifeCompiler
+    compile rootProject.ext.dependencies.gson
+    compile rootProject.ext.dependencies.retrofit
+    compile rootProject.ext.dependencies.converter
+    compile rootProject.ext.dependencies.okhttp
+    compile rootProject.ext.dependencies.loggingInterceptor
 }
