@@ -1,5 +1,6 @@
 package space.zhupeng.arch.mvp.view;
 
+import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -13,6 +14,8 @@ import android.view.View;
  */
 
 public interface BaseView {
+    <C extends Context> C getGenericContext();
+
     void showToast(@NonNull final CharSequence text);
 
     void showToast(@StringRes final int resId);

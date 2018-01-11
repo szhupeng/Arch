@@ -163,6 +163,11 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
         DialogFactory.dismissDialog();
     }
 
+    @Override
+    public Activity getGenericContext() {
+        return getActivity();
+    }
+
     @CallSuper
     @Override
     public Loader<P> onCreateLoader(int id, Bundle args) {

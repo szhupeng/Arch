@@ -1,18 +1,24 @@
 package space.zhupeng.arch.manager;
 
-import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.util.ArrayMap;
+import android.text.TextUtils;
 
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import space.zhupeng.arch.Provider;
 
 /**
  * @author zhupeng
@@ -20,6 +26,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class HttpHelper {
+
+    public interface HeadersProvider extends Provider<ArrayMap<String, String>> {
+    }
+
     public static final String ACCEPT_LANGUAGE = "Accept-Language";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String CONTENT_TYPE_JSON = "application/json;charset=UTF-8";
@@ -29,25 +39,93 @@ public class HttpHelper {
     private static final String DOMAIN_NAME = "Domain-Name";
 
     private Retrofit mRetrofit;
-    private OkHttpClient mHttpClient;
-    private Context context;
-    private final HashMap<Class, Object> mApiServiceHub = new HashMap<>(1);
-    private final Map<String, HttpUrl> mDomainNameHub = new HashMap<>(1);
+    private final ArrayMap<String, Object> mApiServiceHub = new ArrayMap<>(1);
+    private final ArrayMap<String, HttpUrl> mDomainNameHub = new ArrayMap<>(1);
 
-    private Interceptor mHeaderInterceptor;
+    private HeadersProvider mHeadersProvider;
+    private Interceptor mHeadersInterceptor;
+    private HttpLoggingInterceptor mLoggingInterceptor;
 
-    public final void baseUrl(String baseURL) {
-        mRetrofit = new Retrofit.Builder().client(mHttpClient)
+    public HttpHelper(@Nullable HeadersProvider provider) {
+        this.mHeadersProvider = provider;
+
+        this.mHeadersInterceptor = new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                return chain.proceed(processRequest(chain.request()));
+            }
+        };
+
+        this.mLoggingInterceptor = new HttpLoggingInterceptor();
+    }
+
+    public void setDebuggable(boolean debuggable) {
+        if (debuggable) {
+            this.mLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+            this.mLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
+    }
+
+    public void setHeadersProvider(final HeadersProvider provider) {
+        this.mHeadersProvider = provider;
+    }
+
+    public final void baseUrl(@NonNull String baseURL) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        OkHttpClient client = builder.connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS)
+                .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
+                .addInterceptor(mHeadersInterceptor)
+                .addInterceptor(mLoggingInterceptor)
+                .build();
+        mRetrofit = new Retrofit.Builder().client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(baseURL)
                 .build();
         mApiServiceHub.clear();
     }
 
+    /**
+     * 对 {@link Request} 进行处理
+     *
+     * @param request
+     * @return
+     */
+    private Request processRequest(final Request request) {
+        Request.Builder builder = request.newBuilder();
+
+        if (mHeadersProvider != null) {
+            ArrayMap<String, String> headers = mHeadersProvider.get();
+            if (headers != null && !headers.isEmpty()) {
+                for (int i = 0, size = headers.size(); i < size; i++) {
+                    builder.header(headers.keyAt(i), headers.valueAt(i));
+                }
+            }
+        }
+        builder.header(ACCEPT_LANGUAGE, generateAcceptLanguage())
+                .header(CONTENT_TYPE, CONTENT_TYPE_JSON);
+
+        final String domainName = obtainDomainName(request);
+
+        HttpUrl httpUrl = null;
+
+        // 如果有 header，获取 header 中配置的url
+        if (!TextUtils.isEmpty(domainName)) {
+            httpUrl = fetchDomain(domainName);
+            builder.removeHeader(DOMAIN_NAME);
+        }
+
+        if (null != httpUrl) {
+            return builder.url(parseUrl(httpUrl, request.url())).build();
+        }
+
+        return builder.build();
+    }
+
     public final <T> T createApi(Class<T> service) {
         if (!mApiServiceHub.containsKey(service)) {
             T instance = mRetrofit.create(service);
-            mApiServiceHub.put(service, instance);
+            mApiServiceHub.put(service.getCanonicalName(), instance);
         }
 
         //noinspection unchecked
@@ -111,11 +189,6 @@ public class HttpHelper {
     }
 
     protected HttpUrl parseUrl(HttpUrl domainUrl, HttpUrl url) {
-
-        // 如果 HttpUrl.parse(url); 解析为 null 说明,url 格式不正确,正确的格式为 "https://github.com:443"
-        // http 默认端口 80,https 默认端口 443 ,如果端口号是默认端口号就可以将 ":443" 去掉
-        // 只支持 http 和 https
-
         if (null == domainUrl) return url;
 
         return url.newBuilder()

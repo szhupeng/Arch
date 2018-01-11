@@ -30,12 +30,12 @@ public class ToolbarDelegateImpl implements ToolbarDelegate {
     private ImageView ivRight;
 
     public ToolbarDelegateImpl(AppCompatActivity activity, Toolbar toolbar) {
-        tvLeft = activity.findViewById(R.id.tv_left);
-        llCenter = activity.findViewById(R.id.ll_center);
-        tvTitle = activity.findViewById(R.id.tv_title);
-        tvSubtitle = activity.findViewById(R.id.tv_subtitle);
-        tvRight = activity.findViewById(R.id.tv_right);
-        ivRight = activity.findViewById(R.id.iv_right);
+        tvLeft = (TextView) activity.findViewById(R.id.tv_left);
+        llCenter = (LinearLayout) activity.findViewById(R.id.ll_center);
+        tvTitle = (TextView) activity.findViewById(R.id.tv_title);
+        tvSubtitle = (TextView) activity.findViewById(R.id.tv_subtitle);
+        tvRight = (TextView) activity.findViewById(R.id.tv_right);
+        ivRight = (ImageView) activity.findViewById(R.id.iv_right);
 
         setToolbar(activity, toolbar);
     }

@@ -1,6 +1,7 @@
 package space.zhupeng.arch.ui.activity;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -155,8 +156,8 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
      * 返回上一层Activity
      */
     protected void navigateUp() {
-        if (NavUtils.getParentActivityName(getActivity()) != null) {
-            NavUtils.navigateUpFromSameTask(getActivity());
+        if (NavUtils.getParentActivityName(getGenericContext()) != null) {
+            NavUtils.navigateUpFromSameTask(getGenericContext());
         }
     }
 
@@ -194,22 +195,27 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
     @Override
     public void showMessageProgress(@NonNull final CharSequence message) {
-        DialogFactory.showProgressDialog(getActivity(), message);
+        DialogFactory.showProgressDialog(getGenericContext(), message);
     }
 
     @Override
     public void showMessageProgress(@StringRes int resId) {
-        DialogFactory.showProgressDialog(getActivity(), getResources().getString(resId));
+        DialogFactory.showProgressDialog(getGenericContext(), getResources().getString(resId));
     }
 
     @Override
     public void showSimpleProgress() {
-        DialogFactory.showProgressDialog(getActivity());
+        DialogFactory.showProgressDialog(this.getGenericContext());
     }
 
     @Override
     public void closeDialog() {
         DialogFactory.dismissDialog();
+    }
+
+    @Override
+    public Activity getGenericContext() {
+        return this;
     }
 
     @Override
@@ -255,7 +261,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
      * @param runnable
      */
     public final void runOnUiThreadSafely(final Runnable runnable) {
-        Utils.runOnUiThreadSafely(getActivity(), runnable);
+        Utils.runOnUiThreadSafely(getGenericContext(), runnable);
     }
 
     /**
@@ -273,7 +279,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
      * @return
      */
     protected final boolean toCheckNetwork() {
-        if (!NetworkUtils.isNetworkValid(getActivity())) {
+        if (!NetworkUtils.isNetworkValid(getGenericContext())) {
             showToast("网络连接不可用");
             return false;
         }
@@ -282,10 +288,6 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
     protected <T extends View> T findView(int id) {
         return (T) findViewById(id);
-    }
-
-    protected BaseActivity getActivity() {
-        return this;
     }
 
     @LayoutRes

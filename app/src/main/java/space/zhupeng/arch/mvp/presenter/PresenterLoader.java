@@ -4,7 +4,8 @@ import android.content.Context;
 import android.support.v4.content.Loader;
 
 /**
- * 将同步的Loader作为Presenter的缓存，延长Presenter寿命
+ * 将同步的Loader作为Presenter的缓存，延长Presenter的生命周期，
+ * 使得Presenter能在View消亡后还持续存在
  *
  * @author zhupeng
  * @date 2017/9/7

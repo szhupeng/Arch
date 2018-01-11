@@ -155,7 +155,7 @@ public abstract class Repository<T> implements LifecycleObserver {
     }
 
     /**
-     * 加载本地数据（数据库，文件等数据）
+     * 异步加载本地数据（数据库，文件等数据）
      *
      * @param callback
      * @return false 无本地数据，true 有本地数据
@@ -163,12 +163,27 @@ public abstract class Repository<T> implements LifecycleObserver {
     protected void loadFromLocal(final Callback callback) {
     }
 
+    /**
+     * 同步加载本地数据（数据库，文件等数据）
+     *
+     * @return
+     */
     protected T loadFromLocal() {
         return null;
     }
 
+    /**
+     * 同步加载服务器数据（数据库，文件等数据）
+     *
+     * @return
+     */
     protected abstract T loadFromRemote();
 
+    /**
+     * 异步加载服务器数据
+     *
+     * @param callback
+     */
     protected abstract void loadFromRemote(final Callback callback);
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)

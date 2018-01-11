@@ -15,7 +15,7 @@ public class PreferenceHelper {
 
     public PreferenceHelper(Context context, String prefsName) {
         this.context = context.getApplicationContext();
-//        this.mSharedPreferences = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
+        this.mSharedPreferences = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
     }
 
     protected void put(String key, Object value) {

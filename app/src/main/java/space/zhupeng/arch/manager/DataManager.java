@@ -1,37 +1,66 @@
 package space.zhupeng.arch.manager;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+
+import space.zhupeng.arch.Provider;
 
 /**
+ * 子类实现为单例模式
+ *
  * @author zhupeng
  * @date 2018/1/9
  */
 
 public class DataManager {
 
-    private static DataManager sInstance;
-
     protected Context context;
-    protected final HttpHelper mHttpHelper;
-    protected final PreferenceHelper mPreferenceHelper;
-    protected final DBHelper mDBHelper;
+    protected Provider<HttpHelper> mHttpHelperProvider;
+    protected Provider<PreferenceHelper> mPreferenceHelperProvider;
+    protected Provider<DBHelper> mDBHelperProvider;
 
-    private DataManager(Context context) {
-        this.context = context;
-        this.mHttpHelper = new HttpHelper();
-        this.mPreferenceHelper = new PreferenceHelper(context, null);
-        this.mDBHelper = new DBHelper();
+    public DataManager(Context context, HttpHelper.HeadersProvider provider, @NonNull final String prefsName) {
+        this.context = context.getApplicationContext();
+
+        initialize(provider, prefsName);
     }
 
-    public static DataManager obtain(Context context) {
-        if (null == sInstance) {
-            synchronized (DataManager.class) {
-                if (null == sInstance) {
-                    sInstance = new DataManager(context.getApplicationContext());
-                }
-            }
-        }
+    public void setDebuggable(boolean debuggable) {
+        getHttpHelper().setDebuggable(debuggable);
+    }
 
-        return sInstance;
+    protected void initialize(final HttpHelper.HeadersProvider provider, final String prefsName) {
+        this.mHttpHelperProvider = new Provider<HttpHelper>() {
+            @Override
+            public HttpHelper get() {
+                return new HttpHelper(provider);
+            }
+        };
+
+        this.mPreferenceHelperProvider = new Provider<PreferenceHelper>() {
+            @Override
+            public PreferenceHelper get() {
+                return new PreferenceHelper(context, prefsName);
+            }
+        };
+
+        this.mDBHelperProvider = new Provider<DBHelper>() {
+            @Override
+            public DBHelper get() {
+                return new DBHelper();
+            }
+        };
+    }
+
+    public final HttpHelper getHttpHelper() {
+        return this.mHttpHelperProvider.get();
+    }
+
+    public final PreferenceHelper getPreferenceHelper() {
+        return this.mPreferenceHelperProvider.get();
+    }
+
+    public final DBHelper getDBHelper() {
+        return this.mDBHelperProvider.get();
     }
 }

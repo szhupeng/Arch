@@ -9,12 +9,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import java.util.List;
 
 import space.zhupeng.arch.R;
-import space.zhupeng.arch.analysis.Analysis;
 import space.zhupeng.arch.anim.FragmentAnimation;
 import space.zhupeng.arch.anim.Transition;
 import space.zhupeng.arch.ui.fragment.XFragment;
@@ -88,7 +88,7 @@ public abstract class XActivity extends AppCompatActivity {
 
             ft.commitAllowingStateLoss();
         } catch (Exception e) {
-            Analysis.reportError(this, e);
+            Log.e("XActivity:pushFragment", e.getMessage());
         }
     }
 
@@ -114,7 +114,7 @@ public abstract class XActivity extends AppCompatActivity {
                 fragment = (XFragment) Fragment.instantiate(this, fname);
             }
         } catch (Exception e) {
-            Analysis.reportError(this, e);
+            Log.e("XActivity:pushFragment", e.getMessage());
             return;
         }
 
@@ -163,7 +163,7 @@ public abstract class XActivity extends AppCompatActivity {
 
             ft.commitAllowingStateLoss();
         } catch (Exception e) {
-            Analysis.reportError(this, e);
+            Log.e("XActivity:replaceFragment", e.getMessage());
         }
     }
 
@@ -176,7 +176,7 @@ public abstract class XActivity extends AppCompatActivity {
         try {
             fragment = cls.newInstance();
         } catch (Exception e) {
-            Analysis.reportError(this, e);
+            Log.e("XActivity:replaceFragment", e.getMessage());
             return;
         }
 
