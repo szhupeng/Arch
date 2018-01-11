@@ -24,7 +24,7 @@ import space.zhupeng.arch.ui.ToolbarDelegateImpl;
 public abstract class BaseToolbarFragment<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends BaseFragment<M, V, P> implements ToolbarDelegate, View.OnClickListener {
 
     @Nullable
-    Toolbar mToolbar;
+    protected Toolbar mToolbar;
 
     private ToolbarDelegateImpl mToolbarDelegate;
 
@@ -33,7 +33,7 @@ public abstract class BaseToolbarFragment<M extends Repository, V extends BaseVi
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
 
-        mToolbar = view.findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         if (mToolbar != null) {
             mToolbarDelegate = new ToolbarDelegateImpl(this, view, mToolbar);
             bindClickEvent(this);

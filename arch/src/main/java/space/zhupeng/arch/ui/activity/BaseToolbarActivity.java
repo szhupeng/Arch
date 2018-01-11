@@ -38,7 +38,7 @@ public abstract class BaseToolbarActivity<M extends Repository, V extends BaseVi
     protected void initView(@Nullable Bundle savedInstanceState) {
         super.initView(savedInstanceState);
 
-        mToolbar = findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             mToolbarDelegate = new ToolbarDelegateImpl(this, mToolbar);
             bindClickEvent(this);

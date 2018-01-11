@@ -41,8 +41,8 @@ public abstract class BaseBottomBarActivity extends BaseToolbarActivity {
     protected void initView(@Nullable Bundle savedInstanceState) {
         super.initView(savedInstanceState);
 
-        vpBarContent = findViewById(R.id.vp_bar_content);
-        mBottomNavigationBar = findViewById(R.id.bottom_navigation_bar);
+        vpBarContent = (NoScrollViewPager) findViewById(R.id.vp_bar_content);
+        mBottomNavigationBar = (BottomNavigationBar) findViewById(R.id.bottom_navigation_bar);
 
         setupBottomNavigation(mBottomNavigationBar);
         mBottomNavigationBar.inflateMenu(getBottomMenuResId());

@@ -31,7 +31,7 @@ public abstract class BaseStateFragment<M extends Repository, V extends BaseView
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
 
-        mMultiStateView = view.findViewById(R.id.multi_state_view);
+        mMultiStateView = (MultiStateView)view.findViewById(R.id.multi_state_view);
     }
 
     protected void showContentView() {

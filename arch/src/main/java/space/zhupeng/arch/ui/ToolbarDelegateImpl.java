@@ -41,12 +41,12 @@ public class ToolbarDelegateImpl implements ToolbarDelegate {
     }
 
     public ToolbarDelegateImpl(@NonNull Object target, @NonNull View source, Toolbar toolbar) {
-        tvLeft = source.findViewById(R.id.tv_left);
-        llCenter = source.findViewById(R.id.ll_center);
-        tvTitle = source.findViewById(R.id.tv_title);
-        tvSubtitle = source.findViewById(R.id.tv_subtitle);
-        tvRight = source.findViewById(R.id.tv_right);
-        ivRight = source.findViewById(R.id.iv_right);
+        tvLeft = (TextView) source.findViewById(R.id.tv_left);
+        llCenter = (LinearLayout) source.findViewById(R.id.ll_center);
+        tvTitle = (TextView) source.findViewById(R.id.tv_title);
+        tvSubtitle = (TextView) source.findViewById(R.id.tv_subtitle);
+        tvRight = (TextView) source.findViewById(R.id.tv_right);
+        ivRight = (ImageView) source.findViewById(R.id.iv_right);
 
         if (target instanceof Fragment) {
             setToolbar((AppCompatActivity) ((Fragment) target).getActivity(), toolbar);

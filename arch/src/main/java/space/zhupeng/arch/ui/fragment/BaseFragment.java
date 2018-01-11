@@ -165,7 +165,7 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
 
     @Override
     public Activity getGenericContext() {
-        return getActivity();
+        return this.mParentActivity;
     }
 
     @CallSuper

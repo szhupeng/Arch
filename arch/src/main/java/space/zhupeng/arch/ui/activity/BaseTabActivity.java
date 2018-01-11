@@ -39,8 +39,8 @@ public abstract class BaseTabActivity<M extends Repository, V extends BaseView, 
     protected void initView(@Nullable Bundle savedInstanceState) {
         super.initView(savedInstanceState);
 
-        mTabLayout = findViewById(R.id.layout_tabs_bar);
-        vpTabContent = findViewById(R.id.vp_tab_content);
+        mTabLayout = (TabLayout) findViewById(R.id.layout_tabs_bar);
+        vpTabContent = (ViewPager) findViewById(R.id.vp_tab_content);
 
         vpTabContent.setAdapter(getPagerAdapter());
         vpTabContent.setOffscreenPageLimit(getOffscreenPageLimit());

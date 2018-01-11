@@ -82,9 +82,9 @@ public class BaseWebFragment extends BaseToolbarFragment {
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
 
-        mWebRoot = view.findViewById(R.id.web_root);
-        mWebView = view.findViewById(R.id.wv_html);
-        pbLoading = view.findViewById(R.id.pb_loading);
+        mWebRoot = (ViewGroup) view.findViewById(R.id.web_root);
+        mWebView = (WebView) view.findViewById(R.id.wv_html);
+        pbLoading = (ProgressBar) view.findViewById(R.id.pb_loading);
 
         Bundle args = getArguments();
         if (null == args) {

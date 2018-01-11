@@ -53,8 +53,8 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
 
-        mPtrFrameLayout = view.findViewById(R.id.pull_to_refresh);
-        rvDataList = view.findViewById(R.id.rv_data_list);
+        mPtrFrameLayout = (PtrFrameLayout) view.findViewById(R.id.pull_to_refresh);
+        rvDataList = (RecyclerView) view.findViewById(R.id.rv_data_list);
 
         initRecyclerView();
 

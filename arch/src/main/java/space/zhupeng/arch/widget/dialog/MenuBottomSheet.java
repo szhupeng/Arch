@@ -27,8 +27,6 @@ public class MenuBottomSheet extends BottomSheet {
     @Override
     protected void initViews(@Nullable Bundle savedInstanceState) {
         super.initViews(savedInstanceState);
-
-
     }
 
     public void setMenuAdapter(MenuAdapter adapter) {
