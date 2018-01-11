@@ -8,7 +8,7 @@ ext {
             versionName      : "1.0.0"
     ]
 
-    support = "25.1.0"
+    support = "26.1.0"
     butterknife = "8.8.1"
 
     dependencies = [
