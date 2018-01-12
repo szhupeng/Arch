@@ -25,7 +25,8 @@ import space.zhupeng.arch.widget.viewpager.NoScrollViewPager;
  * @date 2018/1/8
  */
 
-public abstract class BaseBottomBarActivity extends BaseToolbarActivity {
+public abstract class BaseBottomBarActivity extends BaseToolbarActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
+        BottomNavigationView.OnNavigationItemReselectedListener {
 
     protected NoScrollViewPager vpBarContent;
     protected BottomNavigationBar mBottomNavigationBar;
@@ -77,21 +78,25 @@ public abstract class BaseBottomBarActivity extends BaseToolbarActivity {
 
     @CallSuper
     protected void setupBottomNavigation(final BottomNavigationView view) {
-        view.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                for (int i = 0, size = view.getMenu().size(); i < size; i++) {
-                    if (view.getMenu().getItem(i) == item) {
-                        vpBarContent.setCurrentItem(i);
-                        break;
-                    }
-                }
-                return false;
-            }
-        });
+        view.setOnNavigationItemSelectedListener(this);
     }
 
-    public void setBadge(int position, int count) {
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        for (int i = 0, size = mBottomNavigationBar.getMenu().size(); i < size; i++) {
+            if (mBottomNavigationBar.getMenu().getItem(i) == item) {
+                vpBarContent.setCurrentItem(i);
+                break;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void onNavigationItemReselected(@NonNull MenuItem item) {
+    }
+
+    public final void setBadge(int position, int count) {
         if (mBottomNavigationBar != null) {
             mBottomNavigationBar.setBadgePositionValue(position, count);
         }

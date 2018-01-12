@@ -67,7 +67,7 @@ public class HttpHelper {
         }
     }
 
-    public void setHeadersProvider(final HeadersProvider provider) {
+    public final void setHeadersProvider(final HeadersProvider provider) {
         this.mHeadersProvider = provider;
     }
 
@@ -169,13 +169,13 @@ public class HttpHelper {
         return mDomainNameHub.get(domainName);
     }
 
-    public void removeDomain(String domainName) {
+    public final void removeDomain(String domainName) {
         synchronized (mDomainNameHub) {
             mDomainNameHub.remove(domainName);
         }
     }
 
-    public void clearAllDomain() {
+    public final void clearAllDomain() {
         mDomainNameHub.clear();
     }
 
@@ -188,7 +188,7 @@ public class HttpHelper {
         }
     }
 
-    protected HttpUrl parseUrl(HttpUrl domainUrl, HttpUrl url) {
+    protected final HttpUrl parseUrl(HttpUrl domainUrl, HttpUrl url) {
         if (null == domainUrl) return url;
 
         return url.newBuilder()
@@ -198,7 +198,7 @@ public class HttpHelper {
                 .build();
     }
 
-    private final String generateAcceptLanguage() {
+    private String generateAcceptLanguage() {
         Locale locale = Locale.getDefault();
         return String.format("%s-%s,%s;q=0.8,en-US;q=0.6,en;q=0.4",
                 locale.getLanguage(), locale.getCountry(), locale.getLanguage());

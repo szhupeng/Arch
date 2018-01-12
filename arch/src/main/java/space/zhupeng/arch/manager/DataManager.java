@@ -2,6 +2,7 @@ package space.zhupeng.arch.manager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import space.zhupeng.arch.Provider;
 
@@ -19,7 +20,7 @@ public class DataManager {
     protected Provider<PreferenceHelper> mPreferenceHelperProvider;
     protected Provider<DBHelper> mDBHelperProvider;
 
-    public DataManager(Context context, HttpHelper.HeadersProvider provider, @NonNull final String prefsName) {
+    protected DataManager(Context context, HttpHelper.HeadersProvider provider, @NonNull final String prefsName) {
         this.context = context.getApplicationContext();
 
         initialize(provider, prefsName);
@@ -30,6 +31,14 @@ public class DataManager {
     }
 
     protected void initialize(final HttpHelper.HeadersProvider provider, final String prefsName) {
+        initialize(provider, prefsName, null);
+    }
+
+    protected void initialize(final HttpHelper.HeadersProvider provider, final String prefsName, final String dbName) {
+        initialize(provider, prefsName, dbName, 1);
+    }
+
+    protected void initialize(final HttpHelper.HeadersProvider provider, final String prefsName, final String dbName, final int dbVersion) {
         this.mHttpHelperProvider = new Provider<HttpHelper>() {
             @Override
             public HttpHelper get() {
@@ -40,6 +49,9 @@ public class DataManager {
         this.mPreferenceHelperProvider = new Provider<PreferenceHelper>() {
             @Override
             public PreferenceHelper get() {
+                if (TextUtils.isEmpty(prefsName)) {
+                    throw new RuntimeException("if you want to operate preference, you must pass prefsName when call initialize function");
+                }
                 return new PreferenceHelper(context, prefsName);
             }
         };
@@ -47,7 +59,11 @@ public class DataManager {
         this.mDBHelperProvider = new Provider<DBHelper>() {
             @Override
             public DBHelper get() {
-                return new DBHelper();
+                if (TextUtils.isEmpty(dbName)) {
+                    throw new RuntimeException("if you want to operate database, you must pass dbName when call initialize function");
+                }
+
+                return new DBHelper(context, dbName, dbVersion);
             }
         };
     }
