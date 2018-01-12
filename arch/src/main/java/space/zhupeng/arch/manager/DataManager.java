@@ -2,6 +2,7 @@ package space.zhupeng.arch.manager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import space.zhupeng.arch.Provider;
@@ -20,25 +21,51 @@ public class DataManager {
     protected Provider<PreferenceHelper> mPreferenceHelperProvider;
     protected Provider<DBHelper> mDBHelperProvider;
 
-    protected DataManager(Context context, HttpHelper.HeadersProvider provider, @NonNull final String prefsName) {
+    protected DataManager(Context context, @NonNull final String prefsName) {
+        this(context, null, prefsName, Context.MODE_PRIVATE, null, 1);
+    }
+
+    protected DataManager(Context context, @NonNull final String prefsName, final int mode) {
+        this(context, null, prefsName, mode, null, 1);
+    }
+
+    protected DataManager(Context context,
+                          @Nullable HttpHelper.HeadersProvider provider,
+                          @NonNull final String prefsName) {
+        this(context, provider, prefsName, Context.MODE_PRIVATE, null, 1);
+    }
+
+    protected DataManager(Context context,
+                          @Nullable HttpHelper.HeadersProvider provider,
+                          @NonNull final String prefsName,
+                          final int mode) {
+        this(context, provider, prefsName, mode, null, 1);
+    }
+
+    protected DataManager(Context context,
+                          @Nullable HttpHelper.HeadersProvider provider,
+                          @NonNull final String prefsName,
+                          final int mode,
+                          final String dbName) {
+        this(context, provider, prefsName, mode, dbName, 1);
+    }
+
+    protected DataManager(@NonNull Context context,
+                          @Nullable HttpHelper.HeadersProvider provider,
+                          @NonNull final String prefsName,
+                          final int mode,
+                          final String dbName,
+                          final int dbVersion) {
         this.context = context.getApplicationContext();
 
-        initialize(provider, prefsName);
+        initialize(provider, prefsName, mode, dbName, dbVersion);
     }
 
-    public void setDebuggable(boolean debuggable) {
-        getHttpHelper().setDebuggable(debuggable);
-    }
-
-    protected void initialize(final HttpHelper.HeadersProvider provider, final String prefsName) {
-        initialize(provider, prefsName, null);
-    }
-
-    protected void initialize(final HttpHelper.HeadersProvider provider, final String prefsName, final String dbName) {
-        initialize(provider, prefsName, dbName, 1);
-    }
-
-    protected void initialize(final HttpHelper.HeadersProvider provider, final String prefsName, final String dbName, final int dbVersion) {
+    protected void initialize(final HttpHelper.HeadersProvider provider,
+                              final String prefsName,
+                              final int mode,
+                              final String dbName,
+                              final int dbVersion) {
         this.mHttpHelperProvider = new Provider<HttpHelper>() {
             @Override
             public HttpHelper get() {
@@ -52,7 +79,7 @@ public class DataManager {
                 if (TextUtils.isEmpty(prefsName)) {
                     throw new RuntimeException("if you want to operate preference, you must pass prefsName when call initialize function");
                 }
-                return new PreferenceHelper(context, prefsName);
+                return new PreferenceHelper(context, prefsName, mode);
             }
         };
 
@@ -78,5 +105,9 @@ public class DataManager {
 
     public final DBHelper getDBHelper() {
         return this.mDBHelperProvider.get();
+    }
+
+    public void setDebuggable(boolean debuggable) {
+        getHttpHelper().setDebuggable(debuggable);
     }
 }

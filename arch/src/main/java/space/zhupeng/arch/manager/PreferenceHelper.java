@@ -15,11 +15,14 @@ public class PreferenceHelper {
     protected final Context context;
     private final SharedPreferences mPrefs;
 
-    public PreferenceHelper(Context context, String prefsName) {
-        this(context, prefsName, Context.MODE_PRIVATE);
-    }
-
     public PreferenceHelper(Context context, String prefsName, int mode) {
+        if (mode != Context.MODE_PRIVATE
+                && mode != Context.MODE_WORLD_READABLE
+                && mode != Context.MODE_WORLD_WRITEABLE
+                && mode != Context.MODE_MULTI_PROCESS) {
+            throw new IllegalArgumentException("The mode is invalid");
+        }
+
         this.context = context.getApplicationContext();
         this.mPrefs = context.getSharedPreferences(prefsName, mode);
     }
