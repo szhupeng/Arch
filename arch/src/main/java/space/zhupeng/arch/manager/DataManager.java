@@ -16,52 +16,61 @@ import space.zhupeng.arch.Provider;
 
 public class DataManager {
 
-    protected Context context;
+    protected final Context context;
     protected Provider<HttpHelper> mHttpHelperProvider;
     protected Provider<PreferenceHelper> mPreferenceHelperProvider;
     protected Provider<DBHelper> mDBHelperProvider;
 
-    protected DataManager(Context context, @NonNull final String prefsName) {
-        this(context, null, prefsName, Context.MODE_PRIVATE, null, 1);
+    public DataManager(Context context, @NonNull String baseUrl) {
+        this(context, null, baseUrl, null, Context.MODE_PRIVATE, null, 1);
     }
 
-    protected DataManager(Context context, @NonNull final String prefsName, final int mode) {
-        this(context, null, prefsName, mode, null, 1);
+    public DataManager(Context context, @NonNull String baseUrl, @NonNull final String prefsName) {
+        this(context, null, baseUrl, prefsName, Context.MODE_PRIVATE, null, 1);
     }
 
-    protected DataManager(Context context,
-                          @Nullable HttpHelper.HeadersProvider provider,
-                          @NonNull final String prefsName) {
-        this(context, provider, prefsName, Context.MODE_PRIVATE, null, 1);
+    public DataManager(Context context, @NonNull String baseUrl, @NonNull final String prefsName, final int mode) {
+        this(context, null, baseUrl, prefsName, mode, null, 1);
     }
 
-    protected DataManager(Context context,
-                          @Nullable HttpHelper.HeadersProvider provider,
-                          @NonNull final String prefsName,
-                          final int mode) {
-        this(context, provider, prefsName, mode, null, 1);
+    public DataManager(Context context,
+                       @Nullable HttpHelper.HeadersProvider provider,
+                       @NonNull String baseUrl,
+                       @NonNull final String prefsName) {
+        this(context, provider, baseUrl, prefsName, Context.MODE_PRIVATE, null, 1);
     }
 
-    protected DataManager(Context context,
-                          @Nullable HttpHelper.HeadersProvider provider,
-                          @NonNull final String prefsName,
-                          final int mode,
-                          final String dbName) {
-        this(context, provider, prefsName, mode, dbName, 1);
+    public DataManager(Context context,
+                       @Nullable HttpHelper.HeadersProvider provider,
+                       @NonNull String baseUrl,
+                       @NonNull final String prefsName,
+                       final int mode) {
+        this(context, provider, baseUrl, prefsName, mode, null, 1);
     }
 
-    protected DataManager(@NonNull Context context,
-                          @Nullable HttpHelper.HeadersProvider provider,
-                          @NonNull final String prefsName,
-                          final int mode,
-                          final String dbName,
-                          final int dbVersion) {
+    public DataManager(Context context,
+                       @Nullable HttpHelper.HeadersProvider provider,
+                       @NonNull String baseUrl,
+                       @NonNull final String prefsName,
+                       final int mode,
+                       final String dbName) {
+        this(context, provider, baseUrl, prefsName, mode, dbName, 1);
+    }
+
+    public DataManager(@NonNull Context context,
+                       @Nullable HttpHelper.HeadersProvider provider,
+                       @NonNull String baseUrl,
+                       @NonNull final String prefsName,
+                       final int mode,
+                       final String dbName,
+                       final int dbVersion) {
         this.context = context.getApplicationContext();
 
-        initialize(provider, prefsName, mode, dbName, dbVersion);
+        initialize(provider, baseUrl, prefsName, mode, dbName, dbVersion);
     }
 
     protected void initialize(final HttpHelper.HeadersProvider provider,
+                              final String baseUrl,
                               final String prefsName,
                               final int mode,
                               final String dbName,
@@ -69,7 +78,7 @@ public class DataManager {
         this.mHttpHelperProvider = new Provider<HttpHelper>() {
             @Override
             public HttpHelper get() {
-                return new HttpHelper(provider);
+                return new HttpHelper(provider, baseUrl);
             }
         };
 
@@ -107,7 +116,7 @@ public class DataManager {
         return this.mDBHelperProvider.get();
     }
 
-    public void setDebuggable(boolean debuggable) {
+    public final void setDebuggable(boolean debuggable) {
         getHttpHelper().setDebuggable(debuggable);
     }
 }

@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import space.zhupeng.arch.Provider;
@@ -46,7 +47,11 @@ public class HttpHelper {
     private Interceptor mHeadersInterceptor;
     private HttpLoggingInterceptor mLoggingInterceptor;
 
-    public HttpHelper(@Nullable HeadersProvider provider) {
+    public HttpHelper(@NonNull String baseURL) {
+        this(null, baseURL);
+    }
+
+    public HttpHelper(@Nullable HeadersProvider provider, @NonNull String baseURL) {
         this.mHeadersProvider = provider;
 
         this.mHeadersInterceptor = new Interceptor() {
@@ -57,6 +62,8 @@ public class HttpHelper {
         };
 
         this.mLoggingInterceptor = new HttpLoggingInterceptor();
+
+        baseUrl(baseURL);
     }
 
     public void setDebuggable(boolean debuggable) {
@@ -123,13 +130,13 @@ public class HttpHelper {
     }
 
     public final <T> T createApi(Class<T> service) {
-        if (!mApiServiceHub.containsKey(service)) {
+        if (!mApiServiceHub.containsKey(service.getCanonicalName())) {
             T instance = mRetrofit.create(service);
             mApiServiceHub.put(service.getCanonicalName(), instance);
         }
 
         //noinspection unchecked
-        return (T) mApiServiceHub.get(service);
+        return (T) mApiServiceHub.get(service.getCanonicalName());
     }
 
     /**
@@ -202,5 +209,14 @@ public class HttpHelper {
         Locale locale = Locale.getDefault();
         return String.format("%s-%s,%s;q=0.8,en-US;q=0.6,en;q=0.4",
                 locale.getLanguage(), locale.getCountry(), locale.getLanguage());
+    }
+
+    public static <T> retrofit2.Response<T> syncCall(Call<T> call) {
+        try {
+            return call.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

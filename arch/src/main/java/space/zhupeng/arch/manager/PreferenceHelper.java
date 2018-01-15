@@ -2,6 +2,8 @@ package space.zhupeng.arch.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import java.util.Map;
 
@@ -24,7 +26,11 @@ public class PreferenceHelper {
         }
 
         this.context = context.getApplicationContext();
-        this.mPrefs = context.getSharedPreferences(prefsName, mode);
+        if (!TextUtils.isEmpty(prefsName)) {
+            this.mPrefs = context.getSharedPreferences(prefsName, mode);
+        } else {
+            this.mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        }
     }
 
     @SuppressWarnings("WeakerAccess")

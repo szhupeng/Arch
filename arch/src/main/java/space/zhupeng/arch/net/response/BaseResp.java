@@ -7,7 +7,7 @@ package space.zhupeng.arch.net.response;
 
 public class BaseResp<T> {
 
-    public int code;
+    public int status;
     public String msg;
-    public T data;
+    public T result;
 }
