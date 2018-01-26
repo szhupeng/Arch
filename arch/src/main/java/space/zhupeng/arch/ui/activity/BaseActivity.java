@@ -3,7 +3,6 @@ package space.zhupeng.arch.ui.activity;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,6 +16,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.content.Loader;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.LayoutInflaterFactory;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -25,7 +25,7 @@ import android.view.WindowManager;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import space.zhupeng.arch.R;
-import space.zhupeng.arch.manager.StatusBarTintManager;
+import space.zhupeng.arch.manager.StatusBarTinter;
 import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.presenter.PresenterFactory;
@@ -53,8 +53,12 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
     private Unbinder mUnbinder;
 
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected final void onCreate(@Nullable Bundle savedInstanceState) {
         LayoutInflaterFactory factory = getInflaterFactory();
         if (factory != null) {
             LayoutInflaterCompat.setFactory(getLayoutInflater(), factory);
@@ -64,28 +68,21 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
         doBeforeSetView();
 
-        tintStatusBar();
-
         if (getLayoutResId() > 0) {
             setContentView(getLayoutResId());
         }
-
         mUnbinder = ButterKnife.bind(this);
 
-        getSupportLoaderManager().initLoader(ID_PRESENTER_LOADER, null, this);
+        if (isStatusBarTintEnabled()) {
+            tintStatusBar();
+        }
 
-        initView(savedInstanceState);
-
-        bindEvent();
+        getSupportLoaderManager().initLoader(ID_PRESENTER_LOADER, savedInstanceState, this);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (mPresenter != null) {
-            mPresenter.attachView((V) this);
-        }
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -135,21 +132,23 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     protected void bindEvent() {
     }
 
+    protected void onPresenterLoaded() {
+
+    }
+
+    protected boolean isStatusBarTintEnabled() {
+        return true;
+    }
+
     /**
      * 状态栏着色
      */
-    protected void tintStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-        }
-
-        StatusBarTintManager tintManager = new StatusBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
+    private void tintStatusBar() {
         int[] attrsArray = {android.R.attr.colorPrimaryDark};
-        TypedArray ta = getTheme().obtainStyledAttributes(attrsArray);
+        TypedArray ta = obtainStyledAttributes(attrsArray);
         int primaryDarkColor = ta.getColor(0, R.color.colorPrimaryDark);
         ta.recycle();
-        tintManager.setStatusBarTintColor(primaryDarkColor);
+        StatusBarTinter.setStatusBarColor(this, primaryDarkColor);
     }
 
     @TargetApi(19)
@@ -249,6 +248,11 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     public final void onLoadFinished(Loader<P> loader, P data) {
         if (ID_PRESENTER_LOADER == loader.getId()) {
             mPresenter = data;
+            if (mPresenter != null) {
+                mPresenter.attachView((V) this);
+            }
+            initView(loader);
+            bindEvent();
         }
     }
 
@@ -257,15 +261,6 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
         if (ID_PRESENTER_LOADER == loader.getId()) {
             mPresenter = null;
         }
-    }
-
-    @Override
-    public void loadData() {
-
-    }
-
-    @Override
-    public void bindData(Object data) {
     }
 
     /**

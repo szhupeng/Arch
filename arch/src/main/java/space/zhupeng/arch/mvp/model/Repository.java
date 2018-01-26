@@ -21,8 +21,8 @@ public abstract class Repository<T> implements LifecycleObserver {
 
     private final List<RepositoryObserver> mObservers = new ArrayList<>(1);
 
-    private T mCachedData;
-    protected boolean mCacheIsDirty = false;
+    protected T mCachedData;
+    protected boolean mCacheIsDirty = true;
 
     public Repository() {
     }

@@ -7,6 +7,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 import space.zhupeng.arch.net.response.BaseResp;
 import space.zhupeng.demo.vo.MenuTypeVo;
+import space.zhupeng.demo.vo.TypeSearchVo;
 
 /**
  * Created by zhupeng on 2018/1/15.
@@ -15,8 +16,11 @@ import space.zhupeng.demo.vo.MenuTypeVo;
 public interface MenuService {
 
     @GET(Api.MENU_TYPE)
-    Call<BaseResp<List<MenuTypeVo>>> getMenuTypes(@Query(Api.KEY_APP_KEY) String appkey);
+    Call<BaseResp<List<MenuTypeVo>>> getMenuTypes(@Query(Api.APP_KEY) String appKey);
 
-    @GET(Api.GET_BY_TYPE)
-    Call<BaseResp> getByType();
+    @GET(Api.GET_MENUS_BY_TYPE)
+    Call<BaseResp<TypeSearchVo>> getMenusByType(@Query(Api.CLASS_ID) String classId, @Query(Api.START) int start, @Query(Api.NUM) int num, @Query(Api.APP_KEY) String appKey);
+
+    @GET(Api.GET_DETAIL_BY_ID)
+    Call<BaseResp<TypeSearchVo.TypeSearchItem>> getDetailById(@Query(Api.ID) String id, @Query(Api.APP_KEY) String appKey);
 }

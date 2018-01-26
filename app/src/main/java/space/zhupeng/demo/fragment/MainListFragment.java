@@ -24,6 +24,7 @@ import space.zhupeng.arch.widget.adapter.entity.MultiItemEntity;
 import space.zhupeng.demo.Api;
 import space.zhupeng.demo.MenuService;
 import space.zhupeng.demo.R;
+import space.zhupeng.demo.activity.MenuTypedActivity;
 import space.zhupeng.demo.vo.MenuTypeVo;
 
 /**
@@ -51,10 +52,10 @@ public class MainListFragment extends BaseListFragment<MultiItemEntity> {
 
     @Override
     protected List<MultiItemEntity> toLoadData(int pageIndex) {
-        DataManager manager = new DataManager(getGenericContext(), Api.BASE_URL);
-        HttpHelper helper = manager.getHttpHelper();
+        DataManager.getInstance().setDebuggable(true);
+        HttpHelper helper = DataManager.getInstance().getHttpHelper();
         MenuService service = helper.createApi(MenuService.class);
-        Call<BaseResp<List<MenuTypeVo>>> call = service.getMenuTypes(Api.APP_KEY);
+        Call<BaseResp<List<MenuTypeVo>>> call = service.getMenuTypes(Api.API_KEY);
         Response<BaseResp<List<MenuTypeVo>>> response = HttpHelper.syncCall(call);
         List<MenuTypeVo> list = response.body().result;
         List<MultiItemEntity> parents = new ArrayList<>();
@@ -72,7 +73,13 @@ public class MainListFragment extends BaseListFragment<MultiItemEntity> {
 
     @Override
     public void onItemClick(BaseAdapter adapter, View view, int position) {
-        
+        if (MenuTypeAdapter.TYPE_MENU_LIST == adapter.getItemViewType(position)) {
+            MenuTypeList child = (MenuTypeList) adapter.getItem(position);
+            MenuTypeVo vo = new MenuTypeVo();
+            vo.classid = child.classid;
+            vo.name = child.name;
+            MenuTypedActivity.toHere(getActivity(), vo);
+        }
     }
 
     public static class MenuTypeAdapter extends BaseMultiItemAdapter<MultiItemEntity, BaseViewHolder> {

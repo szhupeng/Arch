@@ -22,18 +22,21 @@ public class DialogFactory {
         MaterialProgressDialog dialog = new MaterialProgressDialog(context);
         dialog.setMessage(message);
         dialog.show();
+        sDialog = dialog;
     }
 
     public static void showProgressDialog(Context context, @StringRes int resId) {
         MaterialProgressDialog dialog = new MaterialProgressDialog(context);
         dialog.setMessage(resId);
         dialog.show();
+        sDialog = dialog;
     }
 
     public static void showProgressDialog(Context context) {
         MaterialProgressDialog dialog = new MaterialProgressDialog(context);
         dialog.setMessage(null);
         dialog.show();
+        sDialog = dialog;
     }
 
     public static void showSimpleDialog(FragmentManager fm, @LayoutRes int viewId) {

@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">FxBase</string>
+    <string name="app_name">Arch</string>
+    <string name="add_tag">Add Tag</string>
 </resources>

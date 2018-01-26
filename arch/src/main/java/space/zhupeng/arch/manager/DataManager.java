@@ -2,83 +2,91 @@ package space.zhupeng.arch.manager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import space.zhupeng.arch.Provider;
 
 /**
- * 子类实现为单例模式
- *
  * @author zhupeng
  * @date 2018/1/9
  */
 
-public class DataManager {
+public final class DataManager {
 
-    protected final Context context;
+    private static DataManager sInstance;
+    protected Context context;
     protected Provider<HttpHelper> mHttpHelperProvider;
     protected Provider<PreferenceHelper> mPreferenceHelperProvider;
     protected Provider<DBHelper> mDBHelperProvider;
 
-    public DataManager(Context context, @NonNull String baseUrl) {
-        this(context, null, baseUrl, null, Context.MODE_PRIVATE, null, 1);
+    public static DataManager getInstance() {
+        if (null == sInstance) {
+            synchronized (DataManager.class) {
+                if (null == sInstance) {
+                    sInstance = new DataManager();
+                }
+            }
+        }
+        return sInstance;
     }
 
-    public DataManager(Context context, @NonNull String baseUrl, @NonNull final String prefsName) {
-        this(context, null, baseUrl, prefsName, Context.MODE_PRIVATE, null, 1);
+    private DataManager() {
     }
 
-    public DataManager(Context context, @NonNull String baseUrl, @NonNull final String prefsName, final int mode) {
-        this(context, null, baseUrl, prefsName, mode, null, 1);
+    public void initialize(final Context context,
+                           final String baseUrl) {
+        initialize(context, null, baseUrl, null, Context.MODE_PRIVATE, null, 1);
     }
 
-    public DataManager(Context context,
-                       @Nullable HttpHelper.HeadersProvider provider,
-                       @NonNull String baseUrl,
-                       @NonNull final String prefsName) {
-        this(context, provider, baseUrl, prefsName, Context.MODE_PRIVATE, null, 1);
+    public void initialize(final Context context,
+                           final String baseUrl,
+                           final String prefsName) {
+        initialize(context, null, baseUrl, prefsName, Context.MODE_PRIVATE, null, 1);
     }
 
-    public DataManager(Context context,
-                       @Nullable HttpHelper.HeadersProvider provider,
-                       @NonNull String baseUrl,
-                       @NonNull final String prefsName,
-                       final int mode) {
-        this(context, provider, baseUrl, prefsName, mode, null, 1);
+    public void initialize(final Context context,
+                           final HttpHelper.HeadersProvider provider,
+                           final String baseUrl) {
+        initialize(context, provider, baseUrl, null, Context.MODE_PRIVATE, null, 1);
     }
 
-    public DataManager(Context context,
-                       @Nullable HttpHelper.HeadersProvider provider,
-                       @NonNull String baseUrl,
-                       @NonNull final String prefsName,
-                       final int mode,
-                       final String dbName) {
-        this(context, provider, baseUrl, prefsName, mode, dbName, 1);
+    public void initialize(final Context context,
+                           final HttpHelper.HeadersProvider provider,
+                           final String baseUrl,
+                           final String prefsName) {
+        initialize(context, provider, baseUrl, prefsName, Context.MODE_PRIVATE, null, 1);
     }
 
-    public DataManager(@NonNull Context context,
-                       @Nullable HttpHelper.HeadersProvider provider,
-                       @NonNull String baseUrl,
-                       @NonNull final String prefsName,
-                       final int mode,
-                       final String dbName,
-                       final int dbVersion) {
+    public void initialize(final Context context,
+                           final HttpHelper.HeadersProvider provider,
+                           final String baseUrl,
+                           final String prefsName,
+                           final int mode) {
+        initialize(context, provider, baseUrl, prefsName, mode, null, 1);
+    }
+
+    public void initialize(final Context context,
+                           final HttpHelper.HeadersProvider provider,
+                           final String baseUrl,
+                           final String prefsName,
+                           final int mode,
+                           final String dbName) {
+        initialize(context, provider, baseUrl, prefsName, mode, dbName, 1);
+    }
+
+    public void initialize(final Context context,
+                           final HttpHelper.HeadersProvider provider,
+                           final String baseUrl,
+                           final String prefsName,
+                           final int mode,
+                           final String dbName,
+                           final int dbVersion) {
         this.context = context.getApplicationContext();
 
-        initialize(provider, baseUrl, prefsName, mode, dbName, dbVersion);
-    }
-
-    protected void initialize(final HttpHelper.HeadersProvider provider,
-                              final String baseUrl,
-                              final String prefsName,
-                              final int mode,
-                              final String dbName,
-                              final int dbVersion) {
         this.mHttpHelperProvider = new Provider<HttpHelper>() {
             @Override
             public HttpHelper get() {
-                return new HttpHelper(provider, baseUrl);
+                return HttpHelper.getInstance(provider, baseUrl);
             }
         };
 
@@ -104,15 +112,28 @@ public class DataManager {
         };
     }
 
+    public final void baseUrl(@NonNull String baseUrl) {
+        getHttpHelper().baseUrl(baseUrl);
+    }
+
     public final HttpHelper getHttpHelper() {
+        if (null == this.mHttpHelperProvider) {
+            throw new RuntimeException("You must call initialize function firstly");
+        }
         return this.mHttpHelperProvider.get();
     }
 
     public final PreferenceHelper getPreferenceHelper() {
+        if (null == this.mHttpHelperProvider) {
+            throw new RuntimeException("You must call initialize function firstly");
+        }
         return this.mPreferenceHelperProvider.get();
     }
 
     public final DBHelper getDBHelper() {
+        if (null == this.mHttpHelperProvider) {
+            throw new RuntimeException("You must call initialize function firstly");
+        }
         return this.mDBHelperProvider.get();
     }
 

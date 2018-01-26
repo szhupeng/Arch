@@ -56,14 +56,14 @@
     </declare-styleable>
 
     <declare-styleable name="FastScroller">
-        <attr name="fastScrollerAutoHideEnabled" format="boolean"/>
-        <attr name="fastScrollerAutoHideDelayInMillis" format="integer"/>
-        <attr name="fastScrollerBubbleEnabled" format="boolean"/>
+        <attr name="fastScrollerAutoHideEnabled" format="boolean" />
+        <attr name="fastScrollerAutoHideDelayInMillis" format="integer" />
+        <attr name="fastScrollerBubbleEnabled" format="boolean" />
         <attr name="fastScrollerBubblePosition" format="enum">
-            <enum name="adjacent" value="0"/>
-            <enum name="center" value="1"/>
+            <enum name="adjacent" value="0" />
+            <enum name="center" value="1" />
         </attr>
-        <attr name="fastScrollerIgnoreTouchesOutsideHandle" format="boolean"/>
+        <attr name="fastScrollerIgnoreTouchesOutsideHandle" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="BottomNavigationBar">

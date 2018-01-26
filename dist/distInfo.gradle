@@ -9,17 +9,17 @@ ext.distInfo = [
         mavenSnapshotRepo : project.hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL : "https://oss.sonatype.org/content/repositories/snapshots/",
 
         bintrayRepo       : "maven",
-        bintrayName       : "fxbase",
+        bintrayName       : "arch",
 
-        publishedGroupId  : "space.zhupeng.fxbase",
-        libraryName       : "fxbase",
+        publishedGroupId  : "space.zhupeng.arch",
+        libraryName       : "arch",
         libraryVersion    : "1.0.0",
         libraryDescription: "An flexible base frame to develop an app",
-        artifact          : "fxbase",
+        artifact          : "arch",
         libraryPackaging  : "aar",
 
-        siteUrl           : "https://github.com/szhupeng/FxBase",
-        gitUrl            : "https://github.com/szhupeng/FxBase.git",
+        siteUrl           : "https://github.com/szhupeng/Arch",
+        gitUrl            : "https://github.com/szhupeng/Arch.git",
 
 
         developerId       : "szhupeng",

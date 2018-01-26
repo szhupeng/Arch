@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_radius_list"
+    android:orientation="vertical"
+    android:padding="@dimen/dp12">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_menu_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/dp10"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_20" />
+
+        <TextView
+            android:id="@+id/tv_people_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_radius_green"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_12" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dp5"
+        android:paddingTop="@dimen/dp5">
+
+        <space.zhupeng.arch.widget.MultiStyleTextView
+            android:id="@+id/tv_prepare_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/dp15"
+            android:textSize="@dimen/text_size_14" />
+
+        <space.zhupeng.arch.widget.MultiStyleTextView
+            android:id="@+id/tv_cooking_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_14" />
+    </LinearLayout>
+
+    <space.zhupeng.demo.widget.TagGroup
+        android:id="@+id/tag_group"
+        style="@style/TagGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp12"
+        android:paddingTop="@dimen/dp5" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_pic"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="#9f000000"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:padding="@dimen/dp5"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_16" />
+    </FrameLayout>
+</LinearLayout>

@@ -71,6 +71,13 @@ public class MultiStyleTextView extends AppCompatTextView {
         }
     }
 
+    public MultiStyleTextView clear() {
+        if (mSpannableBuilder != null) {
+            mSpannableBuilder.clear();
+        }
+        return this;
+    }
+
     /**
      * 添加文本片段
      *

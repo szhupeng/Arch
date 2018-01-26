@@ -7,6 +7,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
@@ -53,6 +54,16 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     public HashSet<Integer> getChildClickViewIds() {
         return mChildClickViewIds;
+    }
+
+    public BaseViewHolder setHtml(@IdRes int id, String html) {
+        TextView view = findViewById(id);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            view.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            view.setText(Html.fromHtml(html));
+        }
+        return this;
     }
 
     public BaseViewHolder setText(@IdRes int id, CharSequence text) {

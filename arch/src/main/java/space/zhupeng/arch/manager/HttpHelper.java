@@ -39,6 +39,8 @@ public class HttpHelper {
 
     private static final String DOMAIN_NAME = "Domain-Name";
 
+    private static HttpHelper sInstance;
+
     private Retrofit mRetrofit;
     private final ArrayMap<String, Object> mApiServiceHub = new ArrayMap<>(1);
     private final ArrayMap<String, HttpUrl> mDomainNameHub = new ArrayMap<>(1);
@@ -47,11 +49,18 @@ public class HttpHelper {
     private Interceptor mHeadersInterceptor;
     private HttpLoggingInterceptor mLoggingInterceptor;
 
-    public HttpHelper(@NonNull String baseURL) {
-        this(null, baseURL);
+    public static HttpHelper getInstance(@Nullable HeadersProvider provider, @NonNull String baseURL) {
+        if (null == sInstance) {
+            synchronized (HttpHelper.class) {
+                if (null == sInstance) {
+                    sInstance = new HttpHelper(provider, baseURL);
+                }
+            }
+        }
+        return sInstance;
     }
 
-    public HttpHelper(@Nullable HeadersProvider provider, @NonNull String baseURL) {
+    private HttpHelper(@Nullable HeadersProvider provider, @NonNull String baseURL) {
         this.mHeadersProvider = provider;
 
         this.mHeadersInterceptor = new Interceptor() {

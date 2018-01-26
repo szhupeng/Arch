@@ -13,7 +13,7 @@ import java.util.Map;
  */
 
 public class PreferenceHelper {
-
+    
     protected final Context context;
     private final SharedPreferences mPrefs;
 

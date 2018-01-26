@@ -15,7 +15,6 @@ import java.util.List;
 
 import space.zhupeng.arch.R;
 import space.zhupeng.arch.task.BaseExceptionAsyncTask;
-import space.zhupeng.arch.utils.DataUtils;
 import space.zhupeng.arch.utils.DensityUtils;
 import space.zhupeng.arch.widget.adapter.BaseAdapter;
 import space.zhupeng.arch.widget.ptr.PtrDefaultHandler;
@@ -29,9 +28,10 @@ import space.zhupeng.arch.widget.ptr.header.PtrHeader;
  * @author zhupeng
  * @date 2017/1/14
  */
+
 public abstract class BaseListFragment<T> extends BaseStateFragment implements BaseAdapter.OnItemClickListener {
 
-    private static final int PAGE_START = 1;
+    private static final int PAGE_START = 0;
     private static final int PAGE_SIZE = 15;
 
     protected PtrFrameLayout mPtrFrameLayout;
@@ -114,7 +114,7 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
      * 请求列表数据
      */
     @Override
-    public void loadData() {
+    protected void loadDataLazily() {
         if (!isNetworkAvailable()) {
             if (0 == getItemCount()) showErrorView();
             return;
@@ -178,7 +178,7 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
                     @Override
                     protected void onSuccess() {
                         isRefresh = false;
-                        bindData(mMoreData);
+                        bindListData(mMoreData);
                     }
 
                     @Override
@@ -205,7 +205,7 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
 
             @Override
             protected boolean doInBackground() throws Exception {
-                mPageIndex = PAGE_START;
+                mPageIndex = getPageStart();
                 mDataSource = toLoadData(mPageIndex);
                 return true;
             }
@@ -219,7 +219,7 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
             @Override
             protected void onSuccess() {
                 isRefresh = true;
-                bindData(mDataSource);
+                bindListData(mDataSource);
             }
 
             @Override
@@ -258,6 +258,10 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
         return null;
     }
 
+    protected int getPageStart() {
+        return PAGE_START;
+    }
+
     /**
      * 每一页请求的数据条数，默认为{@link #PAGE_SIZE}条
      * 如果一次性请求所有数据，不需要分页，可以返回{@link java.lang.Integer#MAX_VALUE}
@@ -291,22 +295,19 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
      * @param cls
      */
     protected void bindSavedData(@Nullable Bundle savedInstanceState, Class<? extends T> cls) {
-        if (savedInstanceState != null && savedInstanceState.containsKey("json-data")) {
-            String jsonData = savedInstanceState.getString("json-data");
-            isRefresh = true;
-            bindData(DataUtils.getObjectList(jsonData, cls));
-        } else {
-            fetchData(true);
-        }
+//        if (savedInstanceState != null && savedInstanceState.containsKey("json-data")) {
+//            String jsonData = savedInstanceState.getString("json-data");
+//            isRefresh = true;
+//            bindListData(DataUtils.getObjectList(jsonData, cls));
+//        } else {
+//            fetchData(true);
+//        }
     }
 
-    @Override
-    public void bindData(Object data) {
+    public void bindListData(List<T> data) {
         if (null == rvDataList || null == mAdapter) return;
 
-        List<T> ds = (List<T>) data;
-
-        final int size = ds == null ? 0 : ds.size();
+        final int size = data == null ? 0 : data.size();
         if (isRefresh && 0 == size) {
             showEmptyView();
         } else {
@@ -314,14 +315,16 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
         }
 
         if (isRefresh) {
-            mAdapter.setData(ds);
+            mAdapter.setData(data);
         } else if (size > 0) {
-            mAdapter.addData(ds);
+            mAdapter.addData(data);
         }
 
-        if (size < PAGE_SIZE) {
+        if (size < getPageSize()) {
+            mAdapter.setEnableLoadMore(false);
             mAdapter.loadMoreEnd(isRefresh);
         } else {
+            mAdapter.setEnableLoadMore(true);
             mAdapter.loadMoreComplete();
             mPageIndex++;
         }
@@ -329,11 +332,6 @@ public abstract class BaseListFragment<T> extends BaseStateFragment implements B
 
     @Override
     public void onItemClick(BaseAdapter adapter, View view, int position) {
-    }
-
-    @Override
-    protected void rerequest() {
-        loadData();
     }
 
     /**

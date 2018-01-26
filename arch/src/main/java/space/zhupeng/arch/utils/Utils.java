@@ -84,6 +84,7 @@ public final class Utils {
                 try {
                     runnable.run();
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -105,6 +106,7 @@ public final class Utils {
             try {
                 runnable.run();
             } catch (Exception e) {
+                e.printStackTrace();
             }
         } else {
             activity.runOnUiThread(new Runnable() {
@@ -113,6 +115,7 @@ public final class Utils {
                     try {
                         runnable.run();
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             });
@@ -133,6 +136,7 @@ public final class Utils {
                 try {
                     runnable.run();
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }).start();

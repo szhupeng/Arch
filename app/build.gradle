@@ -1,15 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
+    compileSdkVersion COMPILE_SDK_VERSION as int
 
     defaultConfig {
         applicationId "space.zhupeng.demo"
-        minSdkVersion rootProject.ext.android.minSdkVersion
-        targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode rootProject.ext.android.versionCode
-        versionName rootProject.ext.android.versionName
+        minSdkVersion MIN_SDK_VERSION as int
+        targetSdkVersion TARGET_SDK_VERSION as int
+        versionCode VERSION_CODE as int
+        versionName VERSION_NAME
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -23,20 +22,25 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation rootProject.ext.dependencies.appcompatV7
-    implementation rootProject.ext.dependencies.design
-    implementation rootProject.ext.dependencies.cardview
-    implementation rootProject.ext.dependencies.supportV4
-    implementation rootProject.ext.dependencies.lifecycle
-    annotationProcessor rootProject.ext.dependencies.lifecycleCompiler
-    implementation rootProject.ext.dependencies.gson
-    implementation rootProject.ext.dependencies.retrofit
-    implementation rootProject.ext.dependencies.converter
-    implementation rootProject.ext.dependencies.okhttp
-    implementation rootProject.ext.dependencies.loggingInterceptor
+    implementation "com.android.support:appcompat-v7:${ANDROID_SUPPORT_VERSION}"
+    implementation "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
+    implementation "com.android.support:cardview-v7:${ANDROID_SUPPORT_VERSION}"
+    implementation "com.android.support:support-v4:${ANDROID_SUPPORT_VERSION}"
+    implementation "android.arch.lifecycle:extensions:${LIFECYCLE_VERSION}"
+    annotationProcessor "android.arch.lifecycle:compiler:${LIFECYCLE_VERSION}"
+    implementation "com.android.support:multidex:${MULTIDEX_VERSION}"
+    implementation "com.jakewharton:butterknife:${BUTTERKNIFE_VERSION}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${BUTTERKNIFE_VERSION}"
+    implementation "com.google.code.gson:gson:${GSON_VERSION}"
+    implementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+    implementation "com.squareup.retrofit2:converter-gson:${RETROFIT_VERSION}"
+    implementation "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"
+    implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    compile 'com.github.vipulasri:timelineview:1.0.6'
     implementation project(':arch')
 }

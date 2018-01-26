@@ -200,16 +200,7 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
     }
 
     @Override
-    protected final void loadDataLazily() {
-        loadData();
-    }
-
-    @Override
-    public void loadData() {
-    }
-
-    @Override
-    public void bindData(Object data) {
+    protected void loadDataLazily() {
     }
 
     /**
