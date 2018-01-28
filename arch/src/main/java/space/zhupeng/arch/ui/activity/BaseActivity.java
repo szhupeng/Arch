@@ -77,12 +77,17 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
             tintStatusBar();
         }
 
-        getSupportLoaderManager().initLoader(ID_PRESENTER_LOADER, savedInstanceState, this);
+        getSupportLoaderManager().initLoader(ID_PRESENTER_LOADER, null, this);
+
+        initView(savedInstanceState);
+        bindEvent();
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+    protected void onStart() {
+        super.onStart();
+
+        mPresenter.attachView((V) this);
     }
 
     @Override
@@ -133,7 +138,6 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     }
 
     protected void onPresenterLoaded() {
-
     }
 
     protected boolean isStatusBarTintEnabled() {
@@ -251,8 +255,6 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
             if (mPresenter != null) {
                 mPresenter.attachView((V) this);
             }
-            initView(loader);
-            bindEvent();
         }
     }
 

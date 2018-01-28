@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
@@ -7,14 +9,14 @@ android {
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
         versionCode 100
-        versionName "1.0.0"
+        versionName "1.0"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -39,4 +41,89 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"
     implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
     annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
+}
+
+group = 'com.space.arch'
+version = '1.0'
+
+def siteUrl = 'https://github.com/szhupeng/Arch'
+def gitUrl = 'https://github.com/szhupeng/Arch.git'
+
+bintray {
+    user = 'zhupeng'
+    key = 'a82d277a68686e694e90321e3cb0503bb0fff237'
+
+    configurations = ['archives'] //When uploading configuration files
+    pkg {
+        repo = 'arch'
+        name = project.name
+        desc = 'This is an app development infrastructure.'
+        websiteUrl = siteUrl
+        issueTrackerUrl = 'https://github.com/szhupeng/Arch/issues'
+        vcsUrl = gitUrl
+        licenses = ['MIT']
+        labels = ['aar', 'android', 'arch']
+        publicDownloadNumbers = true
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name 'Arch'
+                url siteUrl
+                licenses {
+                    license {
+                        name 'MIT'
+                        url 'https://opensource.org/licenses/MIT'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'zhupeng'
+                        name 'zhupeng'
+                        email 'zhupeng@outlook.com'
+                    }
+                }
+                scm {
+                    connection 'https://github.com/szhupeng/Arch.git'
+                    developerConnection 'https://github.com/szhupeng/Arch.git'
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+javadoc {
+    options {
+        encoding "UTF-8"
+        charSet "UTF-8"
+    }
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+task findConventions << {
+    println project.getConvention()
 }
