@@ -2,6 +2,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
 

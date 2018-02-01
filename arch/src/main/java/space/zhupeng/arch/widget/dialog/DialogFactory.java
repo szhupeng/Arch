@@ -16,6 +16,7 @@ public class DialogFactory {
     private static Dialog sDialog;
 
     private DialogFactory() {
+
     }
 
     public static void showProgressDialog(Context context, CharSequence message) {

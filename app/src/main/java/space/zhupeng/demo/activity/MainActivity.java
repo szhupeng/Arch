@@ -25,7 +25,7 @@ public class MainActivity extends BaseToolbarActivity {
 
         hideLeft();
         setCenterTitle("菜谱大全");
-
+        
         replaceFragment(MainListFragment.class, null);
     }
 }
