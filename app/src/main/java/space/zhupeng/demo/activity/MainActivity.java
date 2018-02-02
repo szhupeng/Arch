@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 
 import space.zhupeng.arch.ui.activity.BaseToolbarActivity;
 import space.zhupeng.demo.R;
-import space.zhupeng.demo.fragment.MainListFragment;
 
 public class MainActivity extends BaseToolbarActivity {
 
@@ -25,7 +24,9 @@ public class MainActivity extends BaseToolbarActivity {
 
         hideLeft();
         setCenterTitle("菜谱大全");
-        
-        replaceFragment(MainListFragment.class, null);
+
+        showMessageProgress("这是带文字的加载进度框");
+
+//        replaceFragment(MainListFragment.class, null);
     }
 }

@@ -35,6 +35,7 @@ import space.zhupeng.arch.utils.NetworkUtils;
 import space.zhupeng.arch.utils.ToastUtils;
 import space.zhupeng.arch.utils.Utils;
 import space.zhupeng.arch.widget.dialog.DialogFactory;
+import space.zhupeng.arch.widget.dialog.DialogService;
 
 /**
  * 业务无关的Activity基类，包括Toast，加载进度框等
@@ -52,6 +53,8 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     protected P mPresenter;
 
     private Unbinder mUnbinder;
+
+    private DialogService mDialogService;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -87,7 +90,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     protected void onStart() {
         super.onStart();
 
-        mPresenter.attachView((V) this);
+//        mPresenter.attachView((V) this);
     }
 
     @Override
@@ -211,22 +214,22 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
     @Override
     public void showMessageProgress(@NonNull final CharSequence message) {
-        DialogFactory.showProgressDialog(getGenericContext(), message);
+        DialogFactory.create().showProgressDialog(getGenericContext(), message);
     }
 
     @Override
     public void showMessageProgress(@StringRes int resId) {
-        DialogFactory.showProgressDialog(getGenericContext(), getResources().getString(resId));
+        DialogFactory.create().showProgressDialog(getGenericContext(), getResources().getString(resId));
     }
 
     @Override
     public void showSimpleProgress() {
-        DialogFactory.showProgressDialog(this.getGenericContext());
+        DialogFactory.create().showProgressDialog(this.getGenericContext());
     }
 
     @Override
     public void closeDialog() {
-        DialogFactory.dismissDialog();
+        DialogFactory.create().closeDialog();
     }
 
     @Override

@@ -143,24 +143,24 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
 
     @Override
     public void showMessageProgress(@NonNull final CharSequence message) {
-        DialogFactory.showProgressDialog(getActivity(), message);
+        DialogFactory.create().showProgressDialog(getActivity(), message);
     }
 
     @Override
     public void showMessageProgress(@StringRes final int resId) {
         if (isAdded()) {
-            DialogFactory.showProgressDialog(getActivity(), getResources().getString(resId));
+            DialogFactory.create().showProgressDialog(getActivity(), getResources().getString(resId));
         }
     }
 
     @Override
     public void showSimpleProgress() {
-        DialogFactory.showProgressDialog(getActivity());
+        DialogFactory.create().showProgressDialog(getActivity());
     }
 
     @Override
     public void closeDialog() {
-        DialogFactory.dismissDialog();
+        DialogFactory.create().closeDialog();
     }
 
     @Override

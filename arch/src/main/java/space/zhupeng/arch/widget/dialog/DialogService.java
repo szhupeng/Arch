@@ -1,19 +1,19 @@
 package space.zhupeng.arch.widget.dialog;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import android.content.Context;
+import android.support.annotation.StringRes;
 
 /**
- * 弹框服务注解
- *
  * @author zhupeng
- * @date 2018/2/1
+ * @date 2018/2/2
  */
-@Documented
-@Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.TYPE)
-public @interface DialogService {
+
+public interface DialogService {
+    void showProgressDialog(Context context, CharSequence message);
+
+    void showProgressDialog(Context context, @StringRes int resId);
+
+    void showProgressDialog(Context context);
+
+    void closeDialog();
 }
