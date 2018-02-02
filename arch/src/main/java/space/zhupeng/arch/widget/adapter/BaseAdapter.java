@@ -79,6 +79,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
      * Use with {@link #openLoadAnimation}
      */
     public static final int SLIDEIN_RIGHT = 0x00000005;
+
     private OnItemClickListener mOnItemClickListener;
     private OnItemLongClickListener mOnItemLongClickListener;
     private OnChildClickListener mOnChildClickListener;
@@ -351,7 +352,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
 
     @Nullable
     public final T getItem(@IntRange(from = 0) int position) {
-        if (position < mDataSet.size()) {
+        if (position >= 0 && position < mDataSet.size()) {
             return mDataSet.get(position);
         } else {
             return null;
@@ -444,7 +445,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     }
 
     private VH getLoadMoreView(ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(mLoadMoreView.getLayoutResID(), parent, false);
+        View view = LayoutInflater.from(context).inflate(mLoadMoreView.getLayoutResId(), parent, false);
         VH holder = onCreateBaseViewHolder(view);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -90,7 +90,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public BaseViewHolder setBackgroundRes(@IdRes int id, @DrawableRes int resId) {
+    public BaseViewHolder setBackgroundResource(@IdRes int id, @DrawableRes int resId) {
         View view = findViewById(id);
         view.setBackgroundResource(resId);
         return this;
@@ -133,7 +133,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     @SuppressWarnings("unchecked")
     public BaseViewHolder addOnClickListener(@IdRes final int id) {
-        mChildClickViewIds.add(id);
+        this.mChildClickViewIds.add(id);
         final View view = findViewById(id);
         if (view != null) {
             if (!view.isClickable()) {

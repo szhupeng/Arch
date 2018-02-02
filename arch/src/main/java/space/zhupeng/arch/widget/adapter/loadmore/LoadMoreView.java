@@ -27,55 +27,40 @@ public abstract class LoadMoreView {
     public void convert(BaseViewHolder holder) {
         switch (mLoadMoreStatus) {
             case STATUS_LOADING:
-                showLoading(holder);
-                hideLoadFail(holder);
-                hideLoadEnd(holder);
+                visibleLoading(holder, true);
+                visibleLoadFail(holder, false);
+                visibleLoadEnd(holder, false);
                 break;
             case STATUS_FAIL:
-                hideLoading(holder);
-                showLoadFail(holder);
-                hideLoadEnd(holder);
+                visibleLoading(holder, false);
+                visibleLoadFail(holder, true);
+                visibleLoadEnd(holder, false);
                 break;
             case STATUS_END:
-                hideLoading(holder);
-                hideLoadFail(holder);
-                showLoadEnd(holder);
+                visibleLoading(holder, false);
+                visibleLoadFail(holder, false);
+                visibleLoadEnd(holder, true);
                 break;
             case STATUS_DEFAULT:
-                hideLoading(holder);
-                hideLoadFail(holder);
-                hideLoadEnd(holder);
+                visibleLoading(holder, false);
+                visibleLoadFail(holder, false);
+                visibleLoadEnd(holder, false);
                 break;
         }
     }
 
-    private void showLoading(BaseViewHolder holder) {
-        holder.setVisibility(getLoadingViewID(), View.VISIBLE);
+    private void visibleLoading(BaseViewHolder holder, boolean visible) {
+        holder.setVisibility(getLoadingViewResId(), visible ? View.VISIBLE : View.GONE);
     }
 
-    private void hideLoading(BaseViewHolder holder) {
-        holder.setVisibility(getLoadingViewID(), View.GONE);
+    private void visibleLoadFail(BaseViewHolder holder, boolean visible) {
+        holder.setVisibility(getLoadFailViewResId(), visible ? View.VISIBLE : View.GONE);
     }
 
-    private void showLoadFail(BaseViewHolder holder) {
-        holder.setVisibility(getLoadFailViewID(), View.VISIBLE);
-    }
-
-    private void hideLoadFail(BaseViewHolder holder) {
-        holder.setVisibility(getLoadFailViewID(), View.GONE);
-    }
-
-    private void showLoadEnd(BaseViewHolder holder) {
-        final int loadEndViewId = getLoadEndViewID();
+    private void visibleLoadEnd(BaseViewHolder holder, boolean visible) {
+        final int loadEndViewId = getLoadEndViewResId();
         if (loadEndViewId != 0) {
-            holder.setVisibility(loadEndViewId, View.VISIBLE);
-        }
-    }
-
-    private void hideLoadEnd(BaseViewHolder holder) {
-        final int loadEndViewId = getLoadEndViewID();
-        if (loadEndViewId != 0) {
-            holder.setVisibility(loadEndViewId, View.GONE);
+            holder.setVisibility(loadEndViewId, visible ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -84,7 +69,7 @@ public abstract class LoadMoreView {
     }
 
     public final boolean isLoadEndMoreGone() {
-        if (getLoadEndViewID() == 0) {
+        if (getLoadEndViewResId() == 0) {
             return true;
         }
         return mLoadMoreEndGone;
@@ -96,7 +81,7 @@ public abstract class LoadMoreView {
      * @return
      */
     @LayoutRes
-    public abstract int getLayoutResID();
+    public abstract int getLayoutResId();
 
     /**
      * loading view
@@ -104,7 +89,7 @@ public abstract class LoadMoreView {
      * @return
      */
     @IdRes
-    protected abstract int getLoadingViewID();
+    protected abstract int getLoadingViewResId();
 
     /**
      * load fail view
@@ -112,7 +97,7 @@ public abstract class LoadMoreView {
      * @return
      */
     @IdRes
-    protected abstract int getLoadFailViewID();
+    protected abstract int getLoadFailViewResId();
 
     /**
      * load end view, you can return 0
@@ -120,5 +105,5 @@ public abstract class LoadMoreView {
      * @return
      */
     @IdRes
-    protected abstract int getLoadEndViewID();
+    protected abstract int getLoadEndViewResId();
 }

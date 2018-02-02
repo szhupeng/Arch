@@ -5,22 +5,22 @@ import space.zhupeng.arch.R;
 public final class SimpleLoadMoreView extends LoadMoreView {
 
     @Override
-    public int getLayoutResID() {
+    public int getLayoutResId() {
         return R.layout.layout_load_more;
     }
 
     @Override
-    protected int getLoadingViewID() {
+    protected int getLoadingViewResId() {
         return R.id.load_more_loading_view;
     }
 
     @Override
-    protected int getLoadFailViewID() {
+    protected int getLoadFailViewResId() {
         return R.id.load_more_load_fail_view;
     }
 
     @Override
-    protected int getLoadEndViewID() {
+    protected int getLoadEndViewResId() {
         return R.id.load_more_load_end_view;
     }
 }
