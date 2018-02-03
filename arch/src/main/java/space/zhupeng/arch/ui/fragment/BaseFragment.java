@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,8 +19,6 @@ import android.view.ViewGroup;
 
 import java.util.concurrent.Executor;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.presenter.PresenterFactory;
@@ -44,8 +43,6 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
     private BaseAsyncTask mTask;
     protected Activity mParentActivity;
 
-    private Unbinder mUnbinder;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -57,7 +54,6 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(getLayoutResId(), container, false);
-        mUnbinder = ButterKnife.bind(this, root);
         return root;
     }
 
@@ -100,11 +96,6 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
 
         if (mPresenter != null) {
             mPresenter.detachView();
-        }
-
-        if (mUnbinder != null && mUnbinder != Unbinder.EMPTY) {
-            mUnbinder.unbind();
-            mUnbinder = null;
         }
     }
 
@@ -163,9 +154,13 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
         DialogFactory.create().closeDialog();
     }
 
+    @Nullable
     @Override
-    public Activity getGenericContext() {
-        return this.mParentActivity;
+    public Context getContext() {
+        if (this.mParentActivity != null) {
+            return this.mParentActivity;
+        }
+        return super.getContext();
     }
 
     @CallSuper
@@ -250,6 +245,10 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
             return false;
         }
         return true;
+    }
+
+    protected final <T extends View> T findById(@NonNull View view, @IdRes int id) {
+        return view.findViewById(id);
     }
 
     @LayoutRes

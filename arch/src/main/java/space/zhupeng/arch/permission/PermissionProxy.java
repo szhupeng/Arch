@@ -7,7 +7,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 /**
- * Created by zhupeng on 2017/12/16.
+ * @author zhupeng
+ * @date 2017/12/16
  */
 
 public final class PermissionProxy implements InvocationHandler {

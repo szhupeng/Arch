@@ -78,8 +78,8 @@ public abstract class BaseDialog extends AppCompatDialog {
     protected void initView() {
     }
 
-    protected <T extends View> T findView(@IdRes int id) {
-        return (T) findViewById(id);
+    public final <T extends View> T findById(@IdRes int id) {
+        return findViewById(id);
     }
 
     @LayoutRes

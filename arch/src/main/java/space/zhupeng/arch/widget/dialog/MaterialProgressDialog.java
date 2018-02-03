@@ -66,7 +66,7 @@ public class MaterialProgressDialog extends BaseDialog {
 
     @Override
     protected void initView() {
-        tvMessage = findView(R.id.tv_message);
+        tvMessage = findById(R.id.tv_message);
     }
 
     @Override

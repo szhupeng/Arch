@@ -9,6 +9,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Response;
 import space.zhupeng.arch.manager.DataManager;

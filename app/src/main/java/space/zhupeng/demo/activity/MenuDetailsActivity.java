@@ -103,7 +103,7 @@ public class MenuDetailsActivity extends BaseToolbarActivity<MenuDetailRepositor
     public void bindData(TypeSearchVo.TypeSearchItem data) {
         setCenterTitle(data.name);
         setCenterSubtitle(new StringBuilder("（").append(data.peoplenum).append("）"));
-        Glide.with(getGenericContext()).load(data.pic).into(ivPic);
+        Glide.with(getContext()).load(data.pic).into(ivPic);
         tvContent.setText(Html.fromHtml(data.content));
         tvPrepareTime.clear()
                 .segment("准备时长：", Color.GRAY)

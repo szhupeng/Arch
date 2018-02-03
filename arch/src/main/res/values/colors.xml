@@ -10,4 +10,6 @@
     <color name="gray">#DDDDDD</color>
 
     <color name="main_black">#333333</color>
+
+    <color name="badge">#f20625</color>
 </resources>

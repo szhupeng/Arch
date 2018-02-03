@@ -16,6 +16,11 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
+/**
+ * @author zhupeng
+ * @date 2018/2/2
+ */
+
 public class DialogServiceProcessor extends AbstractProcessor {
 
     private String mClsName;

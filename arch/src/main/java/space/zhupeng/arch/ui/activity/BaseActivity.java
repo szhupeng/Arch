@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,8 +23,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import space.zhupeng.arch.R;
 import space.zhupeng.arch.manager.StatusBarTinter;
 import space.zhupeng.arch.mvp.model.Repository;
@@ -52,8 +51,6 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
     protected P mPresenter;
 
-    private Unbinder mUnbinder;
-
     private DialogService mDialogService;
 
     static {
@@ -74,7 +71,6 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
         if (getLayoutResId() > 0) {
             setContentView(getLayoutResId());
         }
-        mUnbinder = ButterKnife.bind(this);
 
         if (isStatusBarTintEnabled()) {
             tintStatusBar();
@@ -97,11 +93,6 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     protected void onDestroy() {
         if (mPresenter != null) {
             mPresenter.detachView();
-        }
-
-        if (mUnbinder != null && mUnbinder != Unbinder.EMPTY) {
-            mUnbinder.unbind();
-            mUnbinder = null;
         }
         super.onDestroy();
     }
@@ -175,8 +166,8 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
      * 返回上一层Activity
      */
     protected void navigateUp() {
-        if (NavUtils.getParentActivityName(getGenericContext()) != null) {
-            NavUtils.navigateUpFromSameTask(getGenericContext());
+        if (NavUtils.getParentActivityName(getContext()) != null) {
+            NavUtils.navigateUpFromSameTask(getContext());
         }
     }
 
@@ -214,17 +205,17 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
     @Override
     public void showMessageProgress(@NonNull final CharSequence message) {
-        DialogFactory.create().showProgressDialog(getGenericContext(), message);
+        DialogFactory.create().showProgressDialog(getContext(), message);
     }
 
     @Override
     public void showMessageProgress(@StringRes int resId) {
-        DialogFactory.create().showProgressDialog(getGenericContext(), getResources().getString(resId));
+        DialogFactory.create().showProgressDialog(getContext(), getResources().getString(resId));
     }
 
     @Override
     public void showSimpleProgress() {
-        DialogFactory.create().showProgressDialog(this.getGenericContext());
+        DialogFactory.create().showProgressDialog(this.getContext());
     }
 
     @Override
@@ -233,7 +224,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     }
 
     @Override
-    public Activity getGenericContext() {
+    public Activity getContext() {
         return this;
     }
 
@@ -274,7 +265,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
      * @param runnable
      */
     public final void runOnUiThreadSafely(final Runnable runnable) {
-        Utils.runOnUiThreadSafely(getGenericContext(), runnable);
+        Utils.runOnUiThreadSafely(getContext(), runnable);
     }
 
     /**
@@ -292,11 +283,15 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
      * @return
      */
     protected final boolean toCheckNetwork() {
-        if (!NetworkUtils.isNetworkValid(getGenericContext())) {
+        if (!NetworkUtils.isNetworkValid(getContext())) {
             showToast("网络连接不可用");
             return false;
         }
         return true;
+    }
+
+    protected final <T extends View> T findById(@IdRes int id) {
+        return findViewById(id);
     }
 
     @LayoutRes

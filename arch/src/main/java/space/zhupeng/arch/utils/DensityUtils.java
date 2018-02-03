@@ -151,6 +151,4 @@ public final class DensityUtils {
         }
         return point.y;
     }
-
-
 }

@@ -17,7 +17,7 @@ public final class DataManager {
     protected Context context;
     protected Provider<HttpHelper> mHttpHelperProvider;
     protected Provider<PreferenceHelper> mPreferenceHelperProvider;
-    protected Provider<DBHelper> mDBHelperProvider;
+    protected Provider<DatabaseHelper> mDBHelperProvider;
 
     public static DataManager getInstance() {
         if (null == sInstance) {
@@ -100,14 +100,14 @@ public final class DataManager {
             }
         };
 
-        this.mDBHelperProvider = new Provider<DBHelper>() {
+        this.mDBHelperProvider = new Provider<DatabaseHelper>() {
             @Override
-            public DBHelper get() {
+            public DatabaseHelper get() {
                 if (TextUtils.isEmpty(dbName)) {
                     throw new RuntimeException("if you want to operate database, you must pass dbName when call initialize function");
                 }
 
-                return new DBHelper(context, dbName, dbVersion);
+                return new DatabaseHelper(context, dbName, dbVersion);
             }
         };
     }
@@ -130,7 +130,7 @@ public final class DataManager {
         return this.mPreferenceHelperProvider.get();
     }
 
-    public final DBHelper getDBHelper() {
+    public final DatabaseHelper getDBHelper() {
         if (null == this.mHttpHelperProvider) {
             throw new RuntimeException("You must call initialize function firstly");
         }

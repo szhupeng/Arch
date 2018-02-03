@@ -153,7 +153,7 @@ public abstract class BaseDialogFragment extends AppCompatDialogFragment {
         }
     }
 
-    protected <T extends View> T findView(@IdRes int id) {
+    protected final <T extends View> T findById(@IdRes int id) {
         if (null == mRootView) return null;
 
         return (T) mRootView.findViewById(id);

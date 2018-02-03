@@ -14,7 +14,7 @@ import android.view.View;
  */
 
 public interface BaseView {
-    <C extends Context> C getGenericContext();
+    <C extends Context> C getContext();
 
     void showToast(@NonNull final CharSequence text);
 

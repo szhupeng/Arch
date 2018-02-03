@@ -12,7 +12,7 @@ import android.support.v7.widget.Toolbar;
  * @author zhupeng
  * @date 2018/1/16
  */
-
+@SuppressWarnings("all")
 public class StatusBarTinter {
 
     //Get alpha color
