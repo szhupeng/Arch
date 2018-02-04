@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/Arch.iml" filepath="$PROJECT_DIR$/Arch.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/apt/apt.iml" filepath="$PROJECT_DIR$/apt/apt.iml" />
-      <module fileurl="file://F:\Arch\apt\apt.iml" filepath="F:\Arch\apt\apt.iml" />
       <module fileurl="file://$PROJECT_DIR$/arch/arch.iml" filepath="$PROJECT_DIR$/arch/arch.iml" />
     </modules>
   </component>
