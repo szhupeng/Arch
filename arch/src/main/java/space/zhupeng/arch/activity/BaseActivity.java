@@ -1,8 +1,8 @@
-package space.zhupeng.arch.ui.activity;
+package space.zhupeng.arch.activity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.res.TypedArray;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,14 +14,14 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import space.zhupeng.arch.R;
 import space.zhupeng.arch.manager.StatusBarTinter;
@@ -34,7 +34,6 @@ import space.zhupeng.arch.utils.NetworkUtils;
 import space.zhupeng.arch.utils.ToastUtils;
 import space.zhupeng.arch.utils.Utils;
 import space.zhupeng.arch.widget.dialog.DialogFactory;
-import space.zhupeng.arch.widget.dialog.DialogService;
 
 /**
  * 业务无关的Activity基类，包括Toast，加载进度框等
@@ -51,8 +50,6 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
     protected P mPresenter;
 
-    private DialogService mDialogService;
-
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
@@ -66,7 +63,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
         super.onCreate(savedInstanceState);
 
-        doBeforeSetView();
+        requestFeature();
 
         if (getLayoutResId() > 0) {
             setContentView(getLayoutResId());
@@ -80,13 +77,6 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
         initView(savedInstanceState);
         bindEvent();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-//        mPresenter.attachView((V) this);
     }
 
     @Override
@@ -114,7 +104,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     /**
      * 执行setContentView之前的操作，比如全屏
      */
-    protected void doBeforeSetView() {
+    protected void requestFeature() {
     }
 
     /**
@@ -131,7 +121,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     protected void bindEvent() {
     }
 
-    protected void onPresenterLoaded() {
+    protected void onPresenterReady() {
     }
 
     protected boolean isStatusBarTintEnabled() {
@@ -142,24 +132,25 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
      * 状态栏着色
      */
     private void tintStatusBar() {
-        int[] attrsArray = {android.R.attr.colorPrimaryDark};
-        TypedArray ta = obtainStyledAttributes(attrsArray);
-        int primaryDarkColor = ta.getColor(0, R.color.colorPrimaryDark);
-        ta.recycle();
-        StatusBarTinter.setStatusBarColor(this, primaryDarkColor);
-    }
-
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window window = getWindow();
-        WindowManager.LayoutParams winParams = window.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
+        int colorResId;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            colorResId = android.R.attr.colorPrimaryDark;
         } else {
-            winParams.flags &= ~bits;
+            colorResId = R.attr.colorPrimaryDark;
         }
-        window.setAttributes(winParams);
+        TypedValue ta = new TypedValue();
+        int tintColor = ContextCompat.getColor(this, R.color.colorPrimaryDark);
+        try {
+            Resources.Theme theme = getTheme();
+            if (theme != null && theme.resolveAttribute(colorResId, ta, true)) {
+                if (ta.type >= TypedValue.TYPE_FIRST_INT && ta.type <= TypedValue.TYPE_LAST_INT)
+                    tintColor = ta.data;
+                else if (ta.type == TypedValue.TYPE_STRING)
+                    tintColor = ContextCompat.getColor(this, ta.resourceId);
+            }
+        } catch (Exception ex) {
+        }
+        StatusBarTinter.setStatusBarColor(this, tintColor);
     }
 
     /**
@@ -248,6 +239,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
             mPresenter = data;
             if (mPresenter != null) {
                 mPresenter.attachView((V) this);
+                onPresenterReady();
             }
         }
     }

@@ -114,9 +114,9 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
                 mPadding = a.getDimensionPixelSize(attr, 0);
             else if (attr == R.styleable.CircularProgressDrawable_cpd_initialAngle)
                 mInitialAngle = a.getInteger(attr, 0);
-            else if (attr == R.styleable.CircularProgressDrawable_pv_progress)
+            else if (attr == R.styleable.CircularProgressDrawable_mpv_progress)
                 setProgress(a.getFloat(attr, 0));
-            else if (attr == R.styleable.CircularProgressDrawable_pv_secondaryProgress)
+            else if (attr == R.styleable.CircularProgressDrawable_mpv_secondaryProgress)
                 setSecondaryProgress(a.getFloat(attr, 0));
             else if (attr == R.styleable.CircularProgressDrawable_cpd_maxSweepAngle)
                 mMaxSweepAngle = a.getInteger(attr, 0);
@@ -145,7 +145,7 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
                 mKeepDuration = a.getInteger(attr, 0);
             else if (attr == R.styleable.CircularProgressDrawable_cpd_transformInterpolator)
                 mTransformInterpolator = AnimationUtils.loadInterpolator(context, a.getResourceId(attr, 0));
-            else if (attr == R.styleable.CircularProgressDrawable_pv_progressMode)
+            else if (attr == R.styleable.CircularProgressDrawable_mpv_progressMode)
                 mProgressMode = a.getInteger(attr, 0);
             else if (attr == R.styleable.CircularProgressDrawable_cpd_inAnimDuration)
                 mInAnimationDuration = a.getInteger(attr, 0);
@@ -640,8 +640,8 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
 
             padding(a.getDimensionPixelSize(R.styleable.CircularProgressDrawable_cpd_padding, 0));
             initialAngle(a.getInteger(R.styleable.CircularProgressDrawable_cpd_initialAngle, 0));
-            progressPercent(a.getFloat(R.styleable.CircularProgressDrawable_pv_progress, 0));
-            secondaryProgressPercent(a.getFloat(R.styleable.CircularProgressDrawable_pv_secondaryProgress, 0));
+            progressPercent(a.getFloat(R.styleable.CircularProgressDrawable_mpv_progress, 0));
+            secondaryProgressPercent(a.getFloat(R.styleable.CircularProgressDrawable_mpv_secondaryProgress, 0));
             maxSweepAngle(a.getInteger(R.styleable.CircularProgressDrawable_cpd_maxSweepAngle, 270));
             minSweepAngle(a.getInteger(R.styleable.CircularProgressDrawable_cpd_minSweepAngle, 1));
             strokeSize(a.getDimensionPixelSize(R.styleable.CircularProgressDrawable_cpd_strokeSize, dpToPx(context, 4)));
@@ -661,7 +661,7 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
             keepDuration(a.getInteger(R.styleable.CircularProgressDrawable_cpd_keepDuration, context.getResources().getInteger(android.R.integer.config_shortAnimTime)));
             if ((resId = a.getResourceId(R.styleable.CircularProgressDrawable_cpd_transformInterpolator, 0)) != 0)
                 transformInterpolator(AnimationUtils.loadInterpolator(context, resId));
-            progressMode(a.getInteger(R.styleable.CircularProgressDrawable_pv_progressMode, MaterialProgressView.MODE_INDETERMINATE));
+            progressMode(a.getInteger(R.styleable.CircularProgressDrawable_mpv_progressMode, MaterialProgressView.MODE_INDETERMINATE));
             inAnimDuration(a.getInteger(R.styleable.CircularProgressDrawable_cpd_inAnimDuration, context.getResources().getInteger(android.R.integer.config_mediumAnimTime)));
             if ((resId = a.getResourceId(R.styleable.CircularProgressDrawable_cpd_inStepColors, 0)) != 0) {
                 TypedArray ta = context.getResources().obtainTypedArray(resId);
@@ -788,32 +788,30 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
             return this;
         }
 
-        private int dpToPx(Context context, int dp){
-            return (int)(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics()) + 0.5f);
+        private int dpToPx(Context context, int dp) {
+            return (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics()) + 0.5f);
         }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        private int colorPrimary(Context context, int defaultValue){
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        private int colorPrimary(Context context, int defaultValue) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 return getColor(context, android.R.attr.colorPrimary, defaultValue);
 
             return getColor(context, R.attr.colorPrimary, defaultValue);
         }
 
-        private static int getColor(Context context, int id, int defaultValue){
-            if(value == null)
-                value = new TypedValue();
-
-            try{
+        private int getColor(Context context, int id, int defaultValue) {
+            TypedValue value = new TypedValue();
+            try {
                 Resources.Theme theme = context.getTheme();
-                if(theme != null && theme.resolveAttribute(id, value, true)){
+                if (theme != null && theme.resolveAttribute(id, value, true)) {
                     if (value.type >= TypedValue.TYPE_FIRST_INT && value.type <= TypedValue.TYPE_LAST_INT)
                         return value.data;
                     else if (value.type == TypedValue.TYPE_STRING)
                         return context.getResources().getColor(value.resourceId);
                 }
+            } catch (Exception ex) {
             }
-            catch(Exception ex){}
 
             return defaultValue;
         }

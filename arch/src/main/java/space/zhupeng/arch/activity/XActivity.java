@@ -1,4 +1,4 @@
-package space.zhupeng.arch.ui.activity;
+package space.zhupeng.arch.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -17,7 +17,7 @@ import java.util.List;
 import space.zhupeng.arch.R;
 import space.zhupeng.arch.anim.FragmentAnimation;
 import space.zhupeng.arch.anim.Transition;
-import space.zhupeng.arch.ui.fragment.XFragment;
+import space.zhupeng.arch.fragment.XFragment;
 
 /**
  * @author zhupeng

@@ -2,10 +2,8 @@ package space.zhupeng.arch.widget.progress;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -17,14 +15,11 @@ import space.zhupeng.arch.R;
  * MD风格的ProgressBar
  */
 
-public class MaterialProgressView extends View implements ThemeManager.OnThemeChangedListener {
+public class MaterialProgressView extends View {
 
     public static final long FRAME_DURATION = 1000 / 60;
 
-    protected int mStyleId;
-    protected int mCurrentStyle = ThemeManager.THEME_UNDEFINED;
-
-    private boolean mAutostart = false;
+    private boolean mAutoStart = false;
     private boolean mCircular = true;
     private int mProgressId;
 
@@ -36,27 +31,17 @@ public class MaterialProgressView extends View implements ThemeManager.OnThemeCh
     private Drawable mProgressDrawable;
 
     public MaterialProgressView(Context context) {
-        super(context);
-
-        init(context, null, 0, 0);
+        this(context, null, 0);
     }
 
     public MaterialProgressView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        init(context, attrs, 0, 0);
+        this(context, attrs, 0);
     }
 
     public MaterialProgressView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        init(context, attrs, defStyleAttr, 0);
-    }
-
-    protected void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        applyStyle(context, attrs, defStyleAttr, defStyleRes);
-        if (!isInEditMode())
-            mStyleId = ThemeManager.getStyleId(context, attrs, defStyleAttr, defStyleRes);
+        applyStyle(context, attrs, defStyleAttr, 0);
     }
 
     private boolean needCreateProgress(boolean circular) {
@@ -70,20 +55,7 @@ public class MaterialProgressView extends View implements ThemeManager.OnThemeCh
     }
 
     protected void applyStyle(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ProgressView, defStyleAttr, defStyleRes);
-
-        int leftPadding = -1;
-        int topPadding = -1;
-        int rightPadding = -1;
-        int bottomPadding = -1;
-        int startPadding = Integer.MIN_VALUE;
-        int endPadding = Integer.MIN_VALUE;
-        int padding = -1;
-
-        boolean startPaddingDefined = false;
-        boolean endPaddingDefined = false;
-        boolean leftPaddingDefined = false;
-        boolean rightPaddingDefined = false;
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MaterialProgressView, defStyleAttr, defStyleRes);
 
         int progressId = 0;
         int progressMode = -1;
@@ -93,123 +65,21 @@ public class MaterialProgressView extends View implements ThemeManager.OnThemeCh
         for (int i = 0, count = a.getIndexCount(); i < count; i++) {
             int attr = a.getIndex(i);
 
-            if (attr == R.styleable.ProgressView_android_background) {
-                Drawable bg = a.getDrawable(attr);
-                ViewCompat.setBackground(this, bg);
-            } else if (attr == R.styleable.ProgressView_android_backgroundTint) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                    setBackgroundTintList(a.getColorStateList(attr));
-            } else if (attr == R.styleable.ProgressView_android_backgroundTintMode) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    int value = a.getInt(attr, 3);
-                    switch (value) {
-                        case 3:
-                            setBackgroundTintMode(PorterDuff.Mode.SRC_OVER);
-                            break;
-                        case 5:
-                            setBackgroundTintMode(PorterDuff.Mode.SRC_IN);
-                            break;
-                        case 9:
-                            setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
-                            break;
-                        case 14:
-                            setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
-                            break;
-                        case 15:
-                            setBackgroundTintMode(PorterDuff.Mode.SCREEN);
-                            break;
-                        case 16:
-                            setBackgroundTintMode(PorterDuff.Mode.ADD);
-                            break;
-                    }
-                }
-            } else if (attr == R.styleable.ProgressView_android_elevation) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                    setElevation(a.getDimensionPixelOffset(attr, 0));
-            } else if (attr == R.styleable.ProgressView_android_padding) {
-                padding = a.getDimensionPixelSize(attr, -1);
-                leftPaddingDefined = true;
-                rightPaddingDefined = true;
-            } else if (attr == R.styleable.ProgressView_android_paddingLeft) {
-                leftPadding = a.getDimensionPixelSize(attr, -1);
-                leftPaddingDefined = true;
-            } else if (attr == R.styleable.ProgressView_android_paddingTop)
-                topPadding = a.getDimensionPixelSize(attr, -1);
-            else if (attr == R.styleable.ProgressView_android_paddingRight) {
-                rightPadding = a.getDimensionPixelSize(attr, -1);
-                rightPaddingDefined = true;
-            } else if (attr == R.styleable.ProgressView_android_paddingBottom)
-                bottomPadding = a.getDimensionPixelSize(attr, -1);
-            else if (attr == R.styleable.ProgressView_android_paddingStart) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    startPadding = a.getDimensionPixelSize(attr, Integer.MIN_VALUE);
-                    startPaddingDefined = (startPadding != Integer.MIN_VALUE);
-                }
-            } else if (attr == R.styleable.ProgressView_android_paddingEnd) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    endPadding = a.getDimensionPixelSize(attr, Integer.MIN_VALUE);
-                    endPaddingDefined = (endPadding != Integer.MIN_VALUE);
-                }
-            } else if (attr == R.styleable.ProgressView_android_minHeight)
-                setMinimumHeight(a.getDimensionPixelSize(attr, 0));
-            else if (attr == R.styleable.ProgressView_android_minWidth)
-                setMinimumWidth(a.getDimensionPixelSize(attr, 0));
-            else if (attr == R.styleable.ProgressView_android_soundEffectsEnabled)
-                setSoundEffectsEnabled(a.getBoolean(attr, true));
-            else if (attr == R.styleable.ProgressView_android_visibility) {
-                int value = a.getInteger(attr, 0);
-                switch (value) {
-                    case 0:
-                        setVisibility(View.VISIBLE);
-                        break;
-                    case 1:
-                        setVisibility(View.INVISIBLE);
-                        break;
-                    case 2:
-                        setVisibility(View.GONE);
-                        break;
-                }
-            } else if (attr == R.styleable.ProgressView_pv_autostart)
-                mAutostart = a.getBoolean(attr, false);
-            else if (attr == R.styleable.ProgressView_pv_circular)
+            if (attr == R.styleable.MaterialProgressView_mpv_autoStart)
+                mAutoStart = a.getBoolean(attr, false);
+            else if (attr == R.styleable.MaterialProgressView_mpv_circular)
                 mCircular = a.getBoolean(attr, true);
-            else if (attr == R.styleable.ProgressView_pv_progressStyle)
+            else if (attr == R.styleable.MaterialProgressView_mpv_progressStyle)
                 progressId = a.getResourceId(attr, 0);
-            else if (attr == R.styleable.ProgressView_pv_progressMode)
+            else if (attr == R.styleable.MaterialProgressView_mpv_progressMode)
                 progressMode = a.getInteger(attr, 0);
-            else if (attr == R.styleable.ProgressView_pv_progress)
+            else if (attr == R.styleable.MaterialProgressView_mpv_progress)
                 progress = a.getFloat(attr, 0);
-            else if (attr == R.styleable.ProgressView_pv_secondaryProgress)
+            else if (attr == R.styleable.MaterialProgressView_mpv_secondaryProgress)
                 secondaryProgress = a.getFloat(attr, 0);
         }
 
         a.recycle();
-
-        if (padding >= 0)
-            setPadding(padding, padding, padding, padding);
-        else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (startPaddingDefined)
-                leftPadding = startPadding;
-            if (endPaddingDefined)
-                rightPadding = endPadding;
-
-            setPadding(leftPadding >= 0 ? leftPadding : getPaddingLeft(),
-                    topPadding >= 0 ? topPadding : getPaddingTop(),
-                    rightPadding >= 0 ? rightPadding : getPaddingRight(),
-                    bottomPadding >= 0 ? bottomPadding : getPaddingBottom());
-        } else {
-            if (leftPaddingDefined || rightPaddingDefined)
-                setPadding(leftPaddingDefined ? leftPadding : getPaddingLeft(),
-                        topPadding >= 0 ? topPadding : getPaddingTop(),
-                        rightPaddingDefined ? rightPadding : getPaddingRight(),
-                        bottomPadding >= 0 ? bottomPadding : getPaddingBottom());
-
-            if (startPaddingDefined || endPaddingDefined)
-                setPaddingRelative(startPaddingDefined ? startPadding : getPaddingStart(),
-                        topPadding >= 0 ? topPadding : getPaddingTop(),
-                        endPaddingDefined ? endPadding : getPaddingEnd(),
-                        bottomPadding >= 0 ? bottomPadding : getPaddingBottom());
-        }
 
         boolean needStart = false;
 
@@ -220,7 +90,6 @@ public class MaterialProgressView extends View implements ThemeManager.OnThemeCh
 
             needStart = mProgressDrawable != null && ((Animatable) mProgressDrawable).isRunning();
             mProgressDrawable = mCircular ? new CircularProgressDrawable.Builder(context, mProgressId).build() : new LinearProgressDrawable.Builder(context, mProgressId).build();
-
             ViewCompat.setBackground(this, mProgressDrawable);
         } else if (mProgressId != progressId) {
             mProgressId = progressId;
@@ -248,22 +117,13 @@ public class MaterialProgressView extends View implements ThemeManager.OnThemeCh
     }
 
     @Override
-    public void onThemeChanged(ThemeManager.OnThemeChangedEvent event) {
-        int style = ThemeManager.getInstance().getCurrentStyle(mStyleId);
-        if (mCurrentStyle != style) {
-            mCurrentStyle = style;
-            applyStyle(getContext(), null, 0, mCurrentStyle);
-        }
-    }
-
-    @Override
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
 
         if (changedView != this)
             return;
 
-        if (mAutostart) {
+        if (mAutoStart) {
             if (visibility == GONE || visibility == INVISIBLE)
                 stop();
             else
@@ -274,22 +134,17 @@ public class MaterialProgressView extends View implements ThemeManager.OnThemeCh
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (getVisibility() == View.VISIBLE && mAutostart)
+        if (getVisibility() == View.VISIBLE && mAutoStart) {
             start();
-        if (mStyleId != 0) {
-            ThemeManager.getInstance().registerOnThemeChangedListener(this);
-            onThemeChanged(null);
         }
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        if (mAutostart)
+        if (mAutoStart) {
             stop();
-
+        }
         super.onDetachedFromWindow();
-        if (mStyleId != 0)
-            ThemeManager.getInstance().unregisterOnThemeChangedListener(this);
     }
 
     public int getProgressMode() {

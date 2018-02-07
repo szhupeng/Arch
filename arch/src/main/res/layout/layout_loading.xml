@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<space.zhupeng.arch.widget.MaterialProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<space.zhupeng.arch.widget.progress.MaterialProgressView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/CircularProgressStyle"
     android:layout_width="40dp"
     android:layout_height="40dp"
-    android:layout_gravity="center"
-    app:barColor="@color/colorPrimary"
-    app:progressIndeterminate="true" />
+    android:layout_gravity="center" />

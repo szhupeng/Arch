@@ -78,13 +78,13 @@
         <item name="cpd_transformDuration">600</item>
         <item name="cpd_keepDuration">200</item>
         <item name="cpd_transformInterpolator">@android:anim/decelerate_interpolator</item>
-        <item name="pv_progressMode">indeterminate</item>
+        <item name="mpv_progressMode">indeterminate</item>
         <item name="cpd_inAnimDuration">0</item>
         <item name="cpd_outAnimDuration">@android:integer/config_mediumAnimTime</item>
     </style>
 
     <style name="Material.Drawable.CircularProgress.Determinate" parent="Material.Drawable.CircularProgress">
-        <item name="pv_progressMode">determinate</item>
+        <item name="mpv_progressMode">determinate</item>
         <item name="cpd_inAnimDuration">@android:integer/config_mediumAnimTime</item>
     </style>
 
@@ -99,17 +99,40 @@
         <item name="lpd_transformDuration">600</item>
         <item name="lpd_keepDuration">200</item>
         <item name="lpd_transformInterpolator">@android:anim/decelerate_interpolator</item>
-        <item name="pv_progressMode">indeterminate</item>
+        <item name="mpv_progressMode">indeterminate</item>
         <item name="lpd_inAnimDuration">@android:integer/config_mediumAnimTime</item>
         <item name="lpd_outAnimDuration">@android:integer/config_mediumAnimTime</item>
         <item name="lpd_verticalAlign">bottom</item>
     </style>
 
     <style name="Material.Drawable.LinearProgress.Determinate" parent="Material.Drawable.LinearProgress">
-        <item name="pv_progressMode">determinate</item>
+        <item name="mpv_progressMode">determinate</item>
     </style>
 
-    <style name="Material.Widget.ProgressView">
-        <item name="pv_progress">0</item>
+    <style name="Material.Widget.MaterialProgressView">
+        <item name="mpv_progress">0</item>
+    </style>
+
+    <style name="CircularProgressDrawable" parent="Material.Drawable.CircularProgress">
+        <item name="cpd_reverse">true</item>
+        <item name="cpd_strokeColors">@array/progress_colors</item>
+    </style>
+
+    <style name="LinearProgressDrawable" parent="Material.Drawable.LinearProgress.Determinate">
+        <item name="lpd_strokeColor">@color/progress</item>
+        <item name="lpd_strokeSecondaryColor">@color/progress_quarter</item>
+        <item name="lpd_reverse">true</item>
+    </style>
+
+    <style name="CircularProgressStyle">
+        <item name="mpv_autoStart">true</item>
+        <item name="mpv_circular">true</item>
+        <item name="mpv_progressMode">indeterminate</item>
+        <item name="mpv_progressStyle">@style/CircularProgressDrawable</item>
+    </style>
+
+    <style name="LinearProgressStyle">
+        <item name="mpv_progressStyle">@style/LinearProgressDrawable</item>
+        <item name="mpv_progressMode">determinate</item>
     </style>
 </resources>

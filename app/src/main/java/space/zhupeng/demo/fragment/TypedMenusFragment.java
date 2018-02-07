@@ -18,7 +18,7 @@ import retrofit2.Response;
 import space.zhupeng.arch.manager.DataManager;
 import space.zhupeng.arch.manager.HttpHelper;
 import space.zhupeng.arch.net.response.BaseResp;
-import space.zhupeng.arch.ui.fragment.BaseListFragment;
+import space.zhupeng.arch.fragment.BaseListFragment;
 import space.zhupeng.arch.widget.MultiStyleTextView;
 import space.zhupeng.arch.widget.adapter.BaseAdapter;
 import space.zhupeng.arch.widget.adapter.BaseViewHolder;

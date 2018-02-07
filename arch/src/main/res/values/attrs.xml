@@ -4,19 +4,14 @@
         <!-- Optional. If you put header and content in xml, you can you these to specify them. -->
         <attr name="ptr_header" format="reference" />
         <attr name="ptr_content" format="reference" />
-
         <!-- the resistance when you are moving the frame -->
         <attr name="ptr_resistance" format="float" />
-
         <!-- the ration of the height of the header to trigger refresh -->
         <attr name="ptr_ratio_of_header_height_to_refresh" format="float" />
-
         <attr name="ptr_duration_to_close" format="integer" />
         <attr name="ptr_duration_to_close_header" format="integer" />
-
         <!-- pull to refresh, otherwise release to refresh, default is release to refresh -->
         <attr name="ptr_pull_to_fresh" format="boolean" />
-
         <!-- keep header when refreshing-->
         <attr name="ptr_keep_header_when_refresh" format="boolean" />
     </declare-styleable>
@@ -38,41 +33,24 @@
         <attr name="msv_animateViewChanges" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="MaterialProgressBar">
-        <attr name="progressIndeterminate" format="boolean" />
-        <attr name="barColor" format="color" />
-        <attr name="rimColor" format="color" />
-        <attr name="rimWidth" format="dimension" />
-        <attr name="spinSpeed" format="float" />
-        <attr name="barSpinCycleTime" format="integer" />
-        <attr name="circleRadius" format="dimension" />
-        <attr name="fillRadius" format="boolean" />
-        <attr name="barWidth" format="dimension" />
-        <attr name="linearProgress" format="boolean" />
-    </declare-styleable>
-
     <declare-styleable name="PreRenderTextView">
         <attr name="renderColor" format="color|reference" />
-    </declare-styleable>
-
-    <declare-styleable name="FastScroller">
-        <attr name="fastScrollerAutoHideEnabled" format="boolean" />
-        <attr name="fastScrollerAutoHideDelayInMillis" format="integer" />
-        <attr name="fastScrollerBubbleEnabled" format="boolean" />
-        <attr name="fastScrollerBubblePosition" format="enum">
-            <enum name="adjacent" value="0" />
-            <enum name="center" value="1" />
-        </attr>
-        <attr name="fastScrollerIgnoreTouchesOutsideHandle" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="BottomNavigationBar">
         <attr name="badge" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="ThemableView">
-        <attr name="v_styleId" format="reference" />
-    </declare-styleable>
+    <!-- MaterialProgressView -->
+    <attr name="mpv_progressMode" format="integer">
+        <enum name="determinate" value="0x00000000" />
+        <enum name="indeterminate" value="0x00000001" />
+        <enum name="buffer" value="0x00000002" />
+        <enum name="query" value="0x00000003" />
+    </attr>
+
+    <attr name="mpv_progress" format="float" />
+    <attr name="mpv_secondaryProgress" format="float" />
 
     <declare-styleable name="CircularProgressDrawable">
         <attr name="cpd_padding" format="reference|dimension" />
@@ -92,9 +70,9 @@
         <attr name="cpd_outAnimDuration" format="reference|integer" />
         <attr name="cpd_inStepColors" format="reference" />
         <attr name="cpd_inStepPercent" format="float" />
-        <attr name="pv_progressMode" />
-        <attr name="pv_progress" />
-        <attr name="pv_secondaryProgress" />
+        <attr name="mpv_progressMode" />
+        <attr name="mpv_progress" />
+        <attr name="mpv_secondaryProgress" />
     </declare-styleable>
 
     <declare-styleable name="LinearProgressDrawable">
@@ -116,32 +94,46 @@
             <enum name="center" value="0x00000001" />
             <enum name="bottom" value="0x00000002" />
         </attr>
-        <attr name="pv_progressMode" />
-        <attr name="pv_progress" />
-        <attr name="pv_secondaryProgress" />
+        <attr name="mpv_progressMode" />
+        <attr name="mpv_progress" />
+        <attr name="mpv_secondaryProgress" />
     </declare-styleable>
 
-    <declare-styleable name="ProgressView">
-        <attr name="android:background" />
-        <attr name="android:backgroundTint" />
-        <attr name="android:backgroundTintMode" />
-        <attr name="android:elevation" />
-        <attr name="android:minHeight" />
-        <attr name="android:minWidth" />
-        <attr name="android:padding" />
-        <attr name="android:paddingBottom" />
-        <attr name="android:paddingEnd" />
-        <attr name="android:paddingLeft" />
-        <attr name="android:paddingRight" />
-        <attr name="android:paddingStart" />
-        <attr name="android:paddingTop" />
-        <attr name="android:soundEffectsEnabled" />
-        <attr name="android:visibility" />
-        <attr name="pv_autostart" format="boolean" />
-        <attr name="pv_circular" format="boolean" />
-        <attr name="pv_progressStyle" format="reference" />
-        <attr name="pv_progressMode" />
-        <attr name="pv_progress" />
-        <attr name="pv_secondaryProgress" />
+    <declare-styleable name="MaterialProgressView">
+        <attr name="mpv_autoStart" format="boolean" />
+        <attr name="mpv_circular" format="boolean" />
+        <attr name="mpv_progressStyle" format="reference" />
+        <attr name="mpv_progressMode" />
+        <attr name="mpv_progress" />
+        <attr name="mpv_secondaryProgress" />
+    </declare-styleable>
+    <!-- /////////////// -->
+
+    <declare-styleable name="RoundedImageView">
+        <attr name="riv_corner_radius" format="dimension" />
+        <attr name="riv_corner_radius_top_left" format="dimension" />
+        <attr name="riv_corner_radius_top_right" format="dimension" />
+        <attr name="riv_corner_radius_bottom_left" format="dimension" />
+        <attr name="riv_corner_radius_bottom_right" format="dimension" />
+        <attr name="riv_border_width" format="dimension" />
+        <attr name="riv_border_color" format="color" />
+        <attr name="riv_mutate_background" format="boolean" />
+        <attr name="riv_oval" format="boolean" />
+        <attr name="android:scaleType" />
+        <attr name="riv_tile_mode">
+            <enum name="clamp" value="0" />
+            <enum name="repeat" value="1" />
+            <enum name="mirror" value="2" />
+        </attr>
+        <attr name="riv_tile_mode_x">
+            <enum name="clamp" value="0" />
+            <enum name="repeat" value="1" />
+            <enum name="mirror" value="2" />
+        </attr>
+        <attr name="riv_tile_mode_y">
+            <enum name="clamp" value="0" />
+            <enum name="repeat" value="1" />
+            <enum name="mirror" value="2" />
+        </attr>
     </declare-styleable>
 </resources>

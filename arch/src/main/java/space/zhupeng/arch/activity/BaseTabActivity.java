@@ -1,4 +1,4 @@
-package space.zhupeng.arch.ui.activity;
+package space.zhupeng.arch.activity;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -87,7 +87,7 @@ public abstract class BaseTabActivity<M extends Repository, V extends BaseView, 
         @Override
         public Fragment getItem(int position) {
             final Tab tab = mTabs.get(position);
-            return Fragment.instantiate(getGenericContext(), tab.cls.getName(), tab.args);
+            return Fragment.instantiate(getContext(), tab.cls.getName(), tab.args);
         }
 
         @Override

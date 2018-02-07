@@ -22,6 +22,10 @@ public class AppDelegate implements AppLifecycle {
     private LinkedList<Activity> mActivities;
     private Activity mCurrentActivity;
 
+    public AppDelegate() {
+        this.mActivities = new LinkedList<>();
+    }
+
     @Override
     public void attachBaseContext(Context base) {
         MultiDex.install(base);
@@ -29,8 +33,6 @@ public class AppDelegate implements AppLifecycle {
 
     @Override
     public void onCreate(Application application) {
-        mActivities = new LinkedList<>();
-
         application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {

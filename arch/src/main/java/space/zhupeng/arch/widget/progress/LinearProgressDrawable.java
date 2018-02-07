@@ -1,6 +1,8 @@
 package space.zhupeng.arch.widget.progress;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +15,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -113,9 +116,9 @@ public class LinearProgressDrawable extends Drawable implements Animatable {
         for (int i = 0, count = a.getIndexCount(); i < count; i++) {
             int attr = a.getIndex(i);
 
-            if (attr == R.styleable.LinearProgressDrawable_pv_progress)
+            if (attr == R.styleable.LinearProgressDrawable_mpv_progress)
                 setProgress(a.getFloat(attr, 0));
-            else if (attr == R.styleable.LinearProgressDrawable_pv_secondaryProgress)
+            else if (attr == R.styleable.LinearProgressDrawable_mpv_secondaryProgress)
                 setSecondaryProgress(a.getFloat(attr, 0));
             else if (attr == R.styleable.LinearProgressDrawable_lpd_maxLineWidth) {
                 TypedValue value = a.peekValue(attr);
@@ -160,7 +163,7 @@ public class LinearProgressDrawable extends Drawable implements Animatable {
                 mKeepDuration = a.getInteger(attr, 0);
             else if (attr == R.styleable.LinearProgressDrawable_lpd_transformInterpolator)
                 mTransformInterpolator = AnimationUtils.loadInterpolator(context, a.getResourceId(attr, 0));
-            else if (attr == R.styleable.LinearProgressDrawable_pv_progressMode)
+            else if (attr == R.styleable.LinearProgressDrawable_mpv_progressMode)
                 mProgressMode = a.getInteger(attr, 0);
             else if (attr == R.styleable.LinearProgressDrawable_lpd_inAnimDuration)
                 mInAnimationDuration = a.getInteger(attr, 0);
@@ -938,8 +941,8 @@ public class LinearProgressDrawable extends Drawable implements Animatable {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.LinearProgressDrawable, defStyleAttr, defStyleRes);
             int resId;
 
-            progressPercent(a.getFloat(R.styleable.LinearProgressDrawable_pv_progress, 0));
-            secondaryProgressPercent(a.getFloat(R.styleable.LinearProgressDrawable_pv_secondaryProgress, 0));
+            progressPercent(a.getFloat(R.styleable.LinearProgressDrawable_mpv_progress, 0));
+            secondaryProgressPercent(a.getFloat(R.styleable.LinearProgressDrawable_mpv_secondaryProgress, 0));
 
             TypedValue value = a.peekValue(R.styleable.LinearProgressDrawable_lpd_maxLineWidth);
             if (value == null)
@@ -957,9 +960,9 @@ public class LinearProgressDrawable extends Drawable implements Animatable {
             else
                 minLineWidth(a.getDimensionPixelSize(R.styleable.LinearProgressDrawable_lpd_minLineWidth, 0));
 
-            strokeSize(a.getDimensionPixelSize(R.styleable.LinearProgressDrawable_lpd_strokeSize, ThemeUtil.dpToPx(context, 4)));
+            strokeSize(a.getDimensionPixelSize(R.styleable.LinearProgressDrawable_lpd_strokeSize, dpToPx(context, 4)));
             verticalAlign(a.getInteger(R.styleable.LinearProgressDrawable_lpd_verticalAlign, LinearProgressDrawable.ALIGN_BOTTOM));
-            strokeColors(a.getColor(R.styleable.LinearProgressDrawable_lpd_strokeColor, ThemeUtil.colorPrimary(context, 0xFF000000)));
+            strokeColors(a.getColor(R.styleable.LinearProgressDrawable_lpd_strokeColor, colorPrimary(context, 0xFF000000)));
             if ((resId = a.getResourceId(R.styleable.LinearProgressDrawable_lpd_strokeColors, 0)) != 0) {
                 TypedArray ta = context.getResources().obtainTypedArray(resId);
                 int[] colors = new int[ta.length()];
@@ -975,7 +978,7 @@ public class LinearProgressDrawable extends Drawable implements Animatable {
             keepDuration(a.getInteger(R.styleable.LinearProgressDrawable_lpd_keepDuration, context.getResources().getInteger(android.R.integer.config_shortAnimTime)));
             if ((resId = a.getResourceId(R.styleable.LinearProgressDrawable_lpd_transformInterpolator, 0)) != 0)
                 transformInterpolator(AnimationUtils.loadInterpolator(context, resId));
-            progressMode(a.getInteger(R.styleable.LinearProgressDrawable_pv_progressMode, MaterialProgressView.MODE_INDETERMINATE));
+            progressMode(a.getInteger(R.styleable.LinearProgressDrawable_mpv_progressMode, MaterialProgressView.MODE_INDETERMINATE));
             inAnimDuration(a.getInteger(R.styleable.LinearProgressDrawable_lpd_inAnimDuration, context.getResources().getInteger(android.R.integer.config_mediumAnimTime)));
             outAnimDuration(a.getInteger(R.styleable.LinearProgressDrawable_lpd_outAnimDuration, context.getResources().getInteger(android.R.integer.config_mediumAnimTime)));
 
@@ -1088,5 +1091,32 @@ public class LinearProgressDrawable extends Drawable implements Animatable {
             return this;
         }
 
+        private int dpToPx(Context context, int dp) {
+            return (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics()) + 0.5f);
+        }
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        private int colorPrimary(Context context, int defaultValue) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                return getColor(context, android.R.attr.colorPrimary, defaultValue);
+
+            return getColor(context, R.attr.colorPrimary, defaultValue);
+        }
+
+        private int getColor(Context context, int id, int defaultValue) {
+            TypedValue value = new TypedValue();
+            try {
+                Resources.Theme theme = context.getTheme();
+                if (theme != null && theme.resolveAttribute(id, value, true)) {
+                    if (value.type >= TypedValue.TYPE_FIRST_INT && value.type <= TypedValue.TYPE_LAST_INT)
+                        return value.data;
+                    else if (value.type == TypedValue.TYPE_STRING)
+                        return context.getResources().getColor(value.resourceId);
+                }
+            } catch (Exception ex) {
+            }
+
+            return defaultValue;
+        }
     }
 }

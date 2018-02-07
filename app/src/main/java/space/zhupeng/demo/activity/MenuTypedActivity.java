@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import space.zhupeng.arch.ui.activity.BaseToolbarActivity;
+import space.zhupeng.arch.activity.BaseToolbarActivity;
 import space.zhupeng.demo.R;
 import space.zhupeng.demo.fragment.TypedMenusFragment;
 import space.zhupeng.demo.vo.MenuTypeVo;

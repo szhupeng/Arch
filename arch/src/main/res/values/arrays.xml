@@ -3,4 +3,8 @@
     <integer-array name="ptr_colors">
         <item>@color/progress</item>
     </integer-array>
+
+    <integer-array name="progress_colors">
+        <item>@color/progress</item>
+    </integer-array>
 </resources>

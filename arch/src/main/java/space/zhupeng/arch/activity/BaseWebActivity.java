@@ -1,4 +1,4 @@
-package space.zhupeng.arch.ui.activity;
+package space.zhupeng.arch.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,10 +8,10 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import space.zhupeng.arch.R;
-import space.zhupeng.arch.ui.fragment.BaseWebFragment;
+import space.zhupeng.arch.fragment.BaseWebFragment;
 
-import static space.zhupeng.arch.ui.fragment.BaseWebFragment.EXTRA_JS_FILE;
-import static space.zhupeng.arch.ui.fragment.BaseWebFragment.EXTRA_URL;
+import static space.zhupeng.arch.fragment.BaseWebFragment.EXTRA_JS_FILE;
+import static space.zhupeng.arch.fragment.BaseWebFragment.EXTRA_URL;
 
 /**
  * @author zhupeng

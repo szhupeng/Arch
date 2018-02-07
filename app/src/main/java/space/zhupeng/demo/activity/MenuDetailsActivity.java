@@ -18,8 +18,8 @@ import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import space.zhupeng.arch.activity.BaseToolbarActivity;
 import space.zhupeng.arch.manager.StatusBarTinter;
-import space.zhupeng.arch.ui.activity.BaseToolbarActivity;
 import space.zhupeng.arch.widget.MultiStyleTextView;
 import space.zhupeng.demo.Api;
 import space.zhupeng.demo.R;
@@ -74,11 +74,13 @@ public class MenuDetailsActivity extends BaseToolbarActivity<MenuDetailRepositor
     protected void initView(@Nullable Bundle savedInstanceState) {
         super.initView(savedInstanceState);
 
+        ButterKnife.bind(this);
+
         StatusBarTinter.setStatusBarColorForCollapsingToolbar(this, mAppBarLayout, mCollapsingToolbarLayout, mToolbar, ContextCompat.getColor(this, R.color.colorPrimaryDark));
     }
 
     @Override
-    protected void onPresenterLoaded() {
+    protected void onPresenterReady() {
         loadData();
     }
 

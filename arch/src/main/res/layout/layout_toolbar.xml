@@ -13,5 +13,10 @@
     app:layout_scrollFlags="scroll|enterAlways"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-    <include layout="@layout/layout_toolbar_content" />
+    <space.zhupeng.arch.widget.CustomTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/dp10"
+        android:paddingRight="@dimen/dp10" />
 </android.support.v7.widget.Toolbar>
