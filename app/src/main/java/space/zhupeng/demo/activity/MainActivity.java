@@ -27,6 +27,6 @@ public class MainActivity extends BaseToolbarActivity {
 
 //        showMessageProgress("这是带文字的加载进度框");
 
-        replaceFragment(MainListFragment.class, null);
+//        replaceFragment(MainListFragment.class, null);
     }
 }

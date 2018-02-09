@@ -12,26 +12,28 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
-import android.util.Log;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by zhupeng on 2018/2/7.
+ * @author zhupeng
+ * @date 2016/12/11
  */
 
 @SuppressWarnings("UnusedDeclaration")
-public class RoundedDrawable extends Drawable {
-
-    public static final String TAG = "RoundedDrawable";
+public class TextImageDrawable extends Drawable {
     public static final int DEFAULT_BORDER_COLOR = Color.BLACK;
+    public static final int DEFAULT_TEXT_COLOR = Color.BLACK;
 
     private final RectF mBounds = new RectF();
     private final RectF mDrawableRect = new RectF();
@@ -44,6 +46,9 @@ public class RoundedDrawable extends Drawable {
     private final Paint mBorderPaint;
     private final Matrix mShaderMatrix = new Matrix();
     private final RectF mSquareCornersRect = new RectF();
+    private final Paint mTextPaint;
+
+    private final int mTypeBorderFor;
 
     private Shader.TileMode mTileModeX = Shader.TileMode.CLAMP;
     private Shader.TileMode mTileModeY = Shader.TileMode.CLAMP;
@@ -53,13 +58,21 @@ public class RoundedDrawable extends Drawable {
     // [ topLeft, topRight, bottomLeft, bottomRight ]
     private final boolean[] mCornersRounded = new boolean[]{true, true, true, true};
 
-    private boolean mOval = false;
+    private int mShape = TextImageView.Shape.RECTANGLE;
     private float mBorderWidth = 0;
     private ColorStateList mBorderColor = ColorStateList.valueOf(DEFAULT_BORDER_COLOR);
+    private int mBorderMode = TextImageView.BorderMode.ALWAYS;
     private ImageView.ScaleType mScaleType = ImageView.ScaleType.FIT_CENTER;
 
-    public RoundedDrawable(Bitmap bitmap) {
+    private String mText;
+    private ColorStateList mTextColor = ColorStateList.valueOf(TextImageDrawable.DEFAULT_TEXT_COLOR);
+    private int mTextSize = TextImageView.DEFAULT_TEXT_SIZE;
+    private Typeface mTypeface = Typeface.DEFAULT;
+    private int mTextStyle = Typeface.NORMAL;
+
+    public TextImageDrawable(Bitmap bitmap, int type) {
         mBitmap = bitmap;
+        mTypeBorderFor = type;
 
         mBitmapWidth = bitmap.getWidth();
         mBitmapHeight = bitmap.getHeight();
@@ -74,19 +87,26 @@ public class RoundedDrawable extends Drawable {
         mBorderPaint.setAntiAlias(true);
         mBorderPaint.setColor(mBorderColor.getColorForState(getState(), DEFAULT_BORDER_COLOR));
         mBorderPaint.setStrokeWidth(mBorderWidth);
+
+        mTextPaint = new Paint();
+        mTextPaint.setAntiAlias(true);
+        mTextPaint.setStyle(Paint.Style.FILL);
+        mTextPaint.setTextSize(mTextSize);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
+        mTextPaint.setColor(mTextColor.getColorForState(getState(), DEFAULT_TEXT_COLOR));
     }
 
-    public static RoundedDrawable fromBitmap(Bitmap bitmap) {
+    public static TextImageDrawable fromBitmap(Bitmap bitmap, int type) {
         if (bitmap != null) {
-            return new RoundedDrawable(bitmap);
+            return new TextImageDrawable(bitmap, type);
         } else {
             return null;
         }
     }
 
-    public static Drawable fromDrawable(Drawable drawable) {
+    public static Drawable fromDrawable(Drawable drawable, int type) {
         if (drawable != null) {
-            if (drawable instanceof RoundedDrawable) {
+            if (drawable instanceof TextImageDrawable) {
                 // just return if it's already a RoundedDrawable
                 return drawable;
             } else if (drawable instanceof LayerDrawable) {
@@ -96,7 +116,7 @@ public class RoundedDrawable extends Drawable {
                 // loop through layers to and change to RoundedDrawables if possible
                 for (int i = 0; i < num; i++) {
                     Drawable d = ld.getDrawable(i);
-                    ld.setDrawableByLayerId(ld.getId(i), fromDrawable(d));
+                    ld.setDrawableByLayerId(ld.getId(i), fromDrawable(d, type));
                 }
                 return ld;
             }
@@ -104,7 +124,7 @@ public class RoundedDrawable extends Drawable {
             // try to get a bitmap from the drawable and
             Bitmap bm = drawableToBitmap(drawable);
             if (bm != null) {
-                return new RoundedDrawable(bm);
+                return new TextImageDrawable(bm, type);
             }
         }
         return drawable;
@@ -125,7 +145,6 @@ public class RoundedDrawable extends Drawable {
             drawable.draw(canvas);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.w(TAG, "Failed to create bitmap from drawable!");
             bitmap = null;
         }
 
@@ -138,17 +157,24 @@ public class RoundedDrawable extends Drawable {
 
     @Override
     public boolean isStateful() {
-        return mBorderColor.isStateful();
+        return mBorderColor.isStateful() || mTextColor.isStateful();
     }
 
     @Override
     protected boolean onStateChange(int[] state) {
-        int newColor = mBorderColor.getColorForState(state, 0);
-        if (mBorderPaint.getColor() != newColor) {
-            mBorderPaint.setColor(newColor);
-            return true;
-        } else {
+        int newBorderColor = mBorderColor.getColorForState(state, 0);
+        int newTextColor = mTextColor.getColorForState(state, 0);
+        if (mBorderPaint.getColor() == newBorderColor && mTextPaint.getColor() == newTextColor) {
             return super.onStateChange(state);
+        } else {
+            if (mBorderPaint.getColor() != newBorderColor) {
+                mBorderPaint.setColor(newBorderColor);
+            }
+
+            if (mTextPaint.getColor() != newTextColor) {
+                mTextPaint.setColor(newTextColor);
+            }
+            return true;
         }
     }
 
@@ -268,8 +294,10 @@ public class RoundedDrawable extends Drawable {
             mRebuildShader = false;
         }
 
-        if (mOval) {
-            if (mBorderWidth > 0) {
+        if (mShape == TextImageView.Shape.OVAL) {
+            if (mBorderMode != TextImageView.BorderMode.NONE &&
+                    (mBorderMode == mTypeBorderFor || mBorderMode == TextImageView.BorderMode.ALWAYS)
+                    && mBorderWidth > 0) {
                 canvas.drawOval(mDrawableRect, mBitmapPaint);
                 canvas.drawOval(mBorderRect, mBorderPaint);
             } else {
@@ -278,7 +306,9 @@ public class RoundedDrawable extends Drawable {
         } else {
             if (any(mCornersRounded)) {
                 float radius = mCornerRadius;
-                if (mBorderWidth > 0) {
+                if (mBorderMode != TextImageView.BorderMode.NONE &&
+                        (mBorderMode == mTypeBorderFor || mBorderMode == TextImageView.BorderMode.ALWAYS)
+                        && mBorderWidth > 0) {
                     canvas.drawRoundRect(mDrawableRect, radius, radius, mBitmapPaint);
                     canvas.drawRoundRect(mBorderRect, radius, radius, mBorderPaint);
                     redrawBitmapForSquareCorners(canvas);
@@ -289,10 +319,20 @@ public class RoundedDrawable extends Drawable {
                 }
             } else {
                 canvas.drawRect(mDrawableRect, mBitmapPaint);
-                if (mBorderWidth > 0) {
+                if (mBorderMode != TextImageView.BorderMode.NONE &&
+                        (mBorderMode == mTypeBorderFor || mBorderMode == TextImageView.BorderMode.ALWAYS)
+                        && mBorderWidth > 0) {
                     canvas.drawRect(mBorderRect, mBorderPaint);
                 }
             }
+        }
+
+        if (mTypeBorderFor == TextImageView.BorderMode.FOR_TEXT && !TextUtils.isEmpty(mText)) {
+            int count = canvas.save();
+            canvas.translate(mBounds.left, mBounds.top);
+            mTextPaint.setTextSize(mTextSize);
+            canvas.drawText(mText, mBounds.width() / 2, mBounds.height() / 2 - ((mTextPaint.descent() + mTextPaint.ascent()) / 2), mTextPaint);
+            canvas.restoreToCount(count);
         }
     }
 
@@ -312,22 +352,22 @@ public class RoundedDrawable extends Drawable {
         float bottom = top + mDrawableRect.height();
         float radius = mCornerRadius;
 
-        if (!mCornersRounded[Corner.TOP_LEFT]) {
+        if (!mCornersRounded[TextImageView.Corner.TOP_LEFT]) {
             mSquareCornersRect.set(left, top, left + radius, top + radius);
             canvas.drawRect(mSquareCornersRect, mBitmapPaint);
         }
 
-        if (!mCornersRounded[Corner.TOP_RIGHT]) {
+        if (!mCornersRounded[TextImageView.Corner.TOP_RIGHT]) {
             mSquareCornersRect.set(right - radius, top, right, radius);
             canvas.drawRect(mSquareCornersRect, mBitmapPaint);
         }
 
-        if (!mCornersRounded[Corner.BOTTOM_RIGHT]) {
+        if (!mCornersRounded[TextImageView.Corner.BOTTOM_RIGHT]) {
             mSquareCornersRect.set(right - radius, bottom - radius, right, bottom);
             canvas.drawRect(mSquareCornersRect, mBitmapPaint);
         }
 
-        if (!mCornersRounded[Corner.BOTTOM_LEFT]) {
+        if (!mCornersRounded[TextImageView.Corner.BOTTOM_LEFT]) {
             mSquareCornersRect.set(left, bottom - radius, left + radius, bottom);
             canvas.drawRect(mSquareCornersRect, mBitmapPaint);
         }
@@ -350,22 +390,22 @@ public class RoundedDrawable extends Drawable {
         float radius = mCornerRadius;
         float offset = mBorderWidth / 2;
 
-        if (!mCornersRounded[Corner.TOP_LEFT]) {
+        if (!mCornersRounded[TextImageView.Corner.TOP_LEFT]) {
             canvas.drawLine(left - offset, top, left + radius, top, mBorderPaint);
             canvas.drawLine(left, top - offset, left, top + radius, mBorderPaint);
         }
 
-        if (!mCornersRounded[Corner.TOP_RIGHT]) {
+        if (!mCornersRounded[TextImageView.Corner.TOP_RIGHT]) {
             canvas.drawLine(right - radius - offset, top, right, top, mBorderPaint);
             canvas.drawLine(right, top - offset, right, top + radius, mBorderPaint);
         }
 
-        if (!mCornersRounded[Corner.BOTTOM_RIGHT]) {
+        if (!mCornersRounded[TextImageView.Corner.BOTTOM_RIGHT]) {
             canvas.drawLine(right - radius - offset, bottom, right + offset, bottom, mBorderPaint);
             canvas.drawLine(right, bottom - radius, right, bottom, mBorderPaint);
         }
 
-        if (!mCornersRounded[Corner.BOTTOM_LEFT]) {
+        if (!mCornersRounded[TextImageView.Corner.BOTTOM_LEFT]) {
             canvas.drawLine(left - offset, bottom, left + radius, bottom, mBorderPaint);
             canvas.drawLine(left, bottom - radius, left, bottom, mBorderPaint);
         }
@@ -420,40 +460,20 @@ public class RoundedDrawable extends Drawable {
         return mBitmapHeight;
     }
 
-    /**
-     * @return the corner radius.
-     */
     public float getCornerRadius() {
         return mCornerRadius;
     }
 
-    /**
-     * @param corner the specific corner to get radius of.
-     * @return the corner radius of the specified corner.
-     */
-    public float getCornerRadius(@Corner int corner) {
+    public float getCornerRadius(@TextImageView.Corner int corner) {
         return mCornersRounded[corner] ? mCornerRadius : 0f;
     }
 
-    /**
-     * Sets all corners to the specified radius.
-     *
-     * @param radius the radius.
-     * @return the {@link RoundedDrawable} for chaining.
-     */
-    public RoundedDrawable setCornerRadius(float radius) {
+    public TextImageDrawable setCornerRadius(float radius) {
         setCornerRadius(radius, radius, radius, radius);
         return this;
     }
 
-    /**
-     * Sets the corner radius of one specific corner.
-     *
-     * @param corner the corner.
-     * @param radius the radius.
-     * @return the {@link RoundedDrawable} for chaining.
-     */
-    public RoundedDrawable setCornerRadius(@Corner int corner, float radius) {
+    public TextImageDrawable setCornerRadius(@TextImageView.Corner int corner, float radius) {
         if (radius != 0 && mCornerRadius != 0 && mCornerRadius != radius) {
             throw new IllegalArgumentException("Multiple nonzero corner radii not yet supported.");
         }
@@ -473,17 +493,8 @@ public class RoundedDrawable extends Drawable {
         return this;
     }
 
-    /**
-     * Sets the corner radii of all the corners.
-     *
-     * @param topLeft     top left corner radius.
-     * @param topRight    top right corner radius
-     * @param bottomRight bototm right corner radius.
-     * @param bottomLeft  bottom left corner radius.
-     * @return the {@link RoundedDrawable} for chaining.
-     */
-    public RoundedDrawable setCornerRadius(float topLeft, float topRight, float bottomRight,
-                                           float bottomLeft) {
+    public TextImageDrawable setCornerRadius(float topLeft, float topRight, float bottomRight,
+                                             float bottomLeft) {
         Set<Float> radiusSet = new HashSet<>(4);
         radiusSet.add(topLeft);
         radiusSet.add(topRight);
@@ -506,10 +517,10 @@ public class RoundedDrawable extends Drawable {
             mCornerRadius = 0f;
         }
 
-        mCornersRounded[Corner.TOP_LEFT] = topLeft > 0;
-        mCornersRounded[Corner.TOP_RIGHT] = topRight > 0;
-        mCornersRounded[Corner.BOTTOM_RIGHT] = bottomRight > 0;
-        mCornersRounded[Corner.BOTTOM_LEFT] = bottomLeft > 0;
+        mCornersRounded[TextImageView.Corner.TOP_LEFT] = topLeft > 0;
+        mCornersRounded[TextImageView.Corner.TOP_RIGHT] = topRight > 0;
+        mCornersRounded[TextImageView.Corner.BOTTOM_RIGHT] = bottomRight > 0;
+        mCornersRounded[TextImageView.Corner.BOTTOM_LEFT] = bottomLeft > 0;
         return this;
     }
 
@@ -517,7 +528,7 @@ public class RoundedDrawable extends Drawable {
         return mBorderWidth;
     }
 
-    public RoundedDrawable setBorderWidth(float width) {
+    public TextImageDrawable setBorderWidth(float width) {
         mBorderWidth = width;
         mBorderPaint.setStrokeWidth(mBorderWidth);
         return this;
@@ -527,26 +538,77 @@ public class RoundedDrawable extends Drawable {
         return mBorderColor.getDefaultColor();
     }
 
-    public RoundedDrawable setBorderColor(@ColorInt int color) {
+    public TextImageDrawable setBorderColor(@ColorInt int color) {
         return setBorderColor(ColorStateList.valueOf(color));
+    }
+
+    @TextImageView.BorderMode
+    public int getBorderMode() {
+        return mBorderMode;
+    }
+
+    public TextImageDrawable setBorderMode(@TextImageView.BorderMode int borderMode) {
+        mBorderMode = borderMode;
+        return this;
     }
 
     public ColorStateList getBorderColors() {
         return mBorderColor;
     }
 
-    public RoundedDrawable setBorderColor(ColorStateList colors) {
+    public TextImageDrawable setBorderColor(ColorStateList colors) {
         mBorderColor = colors != null ? colors : ColorStateList.valueOf(0);
         mBorderPaint.setColor(mBorderColor.getColorForState(getState(), DEFAULT_BORDER_COLOR));
         return this;
     }
 
-    public boolean isOval() {
-        return mOval;
+    public String getText() {
+        return mText;
     }
 
-    public RoundedDrawable setOval(boolean oval) {
-        mOval = oval;
+    public TextImageDrawable setText(String text) {
+        mText = text;
+        return this;
+    }
+
+    public ColorStateList getTextColor() {
+        return mTextColor;
+    }
+
+    public TextImageDrawable setTextColor(@ColorInt int color) {
+        return setTextColor(ColorStateList.valueOf(color));
+    }
+
+    public TextImageDrawable setTextColor(ColorStateList colors) {
+        mTextColor = colors != null ? colors : ColorStateList.valueOf(0);
+        mTextPaint.setColor(mTextColor.getColorForState(getState(), DEFAULT_TEXT_COLOR));
+        return this;
+    }
+
+    public int getTextSize() {
+        return mTextSize;
+    }
+
+    public TextImageDrawable setTextSize(int textSize) {
+        mTextSize = textSize;
+        mTextPaint.setTextSize(mTextSize);
+        return this;
+    }
+
+    public TextImageDrawable setFont(Typeface typeface, @IntRange(from = 0, to = 2) int textStyle) {
+        mTypeface = typeface;
+        mTextStyle = textStyle;
+        mTextPaint.setTypeface(Typeface.create(typeface, textStyle));
+        return this;
+    }
+
+    @TextImageView.Shape
+    public int getShape() {
+        return mShape;
+    }
+
+    public TextImageDrawable setShape(@TextImageView.Shape int shape) {
+        mShape = shape;
         return this;
     }
 
@@ -554,7 +616,7 @@ public class RoundedDrawable extends Drawable {
         return mScaleType;
     }
 
-    public RoundedDrawable setScaleType(ImageView.ScaleType scaleType) {
+    public TextImageDrawable setScaleType(ImageView.ScaleType scaleType) {
         if (scaleType == null) {
             scaleType = ImageView.ScaleType.FIT_CENTER;
         }
@@ -569,7 +631,7 @@ public class RoundedDrawable extends Drawable {
         return mTileModeX;
     }
 
-    public RoundedDrawable setTileModeX(Shader.TileMode tileModeX) {
+    public TextImageDrawable setTileModeX(Shader.TileMode tileModeX) {
         if (mTileModeX != tileModeX) {
             mTileModeX = tileModeX;
             mRebuildShader = true;
@@ -582,7 +644,7 @@ public class RoundedDrawable extends Drawable {
         return mTileModeY;
     }
 
-    public RoundedDrawable setTileModeY(Shader.TileMode tileModeY) {
+    public TextImageDrawable setTileModeY(Shader.TileMode tileModeY) {
         if (mTileModeY != tileModeY) {
             mTileModeY = tileModeY;
             mRebuildShader = true;
