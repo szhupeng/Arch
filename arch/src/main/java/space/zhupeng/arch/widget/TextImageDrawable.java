@@ -186,7 +186,9 @@ public class TextImageDrawable extends Drawable {
         switch (mScaleType) {
             case CENTER:
                 mBorderRect.set(mBounds);
-                mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                if (hasBorder()) {
+                    mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                }
 
                 mShaderMatrix.reset();
                 mShaderMatrix.setTranslate((int) ((mBorderRect.width() - mBitmapWidth) * 0.5f + 0.5f),
@@ -195,7 +197,9 @@ public class TextImageDrawable extends Drawable {
 
             case CENTER_CROP:
                 mBorderRect.set(mBounds);
-                mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                if (hasBorder()) {
+                    mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                }
 
                 mShaderMatrix.reset();
 
@@ -233,7 +237,9 @@ public class TextImageDrawable extends Drawable {
 
                 mBorderRect.set(mBitmapRect);
                 mShaderMatrix.mapRect(mBorderRect);
-                mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                if (hasBorder()) {
+                    mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                }
                 mShaderMatrix.setRectToRect(mBitmapRect, mBorderRect, Matrix.ScaleToFit.FILL);
                 break;
 
@@ -242,7 +248,9 @@ public class TextImageDrawable extends Drawable {
                 mBorderRect.set(mBitmapRect);
                 mShaderMatrix.setRectToRect(mBitmapRect, mBounds, Matrix.ScaleToFit.CENTER);
                 mShaderMatrix.mapRect(mBorderRect);
-                mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                if (hasBorder()) {
+                    mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                }
                 mShaderMatrix.setRectToRect(mBitmapRect, mBorderRect, Matrix.ScaleToFit.FILL);
                 break;
 
@@ -250,7 +258,9 @@ public class TextImageDrawable extends Drawable {
                 mBorderRect.set(mBitmapRect);
                 mShaderMatrix.setRectToRect(mBitmapRect, mBounds, Matrix.ScaleToFit.END);
                 mShaderMatrix.mapRect(mBorderRect);
-                mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                if (hasBorder()) {
+                    mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                }
                 mShaderMatrix.setRectToRect(mBitmapRect, mBorderRect, Matrix.ScaleToFit.FILL);
                 break;
 
@@ -258,13 +268,17 @@ public class TextImageDrawable extends Drawable {
                 mBorderRect.set(mBitmapRect);
                 mShaderMatrix.setRectToRect(mBitmapRect, mBounds, Matrix.ScaleToFit.START);
                 mShaderMatrix.mapRect(mBorderRect);
-                mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                if (hasBorder()) {
+                    mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                }
                 mShaderMatrix.setRectToRect(mBitmapRect, mBorderRect, Matrix.ScaleToFit.FILL);
                 break;
 
             case FIT_XY:
                 mBorderRect.set(mBounds);
-                mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                if (hasBorder()) {
+                    mBorderRect.inset(mBorderWidth / 2, mBorderWidth / 2);
+                }
                 mShaderMatrix.reset();
                 mShaderMatrix.setRectToRect(mBitmapRect, mBorderRect, Matrix.ScaleToFit.FILL);
                 break;
@@ -295,9 +309,7 @@ public class TextImageDrawable extends Drawable {
         }
 
         if (mShape == TextImageView.Shape.OVAL) {
-            if (mBorderMode != TextImageView.BorderMode.NONE &&
-                    (mBorderMode == mTypeBorderFor || mBorderMode == TextImageView.BorderMode.ALWAYS)
-                    && mBorderWidth > 0) {
+            if (mBorderMode != TextImageView.BorderMode.NONE && hasBorder() && mBorderWidth > 0) {
                 canvas.drawOval(mDrawableRect, mBitmapPaint);
                 canvas.drawOval(mBorderRect, mBorderPaint);
             } else {
@@ -306,9 +318,7 @@ public class TextImageDrawable extends Drawable {
         } else {
             if (any(mCornersRounded)) {
                 float radius = mCornerRadius;
-                if (mBorderMode != TextImageView.BorderMode.NONE &&
-                        (mBorderMode == mTypeBorderFor || mBorderMode == TextImageView.BorderMode.ALWAYS)
-                        && mBorderWidth > 0) {
+                if (mBorderMode != TextImageView.BorderMode.NONE && hasBorder() && mBorderWidth > 0) {
                     canvas.drawRoundRect(mDrawableRect, radius, radius, mBitmapPaint);
                     canvas.drawRoundRect(mBorderRect, radius, radius, mBorderPaint);
                     redrawBitmapForSquareCorners(canvas);
@@ -319,9 +329,7 @@ public class TextImageDrawable extends Drawable {
                 }
             } else {
                 canvas.drawRect(mDrawableRect, mBitmapPaint);
-                if (mBorderMode != TextImageView.BorderMode.NONE &&
-                        (mBorderMode == mTypeBorderFor || mBorderMode == TextImageView.BorderMode.ALWAYS)
-                        && mBorderWidth > 0) {
+                if (mBorderMode != TextImageView.BorderMode.NONE && hasBorder() && mBorderWidth > 0) {
                     canvas.drawRect(mBorderRect, mBorderPaint);
                 }
             }
@@ -409,6 +417,10 @@ public class TextImageDrawable extends Drawable {
             canvas.drawLine(left - offset, bottom, left + radius, bottom, mBorderPaint);
             canvas.drawLine(left, bottom - radius, left, bottom, mBorderPaint);
         }
+    }
+
+    private boolean hasBorder() {
+        return mTypeBorderFor == mBorderMode || mBorderMode == TextImageView.BorderMode.ALWAYS;
     }
 
     @Override
@@ -548,7 +560,10 @@ public class TextImageDrawable extends Drawable {
     }
 
     public TextImageDrawable setBorderMode(@TextImageView.BorderMode int borderMode) {
-        mBorderMode = borderMode;
+        if (mBorderMode != borderMode) {
+            mBorderMode = borderMode;
+            updateShaderMatrix();
+        }
         return this;
     }
 

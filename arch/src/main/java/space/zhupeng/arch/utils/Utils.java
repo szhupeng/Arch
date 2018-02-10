@@ -91,6 +91,26 @@ public final class Utils {
     }
 
     /**
+     * 在主线程安全延迟执行
+     *
+     * @param handler
+     * @param runnable
+     */
+    public static void postDelayedSafely(final Handler handler, final Runnable runnable, final long delayMillis) {
+        if (null == handler) return;
+
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                try {
+                    runnable.run();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, delayMillis);
+    }
+
+    /**
      * 在主线程安全执行
      *
      * @param activity

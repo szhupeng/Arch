@@ -25,8 +25,6 @@ public class MainActivity extends BaseToolbarActivity {
 
         setCenterTitle("菜谱大全");
 
-//        showMessageProgress("这是带文字的加载进度框");
-
-//        replaceFragment(MainListFragment.class, null);
+        replaceFragment(MainListFragment.class, null);
     }
 }

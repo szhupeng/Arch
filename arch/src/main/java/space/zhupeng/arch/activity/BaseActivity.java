@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -46,7 +47,14 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
     private static final int ID_PRESENTER_LOADER = 100;
 
-    protected final Handler mHandler = new Handler(Looper.getMainLooper());
+    protected final Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            BaseActivity.this.handleMessage(msg);
+        }
+    };
 
     protected P mPresenter;
 
@@ -83,6 +91,9 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     protected void onDestroy() {
         if (mPresenter != null) {
             mPresenter.detachView();
+        }
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
         }
         super.onDestroy();
     }
@@ -267,6 +278,21 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
      */
     public final void postSafely(final Runnable runnable) {
         Utils.postSafely(mHandler, runnable);
+    }
+
+    /**
+     * 在主线程安全执行
+     *
+     * @param runnable
+     */
+    public final void postDelayedSafely(final Runnable runnable, final long delayMillis) {
+        Utils.postDelayedSafely(mHandler, runnable, delayMillis);
+    }
+
+    /**
+     * @param msg
+     */
+    protected void handleMessage(Message msg) {
     }
 
     /**
