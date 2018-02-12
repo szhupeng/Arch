@@ -1,6 +1,6 @@
 package space.zhupeng.demo.presenter;
 
-import space.zhupeng.arch.mvp.model.Callback;
+import space.zhupeng.arch.mvp.model.RepoCallback;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.demo.repository.MenuDetailRepository;
 import space.zhupeng.demo.view.MenuDetailView;
@@ -18,17 +18,25 @@ public class MenuDetailPresenter extends BasePresenter<MenuDetailRepository, Men
 
     public void loadData(String id, String appkey) {
         this.mView.showSimpleProgress();
-        this.mRepository.loadData(id, appkey, new Callback<TypeSearchVo.TypeSearchItem>() {
-            @Override
-            public void onSuccess(TypeSearchVo.TypeSearchItem data) {
-                mView.closeDialog();
-                mView.bindData(data);
-            }
+        try {
+            this.mRepository.loadData(id, appkey, new RepoCallback<TypeSearchVo.TypeSearchItem>() {
+                @Override
+                public void onSuccess(TypeSearchVo.TypeSearchItem data) {
+                    checkViewAttached();
 
-            @Override
-            public void onFailure(Throwable throwable) {
-                mView.closeDialog();
-            }
-        });
+                    mView.closeDialog();
+                    mView.bindData(data);
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    checkViewAttached();
+
+                    mView.closeDialog();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

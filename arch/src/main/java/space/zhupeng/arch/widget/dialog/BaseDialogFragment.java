@@ -38,37 +38,24 @@ public abstract class BaseDialogFragment extends AppCompatDialogFragment {
 
     private View mRootView;
 
-    protected static <T extends BaseDialogFragment> T newInstance(Class<T> cls, Bundle args) {
-        T fragment = null;
-        try {
-            fragment = cls.newInstance();
-            fragment.setArguments(args);
-        } catch (java.lang.InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return fragment;
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = (Activity) context;
+        this.mActivity = (Activity) context;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mArgs = getArguments();
+        this.mArgs = getArguments();
     }
 
     @Nullable
     @Override
     public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mRootView = inflater.inflate(getLayoutResId(), container, false);
+        this.mRootView = inflater.inflate(getLayoutResId(), container, false);
         initialize();
         initView(savedInstanceState);
         bindEvent();
@@ -102,15 +89,16 @@ public abstract class BaseDialogFragment extends AppCompatDialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        getDialog().getWindow().setGravity(gravity);
-        if (0 == width) {
-            width = getResources().getDimensionPixelSize(R.dimen.custom_dialog_width);
+        getDialog().getWindow().setGravity(this.gravity);
+        if (0 == this.width) {
+            this.width = getResources().getDimensionPixelSize(R.dimen.custom_dialog_width);
         }
-        getDialog().getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        getDialog().getWindow().setLayout(this.width, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    public void setWidth(int width) {
+    public BaseDialogFragment setWidth(int width) {
         this.width = width;
+        return this;
     }
 
     public void setGravity(int gravity) {
@@ -147,16 +135,16 @@ public abstract class BaseDialogFragment extends AppCompatDialogFragment {
 
     @Override
     public void dismiss() {
-        if (mActivity != null && !mActivity.isFinishing()) {
+        if (this.mActivity != null && !this.mActivity.isFinishing()) {
             //防止窗体句柄泄漏
             super.dismiss();
         }
     }
 
     protected final <T extends View> T findById(@IdRes int id) {
-        if (null == mRootView) return null;
+        if (null == this.mRootView) return null;
 
-        return (T) mRootView.findViewById(id);
+        return (T) this.mRootView.findViewById(id);
     }
 
     public void show(FragmentManager manager) {

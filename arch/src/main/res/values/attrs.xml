@@ -137,4 +137,11 @@
             <enum name="always" value="3" />
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="VectorCompatTextView">
+        <attr name="drawableLeftCompat" format="reference|color" />
+        <attr name="drawableRightCompat" format="reference|color" />
+        <attr name="drawableTopCompat" format="reference|color" />
+        <attr name="drawableBottomCompat" format="reference|color" />
+    </declare-styleable>
 </resources>

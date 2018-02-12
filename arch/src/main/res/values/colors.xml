@@ -13,4 +13,5 @@
     <color name="main_black">#333333</color>
 
     <color name="badge">#f20625</color>
+    <color name="divider">#d4d4d4</color>
 </resources>

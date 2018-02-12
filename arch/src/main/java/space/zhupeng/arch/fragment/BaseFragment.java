@@ -78,15 +78,6 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
         manager.initLoader(ID_PRESENTER_LOADER, null, this);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if (mPresenter != null) {
-            mPresenter.attachView((V) this);
-        }
-    }
-
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
     }
 
@@ -94,9 +85,13 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
     public void onDestroyView() {
         super.onDestroyView();
 
-        if (mPresenter != null) {
-            mPresenter.detachView();
+        if (this.mPresenter != null) {
+            this.mPresenter.detachView();
         }
+    }
+
+    protected void onPresenterReady() {
+        fetchData();
     }
 
     public void showSnackbar(final String message) {
@@ -182,7 +177,11 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
     @Override
     public final void onLoadFinished(Loader<P> loader, P data) {
         if (ID_PRESENTER_LOADER == loader.getId()) {
-            mPresenter = data;
+            this.mPresenter = data;
+            if (this.mPresenter != null) {
+                this.mPresenter.attachView((V) this);
+                onPresenterReady();
+            }
         }
     }
 
@@ -190,7 +189,10 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
     @Override
     public final void onLoaderReset(Loader<P> loader) {
         if (ID_PRESENTER_LOADER == loader.getId()) {
-            mPresenter = null;
+            if (this.mPresenter != null) {
+                this.mPresenter.detachView();
+                this.mPresenter = null;
+            }
         }
     }
 
@@ -213,7 +215,7 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
      * @param task
      */
     protected void executeTask(final BaseAsyncTask task) {
-        Utils.cancelTask(mTask);
+        Utils.cancelTask(this.mTask);
         task.execute();
         this.mTask = task;
     }
@@ -225,7 +227,7 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
      * @param exec
      */
     protected void executeTaskOnExecutor(final BaseAsyncTask task, final Executor exec) {
-        Utils.cancelTask(mTask);
+        Utils.cancelTask(this.mTask);
         task.executeOnExecutor(exec);
         this.mTask = task;
     }

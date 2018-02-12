@@ -5,7 +5,7 @@ package space.zhupeng.arch.mvp.model;
  * @date 2017/9/7
  */
 
-public interface Callback<T> {
+public interface RepoCallback<T> {
 
     /**
      * 数据加载成功

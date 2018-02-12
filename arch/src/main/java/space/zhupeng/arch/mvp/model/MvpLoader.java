@@ -4,6 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 
+import retrofit2.Call;
+import space.zhupeng.arch.net.response.BaseResp;
+
 /**
  * @author zhupeng
  * @date 2017/9/10
@@ -22,7 +25,21 @@ public abstract class MvpLoader<T> extends AsyncTaskLoader<T> implements Reposit
 
     @Override
     public T loadInBackground() {
-        return mRepository.toLoadData();
+        try {
+            return mRepository.toLoadDataSync(new Repository.CallFactory<BaseResp<T>>() {
+                @Override
+                public Call<BaseResp<T>> create() {
+                    return createCall();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Call<BaseResp<T>> createCall() {
+        return null;
     }
 
     @Override

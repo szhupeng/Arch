@@ -2,12 +2,11 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.AppCompatTextView
+    <space.zhupeng.arch.widget.VectorCompatTextView
         android:id="@+id/tv_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
-        android:drawableLeft="@drawable/ic_back"
         android:drawablePadding="5dp"
         android:gravity="left"
         android:paddingLeft="5dp"
@@ -15,6 +14,7 @@
         android:text="返回"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_18"
+        app:drawableLeftCompat="@drawable/ic_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +53,6 @@
         android:background="?android:attr/selectableItemBackground"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:text="右边"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_18"
         app:layout_constraintBottom_toBottomOf="parent"

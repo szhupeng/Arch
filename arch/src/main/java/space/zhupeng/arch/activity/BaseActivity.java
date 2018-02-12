@@ -89,11 +89,11 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
     @Override
     protected void onDestroy() {
-        if (mPresenter != null) {
-            mPresenter.detachView();
+        if (this.mPresenter != null) {
+            this.mPresenter.detachView();
         }
-        if (mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
+        if (this.mHandler != null) {
+            this.mHandler.removeCallbacksAndMessages(null);
         }
         super.onDestroy();
     }
@@ -247,9 +247,9 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     @Override
     public final void onLoadFinished(Loader<P> loader, P data) {
         if (ID_PRESENTER_LOADER == loader.getId()) {
-            mPresenter = data;
-            if (mPresenter != null) {
-                mPresenter.attachView((V) this);
+            this.mPresenter = data;
+            if (this.mPresenter != null) {
+                this.mPresenter.attachView((V) this);
                 onPresenterReady();
             }
         }
@@ -258,7 +258,10 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     @Override
     public final void onLoaderReset(Loader<P> loader) {
         if (ID_PRESENTER_LOADER == loader.getId()) {
-            mPresenter = null;
+            if (this.mPresenter != null) {
+                this.mPresenter.detachView();
+                this.mPresenter = null;
+            }
         }
     }
 
@@ -277,7 +280,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
      * @param runnable
      */
     public final void postSafely(final Runnable runnable) {
-        Utils.postSafely(mHandler, runnable);
+        Utils.postSafely(this.mHandler, runnable);
     }
 
     /**
@@ -286,7 +289,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
      * @param runnable
      */
     public final void postDelayedSafely(final Runnable runnable, final long delayMillis) {
-        Utils.postDelayedSafely(mHandler, runnable, delayMillis);
+        Utils.postDelayedSafely(this.mHandler, runnable, delayMillis);
     }
 
     /**

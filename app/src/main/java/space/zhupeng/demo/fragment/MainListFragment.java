@@ -11,10 +11,11 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import space.zhupeng.arch.fragment.BaseListFragment;
 import space.zhupeng.arch.manager.DataManager;
 import space.zhupeng.arch.manager.HttpHelper;
+import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.net.response.BaseResp;
-import space.zhupeng.arch.fragment.BaseListFragment;
 import space.zhupeng.arch.widget.adapter.BaseAdapter;
 import space.zhupeng.arch.widget.adapter.BaseMultiItemAdapter;
 import space.zhupeng.arch.widget.adapter.BaseViewHolder;
@@ -25,6 +26,8 @@ import space.zhupeng.demo.Api;
 import space.zhupeng.demo.MenuService;
 import space.zhupeng.demo.R;
 import space.zhupeng.demo.activity.MenuTypedActivity;
+import space.zhupeng.demo.presenter.MenuDetailPresenter;
+import space.zhupeng.demo.repository.MenuDetailRepository;
 import space.zhupeng.demo.vo.MenuTypeVo;
 
 /**
@@ -48,6 +51,11 @@ public class MainListFragment extends BaseListFragment<MultiItemEntity> {
         MenuTypeAdapter adapter = new MenuTypeAdapter(getActivity());
         adapter.openLoadAnimation(BaseAdapter.ALPHAIN);
         setAdapter(adapter);
+    }
+
+    @Override
+    protected BasePresenter createPresenter() {
+        return new MenuDetailPresenter(new MenuDetailRepository());
     }
 
     @Override

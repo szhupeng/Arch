@@ -3,43 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_material_design"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingTop="24dp">
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_update_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:text="有更新啦"
         android:textColor="@color/main_black"
-        android:textSize="@dimen/text_size_20"
-        android:textStyle="bold" />
+        android:textSize="@dimen/text_size_18" />
 
     <TextView
-        android:id="@+id/tv_message"
+        android:id="@+id/tv_update_log"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:paddingBottom="@dimen/dp5"
-        android:paddingLeft="@dimen/dp15"
-        android:paddingRight="@dimen/dp15"
-        android:paddingTop="@dimen/dp10"
+        android:paddingLeft="@dimen/text_size_16"
+        android:paddingRight="@dimen/text_size_16"
+        android:text="1支持多笔欠费订单一键补缴\n 2新增路边停车月卡说明\n 3产品性能优化"
         android:textColor="@color/main_black"
         android:textSize="@dimen/text_size_16" />
 
-    <TextView
-        android:id="@+id/tv_subtext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/dp15"
-        android:paddingRight="@dimen/dp15"
-        android:textColor="@color/gray"
-        android:textSize="@dimen/text_size_12" />
-
-    <android.support.v4.widget.Space
+    <space.zhupeng.arch.widget.progress.MaterialProgressView
+        android:id="@+id/progress_bar"
+        style="@style/LinearProgressStyle"
         android:layout_width="match_parent"
-        android:layout_height="18dp" />
+        android:layout_height="4dp"
+        android:layout_marginLeft="@dimen/text_size_16"
+        android:layout_marginRight="@dimen/text_size_16" />
 
     <include layout="@layout/horizontal_line" />
 
@@ -49,22 +40,6 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/btn_negative"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="@string/cancel"
-            android:textColor="@color/gray"
-            android:textSize="@dimen/text_size_18" />
-
-        <include
-            android:id="@+id/div"
-            layout="@layout/vertical_line" />
-
-        <TextView
             android:id="@+id/btn_positive"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -72,8 +47,24 @@
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:gravity="center"
-            android:text="@string/confirm"
+            android:text="立即更新"
             android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_18" />
+
+        <include
+            android:id="@+id/div"
+            layout="@layout/vertical_line" />
+
+        <TextView
+            android:id="@+id/btn_negative"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="暂不"
+            android:textColor="@color/gray"
             android:textSize="@dimen/text_size_18" />
     </LinearLayout>
 </LinearLayout>
