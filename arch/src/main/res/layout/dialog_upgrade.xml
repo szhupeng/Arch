@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_update_title"
+        android:id="@+id/tv_upgrade_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -15,7 +15,7 @@
         android:textSize="@dimen/text_size_18" />
 
     <TextView
-        android:id="@+id/tv_update_log"
+        android:id="@+id/tv_upgrade_log"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/text_size_16"
@@ -29,8 +29,10 @@
         style="@style/LinearProgressStyle"
         android:layout_width="match_parent"
         android:layout_height="4dp"
+        android:layout_marginBottom="@dimen/text_size_16"
         android:layout_marginLeft="@dimen/text_size_16"
-        android:layout_marginRight="@dimen/text_size_16" />
+        android:layout_marginRight="@dimen/text_size_16"
+        android:layout_marginTop="@dimen/text_size_16" />
 
     <include layout="@layout/horizontal_line" />
 

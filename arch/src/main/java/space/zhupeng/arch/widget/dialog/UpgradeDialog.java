@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import space.zhupeng.arch.R;
+import space.zhupeng.arch.manager.BackgroundUpgrade;
+import space.zhupeng.arch.manager.ForegroundUpgrade;
+import space.zhupeng.arch.manager.UpgradeManager;
 import space.zhupeng.arch.widget.progress.MaterialProgressView;
 
 /**
@@ -20,10 +23,10 @@ import space.zhupeng.arch.widget.progress.MaterialProgressView;
  * @date 2016/12/4
  */
 
-public class UpdateDialog extends BaseDialogFragment {
+public class UpgradeDialog extends BaseDialogFragment {
 
-    private TextView tvUpdateTitle;
-    private TextView tvUpdateLog;
+    private TextView tvUpgradeTitle;
+    private TextView tvUpgradeLog;
     private MaterialProgressView mProgressBar;
     private View mDiv;
     private TextView btnNegative;
@@ -33,13 +36,13 @@ public class UpdateDialog extends BaseDialogFragment {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.dialog_update;
+        return R.layout.dialog_upgrade;
     }
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
-        tvUpdateTitle = findById(R.id.tv_update_title);
-        tvUpdateLog = findById(R.id.tv_update_log);
+        tvUpgradeTitle = findById(R.id.tv_upgrade_title);
+        tvUpgradeLog = findById(R.id.tv_upgrade_log);
         mProgressBar = findById(R.id.progress_bar);
         mDiv = findById(R.id.div);
         btnNegative = findById(R.id.btn_negative);
@@ -47,32 +50,32 @@ public class UpdateDialog extends BaseDialogFragment {
 
         if (null == mBuilder) return;
 
-        if (!TextUtils.isEmpty(mBuilder.mUpdateTitle)) {
-            if (tvUpdateTitle.getVisibility() != View.VISIBLE) {
-                tvUpdateTitle.setVisibility(View.VISIBLE);
+        if (!TextUtils.isEmpty(mBuilder.mUpgradeTitle)) {
+            if (tvUpgradeTitle.getVisibility() != View.VISIBLE) {
+                tvUpgradeTitle.setVisibility(View.VISIBLE);
             }
-            tvUpdateTitle.setText(mBuilder.mUpdateTitle);
+            tvUpgradeTitle.setText(mBuilder.mUpgradeTitle);
             if (Float.compare(mBuilder.mTitleTextSize, 0f) > 0) {
-                tvUpdateTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, mBuilder.mTitleTextSize);
+                tvUpgradeTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, mBuilder.mTitleTextSize);
             }
             if (mBuilder.mTitleTextColor != 0) {
-                tvUpdateTitle.setTextColor(mBuilder.mTitleTextColor);
+                tvUpgradeTitle.setTextColor(mBuilder.mTitleTextColor);
             }
         } else {
-            if (tvUpdateTitle.getVisibility() != View.GONE) {
-                tvUpdateTitle.setVisibility(View.GONE);
+            if (tvUpgradeTitle.getVisibility() != View.GONE) {
+                tvUpgradeTitle.setVisibility(View.GONE);
             }
         }
 
-        tvUpdateLog.setText(mBuilder.mUpdateLog);
+        tvUpgradeLog.setText(mBuilder.mUpgradeLog);
         if (Float.compare(mBuilder.mLogTextSize, 0f) > 0) {
-            tvUpdateLog.setTextSize(TypedValue.COMPLEX_UNIT_SP, mBuilder.mLogTextSize);
+            tvUpgradeLog.setTextSize(TypedValue.COMPLEX_UNIT_SP, mBuilder.mLogTextSize);
         }
         if (mBuilder.mLogTextColor != 0) {
-            tvUpdateLog.setTextColor(mBuilder.mLogTextColor);
+            tvUpgradeLog.setTextColor(mBuilder.mLogTextColor);
         }
 
-        if (mBuilder.isForceUpdate) {
+        if (mBuilder.isForceUpgrade) {
             if (btnNegative.getVisibility() != View.GONE) {
                 btnNegative.setVisibility(View.GONE);
             }
@@ -107,7 +110,7 @@ public class UpdateDialog extends BaseDialogFragment {
     protected void bindEvent() {
         if (null == mBuilder) return;
 
-        if (!mBuilder.isForceUpdate) {
+        if (!mBuilder.isForceUpgrade) {
             btnNegative.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -122,7 +125,24 @@ public class UpdateDialog extends BaseDialogFragment {
         btnPositive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (mBuilder.mPositiveClickListener != null) {
+                    mBuilder.mPositiveClickListener.onClick(v);
+                } else if (mBuilder.isDownloadInBack) {
+                    dismissAllowingStateLoss();
+                    new UpgradeManager(new BackgroundUpgrade(getActivity(), mBuilder.mDownloadUrl).save(mBuilder.mApkPath, mBuilder.mApkName)).start();
+                } else {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    new UpgradeManager(new ForegroundUpgrade(getActivity(), mBuilder.mDownloadUrl, new ForegroundUpgrade.ProgressListener() {
+                        @Override
+                        public void onProgress(int downloaded, int total) {
+                            mProgressBar.setProgress(downloaded * 1.0f / total);
+                            if (downloaded > 0 && downloaded == total) {
+                                mProgressBar.setVisibility(View.GONE);
+                                dismissAllowingStateLoss();
+                            }
+                        }
+                    }).save(mBuilder.mApkPath, mBuilder.mApkName)).start();
+                }
             }
         });
     }
@@ -132,11 +152,11 @@ public class UpdateDialog extends BaseDialogFragment {
     }
 
     public static class Builder {
-        private CharSequence mUpdateTitle;
+        private CharSequence mUpgradeTitle;
         private float mTitleTextSize;
         private int mTitleTextColor;
 
-        private CharSequence mUpdateLog;
+        private CharSequence mUpgradeLog;
         private float mLogTextSize;
         private int mLogTextColor;
 
@@ -150,39 +170,42 @@ public class UpdateDialog extends BaseDialogFragment {
         private int mPositiveTextColor;
         private View.OnClickListener mPositiveClickListener;
 
+        private int mVersionCode;
         private String mDownloadUrl;
-        private boolean isForceUpdate;
+        private boolean isForceUpgrade;
         private boolean isDownloadInBack;
+        private String mApkPath;
+        private String mApkName;
 
         public Builder(Context context) {
         }
 
-        public Builder setUpdateTitle(CharSequence title) {
-            this.mUpdateTitle = title;
+        public Builder setUpgradeTitle(CharSequence title) {
+            this.mUpgradeTitle = title;
             return this;
         }
 
-        public Builder setUpdateTitleTextSize(float textSize) {
+        public Builder setUpgradeTitleTextSize(float textSize) {
             this.mTitleTextSize = textSize;
             return this;
         }
 
-        public Builder setUpdateTitleTextColor(@ColorInt int textColor) {
+        public Builder setUpgradeTitleTextColor(@ColorInt int textColor) {
             this.mTitleTextColor = textColor;
             return this;
         }
 
-        public Builder setUpdateLog(CharSequence log) {
-            this.mUpdateLog = log;
+        public Builder setUpgradeLog(CharSequence log) {
+            this.mUpgradeLog = log;
             return this;
         }
 
-        public Builder setUpdateLogTextSize(float textSize) {
+        public Builder setUpgradeLogTextSize(float textSize) {
             this.mLogTextSize = textSize;
             return this;
         }
 
-        public Builder setUpdateLogTextColor(@ColorInt int textColor) {
+        public Builder setUpgradeLogTextColor(@ColorInt int textColor) {
             this.mLogTextColor = textColor;
             return this;
         }
@@ -219,31 +242,78 @@ public class UpdateDialog extends BaseDialogFragment {
             return this;
         }
 
+        /**
+         * 服务器返回的最新版本号
+         *
+         * @param versionCode
+         * @return
+         */
+        public Builder setVersionCode(int versionCode) {
+            this.mVersionCode = versionCode;
+            return this;
+        }
+
+        /**
+         * 服务器返回的下载链接
+         *
+         * @param url
+         * @return
+         */
         public Builder setDownloadUrl(String url) {
             this.mDownloadUrl = url;
             return this;
         }
 
-        public Builder setForceUpdate(boolean forceUpdate) {
-            isForceUpdate = forceUpdate;
+        /**
+         * 是否强制更新
+         *
+         * @param forceUpgrade
+         * @return
+         */
+        public Builder setForceUpgrade(boolean forceUpgrade) {
+            isForceUpgrade = forceUpgrade;
             return this;
         }
 
+        /**
+         * 是否开启后台下载
+         *
+         * @param inBack
+         * @return
+         */
         public Builder setDownloadInBack(boolean inBack) {
             this.isDownloadInBack = inBack;
             return this;
         }
 
-        public UpdateDialog build() {
-            UpdateDialog dialog = new UpdateDialog();
-            dialog.setCancelable(!isForceUpdate);
+        /**
+         * 下载安装包的保存路径
+         *
+         * @param path
+         * @param name
+         * @return
+         */
+        public Builder setAppPath(String path, String name) {
+            this.mApkPath = path;
+            this.mApkName = name;
+            return this;
+        }
+
+        public Builder setAppPath(String name) {
+            this.mApkName = name;
+            return this;
+        }
+
+        public UpgradeDialog build() {
+            UpgradeDialog dialog = new UpgradeDialog();
+            dialog.setCancelable(!isForceUpgrade);
             dialog.setBuilder(this);
             return dialog;
         }
 
         public void show(FragmentManager manager) {
-            UpdateDialog dialog = build();
-            dialog.show(manager);
+            UpgradeDialog dialog = build();
+            dialog.show(manager, "upgrade");
         }
     }
 }

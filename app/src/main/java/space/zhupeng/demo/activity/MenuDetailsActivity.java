@@ -29,6 +29,7 @@ import space.zhupeng.arch.activity.BaseToolbarActivity;
 import space.zhupeng.arch.manager.StatusBarTinter;
 import space.zhupeng.arch.utils.ViewUtils;
 import space.zhupeng.arch.widget.MultiStyleTextView;
+import space.zhupeng.arch.widget.dialog.SimpleDialog;
 import space.zhupeng.demo.Api;
 import space.zhupeng.demo.R;
 import space.zhupeng.demo.presenter.MenuDetailPresenter;

@@ -121,7 +121,7 @@
     <style name="LinearProgressDrawable" parent="Material.Drawable.LinearProgress.Determinate">
         <item name="lpd_strokeColor">@color/progress</item>
         <item name="lpd_strokeSecondaryColor">@color/progress_quarter</item>
-        <item name="lpd_reverse">true</item>
+        <item name="lpd_reverse">false</item>
     </style>
 
     <style name="CircularProgressStyle">
@@ -132,7 +132,9 @@
     </style>
 
     <style name="LinearProgressStyle">
-        <item name="mpv_progressStyle">@style/LinearProgressDrawable</item>
+        <item name="mpv_autoStart">false</item>
+        <item name="mpv_circular">false</item>
         <item name="mpv_progressMode">determinate</item>
+        <item name="mpv_progressStyle">@style/LinearProgressDrawable</item>
     </style>
 </resources>
