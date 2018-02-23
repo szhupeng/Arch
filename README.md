@@ -84,7 +84,7 @@ Then，Add the following dependencies under the **dependencies** node in the app
 ```groovy
 compile 'space.zhupeng.arch:arch:2.0'
 ```
-Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
+At this point, you can use the app's basic framework for rapid development.
 
 Arch requires at minimum Java 7 or Android 4.0.
 
