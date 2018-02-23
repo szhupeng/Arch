@@ -26,6 +26,7 @@ First:
 ```xml
 <settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd'
           xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+
     <profiles>
         <profile>
             <repositories>
@@ -60,7 +61,7 @@ Then:
 
 ```xml
 <dependency>
-  <groupId>com.space.arch</groupId>
+  <groupId>space.zhupeng.arch</groupId>
   <artifactId>arch</artifactId>
   <version>2.0</version>
   <type>pom</type>
@@ -73,7 +74,7 @@ First:
 ```groovy
 repositories {
     maven {
-        url  "https://dl.bintray.com/zhupeng/maven" 
+        url  "https://dl.bintray.com/zhupeng/maven"
     }
 }
 ```
@@ -81,7 +82,7 @@ repositories {
 Then:
 
 ```groovy
-compile 'com.space.arch:arch:2.0'
+compile 'space.zhupeng.arch:arch:2.0'
 ```
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
 
