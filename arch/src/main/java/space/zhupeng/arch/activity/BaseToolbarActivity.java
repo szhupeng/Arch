@@ -16,7 +16,6 @@ import space.zhupeng.arch.R;
 import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.view.BaseView;
-import space.zhupeng.arch.utils.ActionModeHelper;
 import space.zhupeng.arch.widget.CustomTitleBar;
 
 /**
@@ -32,8 +31,6 @@ public abstract class BaseToolbarActivity<M extends Repository, V extends BaseVi
     protected Toolbar mToolbar;
     @Nullable
     protected CustomTitleBar mCustomTitleBar;
-
-    protected ActionModeHelper mActionModeHelper;
 
     @CallSuper
     @Override

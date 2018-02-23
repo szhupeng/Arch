@@ -26,8 +26,9 @@ public abstract class UpgradeStrategy {
     protected String mApkPath;
     protected String mApkName;
 
-    public UpgradeStrategy(Context context, String url) {
+    public UpgradeStrategy(Context context, int versionCode, String url) {
         this.context = context.getApplicationContext();
+        this.mVersionCode = versionCode;
         this.mDownloadUrl = url;
         this.mApkName = context.getPackageName() + ".apk";
     }

@@ -2,6 +2,9 @@ package space.zhupeng.demo;
 
 import android.app.Application;
 
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
+
 import space.zhupeng.arch.manager.DataManager;
 
 /**

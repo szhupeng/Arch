@@ -23,6 +23,7 @@ import space.zhupeng.arch.widget.adapter.FlexibleItemDecoration;
 import space.zhupeng.arch.widget.adapter.entity.AbstractExpandableItem;
 import space.zhupeng.arch.widget.adapter.entity.MultiItemEntity;
 import space.zhupeng.demo.Api;
+import space.zhupeng.demo.AppContext;
 import space.zhupeng.demo.MenuService;
 import space.zhupeng.demo.R;
 import space.zhupeng.demo.activity.MenuTypedActivity;

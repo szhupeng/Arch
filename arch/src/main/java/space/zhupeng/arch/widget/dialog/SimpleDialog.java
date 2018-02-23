@@ -57,6 +57,8 @@ public class SimpleDialog extends BaseDialogFragment implements DialogInterface.
                 mDiv.setVisibility(View.VISIBLE);
             }
             btnNegative.setText(mBuilder.mNegativeText);
+            btnNegative.setBackgroundResource(R.drawable.sel_left_bottom_radius_white);
+            btnPositive.setBackgroundResource(R.drawable.sel_right_bottom_radius_white);
             if (Float.compare(mBuilder.mNegativeTextSize, 0f) > 0) {
                 btnNegative.setTextSize(TypedValue.COMPLEX_UNIT_SP, mBuilder.mNegativeTextSize);
             }
@@ -70,6 +72,7 @@ public class SimpleDialog extends BaseDialogFragment implements DialogInterface.
             if (mDiv.getVisibility() != View.GONE) {
                 mDiv.setVisibility(View.GONE);
             }
+            btnPositive.setBackgroundResource(R.drawable.sel_bottom_radius_white);
         }
 
         if (!TextUtils.isEmpty(mBuilder.mPositiveText)) {

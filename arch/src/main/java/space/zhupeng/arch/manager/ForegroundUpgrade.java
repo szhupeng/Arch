@@ -2,7 +2,9 @@ package space.zhupeng.arch.manager;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.Timer;
@@ -44,10 +47,19 @@ public class ForegroundUpgrade extends UpgradeStrategy {
         }
     };
 
-    public ForegroundUpgrade(Context context, String url, ProgressListener listener) {
-        super(context, url);
+    public ForegroundUpgrade(Context context, int versionCode, String url, ProgressListener listener) {
+        super(context, versionCode, url);
 
         this.mProgressListener = listener;
+    }
+
+    @Override
+    public void stop() {
+        if (null == context) return;
+
+        if (mDownloader != null) {
+            mDownloader.remove(PreferenceManager.getDefaultSharedPreferences(context).getLong("download_id", -1));
+        }
     }
 
     @Override
@@ -85,15 +97,9 @@ public class ForegroundUpgrade extends UpgradeStrategy {
 
         DownloadManager.Request task = new DownloadManager.Request(Uri.parse(mDownloadUrl));
         task.setTitle(AppUtils.getAppName(context));
-        //task.setDescription("本次更新:\n1.增强系统稳定性\n2.修复已知bug");
-        task.setVisibleInDownloadsUi(true);
-        //设置是否允许手机在漫游状态下下载
-        //task.setAllowedOverRoaming(false);
-        //限定在WiFi下进行下载
-        //task.setAllowedNetworkTypes(Request.NETWORK_WIFI);
+        task.setVisibleInDownloadsUi(false);
         task.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
         task.setMimeType("application/vnd.android.package-archive");
-        // 可能无法创建Download文件夹，如无sdcard情况，系统会默认将路径设置为/data/data/com.android.providers.downloads/cache/xxx.apk
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             task.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mApkName);
         }
@@ -112,19 +118,59 @@ public class ForegroundUpgrade extends UpgradeStrategy {
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(taskId);
                 Cursor cursor = ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE)).query(query);
-                cursor.moveToFirst();
-                int downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                int total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-                cursor.close();
+                if (cursor.moveToFirst()) {
+                    int downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                    int total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                    cursor.close();
 
-                mProgressHandler.sendMessage(mProgressHandler.obtainMessage(1, downloaded, total));
-
-                if (downloaded > 0 && downloaded == total) {
+                    if (downloaded > 0) {
+                        mProgressHandler.sendMessage(mProgressHandler.obtainMessage(1, downloaded, total));
+                        if (downloaded >= total) {
+                            timer.cancel();
+                            installApk(getDownloadApkPath());
+                        }
+                    }
+                } else {
                     timer.cancel();
-                    installApk(getDownloadApkPath());
                 }
             }
 
-        }, 0, 10);
+        }, 0, 100);
+    }
+
+    /**
+     * 下载完成的广播
+     */
+    class DownloadReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mDownloader == null) {
+                return;
+            }
+
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+            long downloadTaskId = sp.getLong("download_id", -1);
+            long completeId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
+            if (completeId != downloadTaskId) {
+                return;
+            }
+
+            DownloadManager.Query query = new DownloadManager.Query();
+            query.setFilterById(downloadTaskId);
+            Cursor cur = mDownloader.query(query);
+            if (!cur.moveToFirst()) {
+                return;
+            }
+
+            int columnIndex = cur.getColumnIndex(DownloadManager.COLUMN_STATUS);
+            if (DownloadManager.STATUS_SUCCESSFUL == cur.getInt(columnIndex)) {
+                installApk(getDownloadApkPath());
+            } else {
+                Toast.makeText(context, "下载App最新版本失败!", Toast.LENGTH_LONG).show();
+            }
+
+            sp.edit().remove("download_id").commit();
+            cur.close();
+        }
     }
 }

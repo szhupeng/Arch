@@ -5,21 +5,27 @@
     android:background="@drawable/bg_material_design"
     android:orientation="vertical">
 
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
     <TextView
         android:id="@+id/tv_upgrade_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:paddingBottom="6dp"
         android:text="有更新啦"
         android:textColor="@color/main_black"
-        android:textSize="@dimen/text_size_18" />
+        android:textSize="@dimen/text_size_18"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_upgrade_log"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/text_size_16"
-        android:paddingRight="@dimen/text_size_16"
+        android:paddingLeft="@dimen/dp15"
+        android:paddingRight="@dimen/dp15"
         android:text="1支持多笔欠费订单一键补缴\n 2新增路边停车月卡说明\n 3产品性能优化"
         android:textColor="@color/main_black"
         android:textSize="@dimen/text_size_16" />
@@ -29,10 +35,11 @@
         style="@style/LinearProgressStyle"
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:layout_marginBottom="@dimen/text_size_16"
-        android:layout_marginLeft="@dimen/text_size_16"
-        android:layout_marginRight="@dimen/text_size_16"
-        android:layout_marginTop="@dimen/text_size_16" />
+        android:layout_marginBottom="@dimen/dp10"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp15"
+        android:layout_marginTop="@dimen/dp10"
+        android:visibility="invisible" />
 
     <include layout="@layout/horizontal_line" />
 
@@ -46,7 +53,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:gravity="center"
             android:text="立即更新"
@@ -62,7 +68,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:gravity="center"
             android:text="暂不"

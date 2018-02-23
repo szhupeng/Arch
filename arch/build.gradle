@@ -87,7 +87,7 @@ install {
                     developer {
                         id 'zhupeng'
                         name 'zhupeng'
-                        email 'zhupeng@outlook.com'
+                        email 'szhupeng@outlook.com'
                     }
                 }
                 scm {

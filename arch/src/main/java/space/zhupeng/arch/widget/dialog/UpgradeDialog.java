@@ -34,6 +34,8 @@ public class UpgradeDialog extends BaseDialogFragment {
 
     private Builder mBuilder;
 
+    private UpgradeManager mUpgradeManager;
+
     @Override
     protected int getLayoutResId() {
         return R.layout.dialog_upgrade;
@@ -79,20 +81,28 @@ public class UpgradeDialog extends BaseDialogFragment {
             if (btnNegative.getVisibility() != View.GONE) {
                 btnNegative.setVisibility(View.GONE);
             }
+            if (mDiv.getVisibility() != View.GONE) {
+                mDiv.setVisibility(View.GONE);
+            }
+            btnPositive.setBackgroundResource(R.drawable.sel_bottom_radius_white);
         } else {
             if (btnNegative.getVisibility() != View.VISIBLE) {
                 btnNegative.setVisibility(View.VISIBLE);
             }
-        }
-
-        if (!TextUtils.isEmpty(mBuilder.mNegativeText)) {
-            btnNegative.setText(mBuilder.mNegativeText);
-            if (Float.compare(mBuilder.mNegativeTextSize, 0f) > 0) {
-                btnNegative.setTextSize(TypedValue.COMPLEX_UNIT_SP, mBuilder.mNegativeTextSize);
+            if (mDiv.getVisibility() != View.VISIBLE) {
+                mDiv.setVisibility(View.VISIBLE);
             }
-            if (mBuilder.mNegativeTextColor != 0) {
-                btnNegative.setTextColor(mBuilder.mNegativeTextColor);
+            if (!TextUtils.isEmpty(mBuilder.mNegativeText)) {
+                btnNegative.setText(mBuilder.mNegativeText);
+                if (Float.compare(mBuilder.mNegativeTextSize, 0f) > 0) {
+                    btnNegative.setTextSize(TypedValue.COMPLEX_UNIT_SP, mBuilder.mNegativeTextSize);
+                }
+                if (mBuilder.mNegativeTextColor != 0) {
+                    btnNegative.setTextColor(mBuilder.mNegativeTextColor);
+                }
             }
+            btnNegative.setBackgroundResource(R.drawable.sel_right_bottom_radius_white);
+            btnPositive.setBackgroundResource(R.drawable.sel_left_bottom_radius_white);
         }
 
         if (!TextUtils.isEmpty(mBuilder.mPositiveText)) {
@@ -118,6 +128,9 @@ public class UpgradeDialog extends BaseDialogFragment {
                     if (mBuilder.mNegativeClickListener != null) {
                         mBuilder.mNegativeClickListener.onClick(v);
                     }
+                    if (mUpgradeManager != null) {
+                        mUpgradeManager.stop();
+                    }
                 }
             });
         }
@@ -127,21 +140,26 @@ public class UpgradeDialog extends BaseDialogFragment {
             public void onClick(View v) {
                 if (mBuilder.mPositiveClickListener != null) {
                     mBuilder.mPositiveClickListener.onClick(v);
-                } else if (mBuilder.isDownloadInBack) {
+                } else if (mBuilder.isDownloadInBack && !mBuilder.isForceUpgrade) {
                     dismissAllowingStateLoss();
-                    new UpgradeManager(new BackgroundUpgrade(getActivity(), mBuilder.mDownloadUrl).save(mBuilder.mApkPath, mBuilder.mApkName)).start();
+                    mUpgradeManager = new UpgradeManager(new BackgroundUpgrade(getActivity(), mBuilder.mVersionCode, mBuilder.mDownloadUrl)
+                            .save(mBuilder.mApkPath, mBuilder.mApkName));
+                    mUpgradeManager.start();
                 } else {
                     mProgressBar.setVisibility(View.VISIBLE);
-                    new UpgradeManager(new ForegroundUpgrade(getActivity(), mBuilder.mDownloadUrl, new ForegroundUpgrade.ProgressListener() {
-                        @Override
-                        public void onProgress(int downloaded, int total) {
-                            mProgressBar.setProgress(downloaded * 1.0f / total);
-                            if (downloaded > 0 && downloaded == total) {
-                                mProgressBar.setVisibility(View.GONE);
-                                dismissAllowingStateLoss();
-                            }
-                        }
-                    }).save(mBuilder.mApkPath, mBuilder.mApkName)).start();
+                    mProgressBar.setProgress(0.0001f);
+                    mUpgradeManager = new UpgradeManager(new ForegroundUpgrade(getActivity(), mBuilder.mVersionCode, mBuilder.mDownloadUrl,
+                            new ForegroundUpgrade.ProgressListener() {
+                                @Override
+                                public void onProgress(int downloaded, int total) {
+                                    mProgressBar.setProgress(downloaded * 1.0f / total);
+                                    if (downloaded > 0 && downloaded == total) {
+                                        mProgressBar.setVisibility(View.GONE);
+                                        dismissAllowingStateLoss();
+                                    }
+                                }
+                            }).save(mBuilder.mApkPath, mBuilder.mApkName));
+                    mUpgradeManager.start();
                 }
             }
         });

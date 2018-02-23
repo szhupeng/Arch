@@ -30,11 +30,24 @@ public class BackgroundUpgrade extends UpgradeStrategy {
     private NotificationClickReceiver mNotificationClickReceiver;
     private DownloadReceiver mDownloadReceiver;
 
-    public BackgroundUpgrade(Context context, String url) {
-        super(context, url);
+    public BackgroundUpgrade(Context context, int versionCode, String url) {
+        super(context, versionCode, url);
 
         mDownloadReceiver = new DownloadReceiver();
         mNotificationClickReceiver = new NotificationClickReceiver();
+    }
+
+    @Override
+    public void stop() {
+        if (null == context) return;
+
+        if (mDownloadReceiver != null) {
+            context.unregisterReceiver(mDownloadReceiver);
+        }
+
+        if (mNotificationClickReceiver != null) {
+            context.unregisterReceiver(mNotificationClickReceiver);
+        }
     }
 
     @Override
@@ -75,9 +88,9 @@ public class BackgroundUpgrade extends UpgradeStrategy {
         //task.setDescription("本次更新:\n1.增强系统稳定性\n2.修复已知bug");
         task.setVisibleInDownloadsUi(true);
         //设置是否允许手机在漫游状态下下载
-        //task.setAllowedOverRoaming(false);
+        task.setAllowedOverRoaming(false);
         //限定在WiFi下进行下载
-        //task.setAllowedNetworkTypes(Request.NETWORK_WIFI);
+        task.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
         task.setMimeType("application/vnd.android.package-archive");
         // 在通知栏通知下载中和下载完成
         // 下载完成后该Notification才会被显示

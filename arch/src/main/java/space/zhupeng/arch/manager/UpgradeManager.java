@@ -14,6 +14,10 @@ public class UpgradeManager {
         this.mStrategy = strategy;
     }
 
+    public void stop() {
+        this.mStrategy.stop();
+    }
+
     public void start() {
         this.mStrategy.start();
     }

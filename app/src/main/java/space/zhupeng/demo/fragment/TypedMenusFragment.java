@@ -24,6 +24,7 @@ import space.zhupeng.arch.widget.adapter.BaseAdapter;
 import space.zhupeng.arch.widget.adapter.BaseViewHolder;
 import space.zhupeng.arch.widget.adapter.FlexibleItemDecoration;
 import space.zhupeng.demo.Api;
+import space.zhupeng.demo.AppContext;
 import space.zhupeng.demo.MenuService;
 import space.zhupeng.demo.R;
 import space.zhupeng.demo.activity.MenuDetailsActivity;

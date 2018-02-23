@@ -102,6 +102,11 @@ public abstract class BaseBottomBarActivity extends BaseToolbarActivity implemen
         }
     }
 
+    /**
+     * ViewPager是否支持手势滑动
+     *
+     * @return
+     */
     protected boolean isScrollEnabled() {
         return false;
     }

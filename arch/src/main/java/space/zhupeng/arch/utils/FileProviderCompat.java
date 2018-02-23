@@ -17,10 +17,10 @@ import java.util.List;
  * @date 2017/8/1
  */
 
-public class FileProviderHelper {
+public class FileProviderCompat {
 
     public static Uri getUriForFile(Context context, File file) {
-        Uri fileUri = null;
+        Uri fileUri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             fileUri = getUriForNougatFile(context, file);
         } else {
