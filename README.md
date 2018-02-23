@@ -15,20 +15,70 @@ You just need to simply inherit them and implement some methods will be able to 
 
 Download
 --------
-
 Download [the latest JAR][2] or grab via Maven:
+
+First:
+
+```xml
+<settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd'
+          xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+    <profiles>
+        <profile>
+            <repositories>
+                <repository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>bintray-zhupeng-maven</id>
+                    <name>bintray</name>
+                    <url>https://dl.bintray.com/zhupeng/maven</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>bintray-zhupeng-maven</id>
+                    <name>bintray-plugins</name>
+                    <url>https://dl.bintray.com/zhupeng/maven</url>
+                </pluginRepository>
+            </pluginRepositories>
+            <id>bintray</id>
+        </profile>
+    </profiles>
+    <activeProfiles>
+        <activeProfile>bintray</activeProfile>
+    </activeProfiles>
+</settings>
+```
+Then:
+
 ```xml
 <dependency>
-  <groupId>space.zhupeng.arch</groupId>
+  <groupId>com.space.arch</groupId>
   <artifactId>arch</artifactId>
-  <version>1.0.0</version>
+  <version>1.0</version>
+  <type>pom</type>
 </dependency>
 ```
 or Gradle:
+
+First:
+
 ```groovy
-compile 'space.zhupeng.arch:arch:1.0.0'
+repositories {
+    maven {
+        url  "https://dl.bintray.com/zhupeng/maven" 
+    }
+}
 ```
 
+Then:
+
+```groovy
+compile 'com.space.arch:arch:1.0'
+```
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
 
 Arch requires at minimum Java 7 or Android 4.0.
