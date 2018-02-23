@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
-        versionCode 100
-        versionName "1.0"
+        versionCode 200
+        versionName "2.0.0"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
@@ -46,8 +46,12 @@ dependencies {
     compile files('libs/apt.jar')
 }
 
+// 上传步骤（终端执行命令）：
+// 1. gradlew install
+// 2. gradlew bintrayUpload
+
 group = 'com.space.arch'
-version = '1.0'
+version = '2.0'
 
 def siteUrl = 'https://github.com/szhupeng/Arch'
 def gitUrl = 'https://github.com/szhupeng/Arch.git'
