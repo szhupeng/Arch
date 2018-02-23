@@ -19,9 +19,9 @@ You just need to simply inherit them and implement some methods will be able to 
 
 Download
 --------
-Download [the latest JAR][2] or grab via Maven:
+Download the latest AAR via Maven:
 
-First:
+First, Add the following configuration information to the **settings.xml** file:
 
 ```xml
 <settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd'
@@ -57,7 +57,7 @@ First:
     </activeProfiles>
 </settings>
 ```
-Then:
+Then, Add the following information to the **pom.xml** file:
 
 ```xml
 <dependency>
@@ -69,7 +69,7 @@ Then:
 ```
 or Gradle:
 
-First:
+First，Add the maven repository address under the **repositories** node in the root **build.gradle** file:
 
 ```groovy
 repositories {
@@ -79,7 +79,7 @@ repositories {
 }
 ```
 
-Then:
+Then，Add the following dependencies under the **dependencies** node in the app's **build.gradle** file:
 
 ```groovy
 compile 'space.zhupeng.arch:arch:2.0'
