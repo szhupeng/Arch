@@ -5,6 +5,7 @@ Arch [![API](https://img.shields.io/badge/API-14%2B-blue.svg?style=flat)](https:
 
 Arch is a flexible base frame to develop an app. It mainly included:
 
+* BasePresenter
 * BaseActivity
 * BaseToolbarActivity
 * BaseFragment
@@ -58,7 +59,7 @@ Then:
 <dependency>
   <groupId>com.space.arch</groupId>
   <artifactId>arch</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
   <type>pom</type>
 </dependency>
 ```
@@ -77,7 +78,7 @@ repositories {
 Then:
 
 ```groovy
-compile 'com.space.arch:arch:1.0'
+compile 'com.space.arch:arch:1.1'
 ```
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
 
