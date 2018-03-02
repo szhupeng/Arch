@@ -16,6 +16,10 @@ import android.view.View;
 public interface BaseView {
     Context getContext();
 
+    AbstractViewProxy onCreateViewProxy();
+
+    void onProxyBound();
+
     void showToast(@NonNull final CharSequence text);
 
     void showToast(@StringRes final int resId);

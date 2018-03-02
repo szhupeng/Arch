@@ -10,6 +10,7 @@ import android.support.v4.app.SupportActivity;
 import android.view.View;
 
 import space.zhupeng.arch.mvp.model.Repository;
+import space.zhupeng.arch.mvp.view.AbstractViewProxy;
 import space.zhupeng.arch.mvp.view.BaseView;
 
 /**
@@ -30,13 +31,20 @@ public class BasePresenter<M extends Repository, V extends BaseView> implements 
 
     @Override
     public void attachView(V view) {
-        this.mView = view;
+        if (null == view) return;
 
-        if (mView != null && mView instanceof LifecycleOwner) {
-            ((LifecycleOwner) mView).getLifecycle().addObserver(this);
+        if (view != null && view instanceof LifecycleOwner) {
+            ((LifecycleOwner) view).getLifecycle().addObserver(this);
             if (mRepository != null && mRepository instanceof LifecycleObserver) {
-                ((LifecycleOwner) mView).getLifecycle().addObserver(mRepository);
+                ((LifecycleOwner) view).getLifecycle().addObserver(mRepository);
             }
+        }
+
+        AbstractViewProxy<V> proxy = view.onCreateViewProxy();
+        if (null == proxy) {
+            this.mView = view;
+        } else {
+            this.mView = proxy.proxy((Class<V>) view.getClass());
         }
     }
 

@@ -29,9 +29,7 @@ import space.zhupeng.arch.activity.BaseToolbarActivity;
 import space.zhupeng.arch.manager.StatusBarTinter;
 import space.zhupeng.arch.utils.ViewUtils;
 import space.zhupeng.arch.widget.MultiStyleTextView;
-import space.zhupeng.arch.widget.dialog.SimpleDialog;
 import space.zhupeng.demo.Api;
-import space.zhupeng.demo.AppContext;
 import space.zhupeng.demo.R;
 import space.zhupeng.demo.presenter.MenuDetailPresenter;
 import space.zhupeng.demo.repository.MenuDetailRepository;
@@ -93,7 +91,7 @@ public class MenuDetailsActivity extends BaseToolbarActivity<MenuDetailRepositor
     }
 
     @Override
-    protected void onPresenterReady() {
+    protected void onPresenterCreated() {
         loadData();
     }
 
@@ -105,7 +103,7 @@ public class MenuDetailsActivity extends BaseToolbarActivity<MenuDetailRepositor
     }
 
     @Override
-    protected MenuDetailPresenter createPresenter() {
+    protected MenuDetailPresenter onCreatePresenter() {
         return new MenuDetailPresenter(new MenuDetailRepository());
     }
 

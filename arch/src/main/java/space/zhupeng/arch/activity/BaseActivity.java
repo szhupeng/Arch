@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -30,6 +31,7 @@ import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.presenter.PresenterFactory;
 import space.zhupeng.arch.mvp.presenter.PresenterLoader;
+import space.zhupeng.arch.mvp.view.AbstractViewProxy;
 import space.zhupeng.arch.mvp.view.BaseView;
 import space.zhupeng.arch.utils.NetworkUtils;
 import space.zhupeng.arch.utils.ToastUtils;
@@ -132,9 +134,6 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     protected void bindEvent() {
     }
 
-    protected void onPresenterReady() {
-    }
-
     protected boolean isStatusBarTintEnabled() {
         return true;
     }
@@ -235,13 +234,27 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
         return new PresenterLoader(this, new PresenterFactory<P>() {
             @Override
             public P create() {
-                return createPresenter();
+                return onCreatePresenter();
             }
         });
     }
 
-    protected P createPresenter() {
+    protected P onCreatePresenter() {
         return null;
+    }
+
+    @CallSuper
+    protected void onPresenterCreated() {
+        this.mPresenter.attachView((V) this);
+    }
+
+    @Override
+    public AbstractViewProxy<V> onCreateViewProxy() {
+        return null;
+    }
+
+    @Override
+    public void onProxyBound() {
     }
 
     @Override
@@ -249,8 +262,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
         if (ID_PRESENTER_LOADER == loader.getId()) {
             this.mPresenter = data;
             if (this.mPresenter != null) {
-                this.mPresenter.attachView((V) this);
-                onPresenterReady();
+                onPresenterCreated();
             }
         }
     }

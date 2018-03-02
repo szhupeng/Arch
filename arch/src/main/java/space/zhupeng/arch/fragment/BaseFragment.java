@@ -23,6 +23,7 @@ import space.zhupeng.arch.mvp.model.Repository;
 import space.zhupeng.arch.mvp.presenter.BasePresenter;
 import space.zhupeng.arch.mvp.presenter.PresenterFactory;
 import space.zhupeng.arch.mvp.presenter.PresenterLoader;
+import space.zhupeng.arch.mvp.view.AbstractViewProxy;
 import space.zhupeng.arch.mvp.view.BaseView;
 import space.zhupeng.arch.task.BaseAsyncTask;
 import space.zhupeng.arch.utils.NetworkUtils;
@@ -88,10 +89,6 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
         if (this.mPresenter != null) {
             this.mPresenter.detachView();
         }
-    }
-
-    protected void onPresenterReady() {
-        fetchData();
     }
 
     public void showSnackbar(final String message) {
@@ -164,13 +161,26 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
         return new PresenterLoader(getActivity(), new PresenterFactory<P>() {
             @Override
             public P create() {
-                return createPresenter();
+                return onCreatePresenter();
             }
         });
     }
 
-    protected P createPresenter() {
+    protected P onCreatePresenter() {
         return null;
+    }
+
+    protected void onPresenterCreated() {
+        fetchData();
+    }
+
+    @Override
+    public AbstractViewProxy<V> onCreateViewProxy() {
+        return null;
+    }
+
+    @Override
+    public void onProxyBound() {
     }
 
     @CallSuper
@@ -180,7 +190,7 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
             this.mPresenter = data;
             if (this.mPresenter != null) {
                 this.mPresenter.attachView((V) this);
-                onPresenterReady();
+                onPresenterCreated();
             }
         }
     }

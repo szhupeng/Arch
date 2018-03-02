@@ -27,7 +27,7 @@ public class DialogServiceProcessor extends AbstractProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(AsDialogService.class.getCanonicalName());
+        return Collections.singleton(DialogComponent.class.getCanonicalName());
     }
 
     @Override
@@ -58,7 +58,7 @@ public class DialogServiceProcessor extends AbstractProcessor {
 
     private void processAnnotations(Set<? extends TypeElement> annotations,
                                     RoundEnvironment roundEnv) {
-        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(AsDialogService.class);
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(DialogComponent.class);
         for (Element e : elements) {
             // TODO(gak): check for error trees?
             TypeElement te = (TypeElement) e;
