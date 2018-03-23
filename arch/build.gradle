@@ -51,7 +51,7 @@ dependencies {
 // 2. gradlew bintrayUpload
 
 group = 'space.zhupeng.arch'
-version = '2.0'
+version = '2.1'
 
 def siteUrl = 'https://github.com/szhupeng/Arch'
 def gitUrl = 'https://github.com/szhupeng/Arch.git'
