@@ -102,7 +102,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     private BaseAnimation mSelectAnimation = new AlphaInAnimation();
 
     protected Context context;
-    protected List<T> mDataSet;
+    protected List<T> mDataSource;
 
     private LinearLayout mHeaderLayout;
     private LinearLayout mFooterLayout;
@@ -121,11 +121,11 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
 
     public BaseAdapter(Context context, @Nullable List<T> data) {
         this.context = context;
-        this.mDataSet = data == null ? new ArrayList<T>() : data;
+        this.mDataSource = data == null ? new ArrayList<T>() : data;
     }
 
     public final void setData(@Nullable List<T> data) {
-        this.mDataSet = data == null ? new ArrayList<T>() : data;
+        this.mDataSource = data == null ? new ArrayList<T>() : data;
         if (mOnLoadMoreListener != null) {
             mNextLoadEnable = true;
             mLoadMoreEnable = true;
@@ -139,7 +139,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     public final void addData(@IntRange(from = 0) int position, @NonNull T data) {
         if (null == data) return;
 
-        mDataSet.add(position, data);
+        mDataSource.add(position, data);
         notifyItemInserted(position + getHeaderLayoutCount());
         compatibilityDataSizeChanged(1);
     }
@@ -147,7 +147,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     public final void addData(@IntRange(from = 0) int position, @NonNull Collection<? extends T> data) {
         if (null == data) return;
 
-        mDataSet.addAll(position, data);
+        mDataSource.addAll(position, data);
         notifyItemRangeInserted(position + getHeaderLayoutCount(), data.size());
         compatibilityDataSizeChanged(data.size());
     }
@@ -155,34 +155,34 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     public final void addData(@NonNull Collection<? extends T> data) {
         if (null == data) return;
 
-        mDataSet.addAll(data);
-        notifyItemRangeInserted(mDataSet.size() - data.size() + getHeaderLayoutCount(), data.size());
+        mDataSource.addAll(data);
+        notifyItemRangeInserted(mDataSource.size() - data.size() + getHeaderLayoutCount(), data.size());
         compatibilityDataSizeChanged(data.size());
     }
 
     public final void addData(@NonNull T data) {
         if (null == data) return;
 
-        mDataSet.add(data);
-        notifyItemInserted(mDataSet.size() + getHeaderLayoutCount());
+        mDataSource.add(data);
+        notifyItemInserted(mDataSource.size() + getHeaderLayoutCount());
         compatibilityDataSizeChanged(1);
     }
 
     public void remove(@IntRange(from = 0) int position) {
-        mDataSet.remove(position);
+        mDataSource.remove(position);
         int internalPosition = position + getHeaderLayoutCount();
         notifyItemRemoved(internalPosition);
         compatibilityDataSizeChanged(0);
-        notifyItemRangeChanged(internalPosition, mDataSet.size() - internalPosition);
+        notifyItemRangeChanged(internalPosition, mDataSource.size() - internalPosition);
     }
 
     public final void setData(@IntRange(from = 0) int index, @NonNull T data) {
-        mDataSet.set(index, data);
+        mDataSource.set(index, data);
         notifyItemChanged(index + getHeaderLayoutCount());
     }
 
     private void compatibilityDataSizeChanged(int size) {
-        final int dataSize = mDataSet == null ? 0 : mDataSet.size();
+        final int dataSize = mDataSource == null ? 0 : mDataSource.size();
         if (dataSize == size) {
             notifyDataSetChanged();
         }
@@ -253,7 +253,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         if (!mNextLoadEnable && mLoadMoreView.isLoadEndMoreGone()) {
             return 0;
         }
-        if (mDataSet.size() == 0) {
+        if (mDataSource.size() == 0) {
             return 0;
         }
         return 1;
@@ -269,7 +269,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     }
 
     public final int getLoadMoreViewPosition() {
-        return getHeaderLayoutCount() + mDataSet.size() + getFooterLayoutCount();
+        return getHeaderLayoutCount() + mDataSource.size() + getFooterLayoutCount();
     }
 
     public final void loadMoreEnd() {
@@ -336,6 +336,10 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return mLoadMoreEnable;
     }
 
+    public final void notifyItemChangedSafely(int position) {
+        notifyItemChanged(position + getHeaderLayoutCount());
+    }
+
     public final int getHeaderLayoutCount() {
         if (mHeaderLayout == null || mHeaderLayout.getChildCount() == 0) {
             return 0;
@@ -352,8 +356,8 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
 
     @Nullable
     public final T getItem(@IntRange(from = 0) int position) {
-        if (position >= 0 && position < mDataSet.size()) {
-            return mDataSet.get(position);
+        if (position >= 0 && position < mDataSource.size()) {
+            return mDataSource.get(position);
         } else {
             return null;
         }
@@ -405,12 +409,12 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     }
 
     public final int getDataItemCount() {
-        return mDataSet.size();
+        return mDataSource.size();
     }
 
     @Override
     public final int getItemCount() {
-        return getHeaderLayoutCount() + mDataSet.size() + getFooterLayoutCount() + getLoadMoreViewCount();
+        return getHeaderLayoutCount() + mDataSource.size() + getFooterLayoutCount() + getLoadMoreViewCount();
     }
 
     @Override
@@ -420,7 +424,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
             return TYPE_HEADER_VIEW;
         } else {
             int realPosition = position - numberOfHeaders;
-            int adapterCount = mDataSet.size();
+            int adapterCount = mDataSource.size();
             if (realPosition < adapterCount) {
                 return getContentItemType(realPosition);
             } else {
@@ -600,6 +604,10 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
                 }
             });
         }
+    }
+
+    public void setDuration(int duration) {
+        mDuration = duration;
     }
 
     private void addAnimation(RecyclerView.ViewHolder holder) {
@@ -886,7 +894,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
 
     private final int getFooterViewPosition() {
         //Return to footer view notify position
-        return getHeaderLayoutCount() + mDataSet.size();
+        return getHeaderLayoutCount() + mDataSource.size();
     }
 
     @SuppressWarnings("unchecked")
@@ -898,7 +906,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
                 IExpandable item = (IExpandable) list.get(i);
                 if (item.isExpanded() && hasSubItems(item)) {
                     List subList = item.getSubItems();
-                    mDataSet.addAll(pos + 1, subList);
+                    mDataSource.addAll(pos + 1, subList);
                     int subItemCount = recursiveExpand(pos + 1, subList);
                     count += subItemCount;
                 }
@@ -923,7 +931,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         int subItemCount = 0;
         if (!expandable.isExpanded()) {
             List list = expandable.getSubItems();
-            mDataSet.addAll(position + 1, list);
+            mDataSource.addAll(position + 1, list);
             subItemCount += recursiveExpand(position + 1, list);
 
             expandable.setExpanded(true);
@@ -952,7 +960,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         position -= getHeaderLayoutCount();
 
         T endItem = null;
-        if (position + 1 < this.mDataSet.size()) {
+        if (position + 1 < this.mDataSource.size()) {
             endItem = getItem(position + 1);
         }
 
@@ -968,7 +976,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
 
         int count = expand(position + getHeaderLayoutCount(), false, false);
-        for (int i = position + 1; i < this.mDataSet.size(); i++) {
+        for (int i = position + 1; i < this.mDataSource.size(); i++) {
             T item = getItem(i);
 
             if (item == endItem) {
@@ -994,7 +1002,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     }
 
     public final void expandAll() {
-        for (int i = mDataSet.size() - 1 + getHeaderLayoutCount(); i >= getHeaderLayoutCount(); i--) {
+        for (int i = mDataSource.size() - 1 + getHeaderLayoutCount(); i >= getHeaderLayoutCount(); i--) {
             expandAll(i, false, false);
         }
     }
@@ -1020,7 +1028,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
                 if (subItem instanceof IExpandable) {
                     subItemCount += recursiveCollapse(pos);
                 }
-                mDataSet.remove(pos);
+                mDataSource.remove(pos);
                 subItemCount++;
             }
         }
@@ -1057,7 +1065,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
     }
 
     private int getItemPosition(T item) {
-        return item != null && mDataSet != null && !mDataSet.isEmpty() ? mDataSet.indexOf(item) : -1;
+        return item != null && mDataSource != null && !mDataSource.isEmpty() ? mDataSource.indexOf(item) : -1;
     }
 
     private boolean hasSubItems(IExpandable item) {
@@ -1102,7 +1110,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         }
 
         for (int i = position; i >= 0; i--) {
-            T temp = mDataSet.get(i);
+            T temp = mDataSource.get(i);
             if (temp instanceof IExpandable) {
                 IExpandable expandable = (IExpandable) temp;
                 if (expandable.getLevel() >= 0 && expandable.getLevel() < level) {

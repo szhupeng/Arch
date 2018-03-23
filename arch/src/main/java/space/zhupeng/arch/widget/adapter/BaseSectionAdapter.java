@@ -25,7 +25,7 @@ public abstract class BaseSectionAdapter<T extends SectionEntity, VH extends Bas
 
     @Override
     protected final int getContentItemType(int position) {
-        return mDataSet.get(position).isHeader ? TYPE_SECTION_HEADER : 0;
+        return mDataSource.get(position).isHeader ? TYPE_SECTION_HEADER : 0;
     }
 
     @Override

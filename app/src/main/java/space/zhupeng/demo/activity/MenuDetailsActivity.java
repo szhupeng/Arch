@@ -92,6 +92,7 @@ public class MenuDetailsActivity extends BaseToolbarActivity<MenuDetailRepositor
 
     @Override
     protected void onPresenterCreated() {
+        super.onPresenterCreated();
         loadData();
     }
 

@@ -21,17 +21,17 @@ public abstract class BaseMultiItemAdapter<T extends MultiItemEntity, VH extends
 
     @Override
     protected final int getContentItemType(int position) {
-        T item = mDataSet.get(position);
+        T item = mDataSource.get(position);
         return item.getItemType();
     }
 
     @Override
     public void remove(@IntRange(from = 0L) int position) {
-        if (mDataSet == null
+        if (mDataSource == null
                 || position < 0
-                || position >= mDataSet.size()) return;
+                || position >= mDataSource.size()) return;
 
-        T entity = mDataSet.get(position);
+        T entity = mDataSource.get(position);
         if (entity instanceof IExpandable) {
             removeAllChild((IExpandable) entity, position);
         }
@@ -65,7 +65,7 @@ public abstract class BaseMultiItemAdapter<T extends MultiItemEntity, VH extends
     protected void removeDataFromParent(T child) {
         int position = getParentPosition(child);
         if (position >= 0) {
-            IExpandable parent = (IExpandable) mDataSet.get(position);
+            IExpandable parent = (IExpandable) mDataSource.get(position);
             parent.getSubItems().remove(child);
         }
     }

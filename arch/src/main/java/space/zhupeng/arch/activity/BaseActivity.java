@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -243,9 +242,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
         return null;
     }
 
-    @CallSuper
     protected void onPresenterCreated() {
-        this.mPresenter.attachView((V) this);
     }
 
     @Override
@@ -262,6 +259,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
         if (ID_PRESENTER_LOADER == loader.getId()) {
             this.mPresenter = data;
             if (this.mPresenter != null) {
+                this.mPresenter.attachView((V) this);
                 onPresenterCreated();
             }
         }
