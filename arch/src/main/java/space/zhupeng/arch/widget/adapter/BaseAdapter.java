@@ -336,7 +336,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         return mLoadMoreEnable;
     }
 
-    public final void notifyItemChangedSafely(int position) {
+    public final void notifyRelativeItemChanged(int position) {
         notifyItemChanged(position + getHeaderLayoutCount());
     }
 
