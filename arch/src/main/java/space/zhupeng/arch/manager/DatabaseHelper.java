@@ -3,13 +3,14 @@ package space.zhupeng.arch.manager;
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Message;
 
 /**
  * @author zhupeng
  * @date 2018/1/9
  */
 
-public class DatabaseHelper {
+public class DatabaseHelper implements Handler.Callback {
 
     protected final Context context;
     protected final String mDatabaseName;
@@ -25,7 +26,7 @@ public class DatabaseHelper {
 
         this.mReadWriteThread = new HandlerThread("ReadWriteDbThread");
         this.mReadWriteThread.start();
-        this.mReadWriteHandler = new Handler(mReadWriteThread.getLooper());
+        this.mReadWriteHandler = new Handler(mReadWriteThread.getLooper(), this);
     }
 
     public void postSafely(final Runnable runnable) {
@@ -41,5 +42,10 @@ public class DatabaseHelper {
                 }
             });
         }
+    }
+
+    @Override
+    public boolean handleMessage(Message msg) {
+        return false;
     }
 }
