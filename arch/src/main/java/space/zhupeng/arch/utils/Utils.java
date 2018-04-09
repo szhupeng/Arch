@@ -1,6 +1,8 @@
 package space.zhupeng.arch.utils;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +17,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 /**
  * 通用工具方法
@@ -225,7 +228,7 @@ public final class Utils {
                     PackageManager.GET_META_DATA);
             bundle = ai.metaData;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("Utils", e.getMessage());
         }
         return bundle;
     }
@@ -261,5 +264,17 @@ public final class Utils {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 复制
+     *
+     * @param context
+     * @param text
+     */
+    public static void copy(Context context, String text) {
+        ClipboardManager mClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("text copy", text);
+        mClipboard.setPrimaryClip(clip);
     }
 }

@@ -30,20 +30,20 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
-    compile "com.android.support:appcompat-v7:${ANDROID_SUPPORT_VERSION}"
-    compile "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
-    compile "com.android.support:cardview-v7:${ANDROID_SUPPORT_VERSION}"
-    compile "com.android.support:support-v4:${ANDROID_SUPPORT_VERSION}"
-    compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_VERSION}"
-    compile "android.arch.lifecycle:runtime:${LIFECYCLE_VERSION}"
+    api "com.android.support:appcompat-v7:${ANDROID_SUPPORT_VERSION}"
+    api "com.android.support:design:${ANDROID_SUPPORT_VERSION}"
+    api "com.android.support:cardview-v7:${ANDROID_SUPPORT_VERSION}"
+    api "com.android.support:support-v4:${ANDROID_SUPPORT_VERSION}"
+    api "com.android.support.constraint:constraint-layout:${CONSTRAINT_VERSION}"
+    api "android.arch.lifecycle:runtime:${LIFECYCLE_VERSION}"
     annotationProcessor "android.arch.lifecycle:compiler:${LIFECYCLE_VERSION}"
-    compile "com.android.support:multidex:${MULTIDEX_VERSION}"
-    compile "com.google.code.gson:gson:${GSON_VERSION}"
-    compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
-    compile "com.squareup.retrofit2:converter-gson:${RETROFIT_VERSION}"
-    compile "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
-    compile "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"
-    compile files('libs/apt.jar')
+    api "com.android.support:multidex:${MULTIDEX_VERSION}"
+    api "com.google.code.gson:gson:${GSON_VERSION}"
+    api "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+    api "com.squareup.retrofit2:converter-gson:${RETROFIT_VERSION}"
+    api "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
+    api "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"
+    api files('libs/apt.jar')
 }
 
 // 上传步骤（终端执行命令）：
