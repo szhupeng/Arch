@@ -11,7 +11,6 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.KeyEvent;
@@ -34,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import space.zhupeng.arch.R;
+import space.zhupeng.arch.utils.FileProviderCompat;
 import space.zhupeng.arch.utils.Utils;
 
 /**
@@ -289,11 +289,7 @@ public class BaseWebFragment extends BaseToolbarFragment {
      * 拍照
      */
     private void takePhoto() {
-        mImageUri = Uri.fromFile(mPhotoFile);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mImageUri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".fileprovider", mPhotoFile);//通过FileProvider创建一个content类型的Uri
-
-        }
+        mImageUri = FileProviderCompat.getUriForFile(getActivity(), mPhotoFile);
         Utils.takePicture(getActivity(), mImageUri, RC_TAKE_PHOTO);
     }
 
