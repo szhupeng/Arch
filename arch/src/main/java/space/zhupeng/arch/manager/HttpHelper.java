@@ -17,6 +17,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
+import retrofit2.CallAdapter;
+import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import space.zhupeng.arch.Provider;
@@ -85,6 +87,35 @@ public class HttpHelper {
 
     public final void setHeadersProvider(final HeadersProvider provider) {
         this.mHeadersProvider = provider;
+    }
+
+    public final void baseUrl(@NonNull String baseURL, Converter.Factory converter, CallAdapter.Factory adapter) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        OkHttpClient client = builder.connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS)
+                .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
+                .addInterceptor(mHeadersInterceptor)
+                .addInterceptor(mLoggingInterceptor)
+                .build();
+        mRetrofit = new Retrofit.Builder().client(client)
+                .addConverterFactory(converter)
+                .addCallAdapterFactory(adapter)
+                .baseUrl(baseURL)
+                .build();
+        mApiServiceHub.clear();
+    }
+
+    public final void baseUrl(@NonNull String baseURL, Converter.Factory factory) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        OkHttpClient client = builder.connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS)
+                .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
+                .addInterceptor(mHeadersInterceptor)
+                .addInterceptor(mLoggingInterceptor)
+                .build();
+        mRetrofit = new Retrofit.Builder().client(client)
+                .addConverterFactory(factory)
+                .baseUrl(baseURL)
+                .build();
+        mApiServiceHub.clear();
     }
 
     public final void baseUrl(@NonNull String baseURL) {

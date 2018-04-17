@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -44,9 +45,9 @@ import space.zhupeng.arch.widget.dialog.DialogFactory;
  * @date 2017/1/14
  */
 @SuppressWarnings("all")
-public abstract class BaseActivity<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends XActivity implements BaseView, LoaderManager.LoaderCallbacks<P> {
+public abstract class BaseActivity<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends XActivity implements BaseView, LoaderManager.LoaderCallbacks<Object> {
 
-    private static final int ID_PRESENTER_LOADER = 100;
+    protected static final int ID_PRESENTER_LOADER = 100;
 
     protected final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -228,14 +229,38 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
         return this;
     }
 
+    @CallSuper
     @Override
-    public final Loader<P> onCreateLoader(int id, Bundle args) {
+    public Loader<Object> onCreateLoader(int id, Bundle args) {
         return new PresenterLoader(this, new PresenterFactory<P>() {
             @Override
             public P create() {
                 return onCreatePresenter();
             }
         });
+    }
+
+    @CallSuper
+    @Override
+    public void onLoadFinished(Loader<Object> loader, Object data) {
+        if (ID_PRESENTER_LOADER == loader.getId()) {
+            this.mPresenter = (P) data;
+            if (this.mPresenter != null) {
+                this.mPresenter.attachView((V) this);
+                onPresenterCreated();
+            }
+        }
+    }
+
+    @CallSuper
+    @Override
+    public void onLoaderReset(Loader<Object> loader) {
+        if (ID_PRESENTER_LOADER == loader.getId()) {
+            if (this.mPresenter != null) {
+                this.mPresenter.detachView();
+                this.mPresenter = null;
+            }
+        }
     }
 
     protected P onCreatePresenter() {
@@ -252,27 +277,6 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
 
     @Override
     public void onProxyBound() {
-    }
-
-    @Override
-    public final void onLoadFinished(Loader<P> loader, P data) {
-        if (ID_PRESENTER_LOADER == loader.getId()) {
-            this.mPresenter = data;
-            if (this.mPresenter != null) {
-                this.mPresenter.attachView((V) this);
-                onPresenterCreated();
-            }
-        }
-    }
-
-    @Override
-    public final void onLoaderReset(Loader<P> loader) {
-        if (ID_PRESENTER_LOADER == loader.getId()) {
-            if (this.mPresenter != null) {
-                this.mPresenter.detachView();
-                this.mPresenter = null;
-            }
-        }
     }
 
     /**
@@ -322,7 +326,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
     }
 
     protected final <T extends View> T findById(@IdRes int id) {
-        return findViewById(id);
+        return (T) findViewById(id);
     }
 
     @LayoutRes

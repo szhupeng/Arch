@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,6 +19,8 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import space.zhupeng.arch.route.Router;
 
 /**
  * 通用工具方法
@@ -236,11 +239,11 @@ public final class Utils {
     /**
      * 调用系统相机拍照
      *
-     * @param activity    当前activity
-     * @param imageUri    拍照后照片存储路径
-     * @param requestCode 请求码
+     * @param activity 当前activity
+     * @param imageUri 拍照后照片存储路径
+     * @param callback 结果回调
      */
-    public static void takePicture(Activity activity, Uri imageUri, int requestCode) {
+    public static void takePicture(Activity activity, Uri imageUri, Router.Callback callback) {
         //调用系统相机
         Intent intent = new Intent();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -249,21 +252,28 @@ public final class Utils {
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
         //将拍照结果保存至photo_file的Uri中，不保留在相册中
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        if (activity != null) {
-            activity.startActivityForResult(intent, requestCode);
-        }
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        Router router = new Router(activity);
+        router.startActivityForResult(intent, callback);
     }
 
     /**
      * 打开系统相册
      *
-     * @param activity    当前activity
-     * @param requestCode 请求码
+     * @param activity 当前activity
+     * @param callback 结果回调
      */
-    public static void openAlbum(Activity activity, int requestCode) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+    public static void openAlbum(Activity activity, Router.Callback callback) {
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
         intent.setType("image/*");
-        activity.startActivityForResult(intent, requestCode);
+        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Router router = new Router(activity);
+        try {
+            router.startActivityForResult(intent, callback);
+        } catch (Exception e) {
+            intent.setData(MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            router.startActivityForResult(intent, callback);
+        }
     }
 
     /**

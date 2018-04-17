@@ -36,9 +36,9 @@ import space.zhupeng.arch.widget.dialog.DialogFactory;
  * @date 2017/1/14
  */
 @SuppressWarnings("all")
-public abstract class BaseFragment<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends XFragment implements BaseView, LoaderManager.LoaderCallbacks<P> {
+public abstract class BaseFragment<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends XFragment implements BaseView, LoaderManager.LoaderCallbacks<Object> {
 
-    private static final int ID_PRESENTER_LOADER = 200;
+    protected static final int ID_PRESENTER_LOADER = 200;
 
     protected P mPresenter;
     private BaseAsyncTask mTask;
@@ -157,7 +157,7 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
 
     @CallSuper
     @Override
-    public Loader<P> onCreateLoader(int id, Bundle args) {
+    public Loader<Object> onCreateLoader(int id, Bundle args) {
         return new PresenterLoader(getActivity(), new PresenterFactory<P>() {
             @Override
             public P create() {
@@ -185,9 +185,9 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
 
     @CallSuper
     @Override
-    public final void onLoadFinished(Loader<P> loader, P data) {
+    public final void onLoadFinished(Loader<Object> loader, Object data) {
         if (ID_PRESENTER_LOADER == loader.getId()) {
-            this.mPresenter = data;
+            this.mPresenter = (P) data;
             if (this.mPresenter != null) {
                 this.mPresenter.attachView((V) this);
                 onPresenterCreated();
@@ -197,7 +197,7 @@ public abstract class BaseFragment<M extends Repository, V extends BaseView, P e
 
     @CallSuper
     @Override
-    public final void onLoaderReset(Loader<P> loader) {
+    public final void onLoaderReset(Loader<Object> loader) {
         if (ID_PRESENTER_LOADER == loader.getId()) {
             if (this.mPresenter != null) {
                 this.mPresenter.detachView();
