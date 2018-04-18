@@ -83,7 +83,7 @@ repositories {
 Then，Add the following dependencies under the **dependencies** node in the app's **build.gradle** file:
 
 ```groovy
-compile 'space.zhupeng.arch:arch:2.2'
+implementation 'space.zhupeng.arch:arch:2.2'
 ```
 At this point, you can use the app's basic framework for rapid development.
 
