@@ -64,7 +64,7 @@ Then, Add the following information to the **pom.xml** file:
 <dependency>
   <groupId>space.zhupeng.arch</groupId>
   <artifactId>arch</artifactId>
-  <version>2.2</version>
+  <version>2.3</version>
   <type>pom</type>
 </dependency>
 ```
@@ -83,7 +83,7 @@ repositories {
 Then，Add the following dependencies under the **dependencies** node in the app's **build.gradle** file:
 
 ```groovy
-implementation 'space.zhupeng.arch:arch:2.2'
+implementation 'space.zhupeng.arch:arch:2.3'
 ```
 At this point, you can use the app's basic framework for rapid development.
 

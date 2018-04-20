@@ -1,5 +1,7 @@
 package space.zhupeng.arch.manager;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -7,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
@@ -86,6 +89,15 @@ public abstract class UpgradeStrategy {
         if (!apkFile.exists()) {
             //APP安装文件不存在或已损坏
             return;
+        }
+
+        // 兼容Android 8.0
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //先获取是否有安装未知来源应用的权限
+            if (!context.getPackageManager().canRequestPackageInstalls()) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, 1);
+                return;
+            }
         }
 
         Intent intent = new Intent(Intent.ACTION_VIEW);

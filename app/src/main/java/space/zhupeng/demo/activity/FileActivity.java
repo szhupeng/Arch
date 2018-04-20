@@ -18,9 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import space.zhupeng.arch.activity.BaseActivity;
-import space.zhupeng.arch.route.Router;
+import space.zhupeng.arch.manager.NotificationOreoCompat;
 import space.zhupeng.arch.utils.FileProviderCompat;
-import space.zhupeng.arch.utils.Utils;
 import space.zhupeng.demo.R;
 
 public class FileActivity extends BaseActivity {

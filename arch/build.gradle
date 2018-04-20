@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
-        versionCode 220
-        versionName "2.2.0"
+        versionCode 230
+        versionName "2.3.0"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
@@ -51,7 +51,7 @@ dependencies {
 // 2. gradlew bintrayUpload
 
 group = 'space.zhupeng.arch'
-version = '2.2'
+version = '2.3'
 
 def siteUrl = 'https://github.com/szhupeng/Arch'
 def gitUrl = 'https://github.com/szhupeng/Arch.git'

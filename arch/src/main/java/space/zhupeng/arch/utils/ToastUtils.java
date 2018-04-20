@@ -22,7 +22,7 @@ import android.widget.Toast;
 public final class ToastUtils {
 
     private static final int DEFAULT_COLOR = 0x12000000;
-    private static final Handler sHandler = new Handler(Looper.getMainLooper());
+    private static final Handler H = new Handler(Looper.getMainLooper());
     private static Toast sToast;
 
     private ToastUtils() {
@@ -36,7 +36,7 @@ public final class ToastUtils {
      * @param text    文本
      */
     public static void showShortSafely(@NonNull final Context context, @NonNull final CharSequence text) {
-        sHandler.post(new Runnable() {
+        H.post(new Runnable() {
             @Override
             public void run() {
                 show(context, text, Toast.LENGTH_SHORT);
@@ -51,7 +51,7 @@ public final class ToastUtils {
      * @param resId   资源Id
      */
     public static void showShortSafely(@NonNull final Context context, @StringRes final int resId) {
-        sHandler.post(new Runnable() {
+        H.post(new Runnable() {
             @Override
             public void run() {
                 show(context, resId, Toast.LENGTH_SHORT);
@@ -66,7 +66,7 @@ public final class ToastUtils {
      * @param text    文本
      */
     public static void showLongSafely(@NonNull final Context context, @NonNull final CharSequence text) {
-        sHandler.post(new Runnable() {
+        H.post(new Runnable() {
             @Override
             public void run() {
                 show(context, text, Toast.LENGTH_LONG);
@@ -81,7 +81,7 @@ public final class ToastUtils {
      * @param resId   资源Id
      */
     public static void showLongSafely(@NonNull final Context context, @StringRes final int resId) {
-        sHandler.post(new Runnable() {
+        H.post(new Runnable() {
             @Override
             public void run() {
                 show(context, resId, Toast.LENGTH_LONG);
@@ -135,7 +135,7 @@ public final class ToastUtils {
      * @param context
      */
     public static void showCustomShortSafely(@NonNull final Context context, @LayoutRes final int layoutId) {
-        sHandler.post(new Runnable() {
+        H.post(new Runnable() {
             @Override
             public void run() {
                 showCustom(context, layoutId, Toast.LENGTH_SHORT);
@@ -149,7 +149,7 @@ public final class ToastUtils {
      * @param context
      */
     public static void showCustomLongSafely(@NonNull final Context context, @LayoutRes final int layoutId) {
-        sHandler.post(new Runnable() {
+        H.post(new Runnable() {
             @Override
             public void run() {
                 showCustom(context, layoutId, Toast.LENGTH_LONG);
@@ -181,7 +181,7 @@ public final class ToastUtils {
      * @param context
      */
     public static void showCustomShortSafely(@NonNull final Context context, @NonNull final View view) {
-        sHandler.post(new Runnable() {
+        H.post(new Runnable() {
             @Override
             public void run() {
                 showCustom(context, view, Toast.LENGTH_SHORT);
@@ -195,7 +195,7 @@ public final class ToastUtils {
      * @param context
      */
     public static void showCustomLongSafely(@NonNull final Context context, @NonNull final View view) {
-        sHandler.post(new Runnable() {
+        H.post(new Runnable() {
             @Override
             public void run() {
                 showCustom(context, view, Toast.LENGTH_LONG);
