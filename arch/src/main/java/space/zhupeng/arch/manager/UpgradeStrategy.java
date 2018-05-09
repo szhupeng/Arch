@@ -15,6 +15,8 @@ import android.text.TextUtils;
 
 import java.io.File;
 
+import space.zhupeng.arch.widget.dialog.UpgradeDialog;
+
 /**
  * @author zhupeng
  * @date 2018/2/22
@@ -30,7 +32,7 @@ public abstract class UpgradeStrategy {
     protected String mApkName;
 
     public UpgradeStrategy(Context context, int versionCode, String url) {
-        this.context = context.getApplicationContext();
+        this.context = context;
         this.mVersionCode = versionCode;
         this.mDownloadUrl = url;
         this.mApkName = context.getPackageName() + ".apk";
@@ -47,7 +49,7 @@ public abstract class UpgradeStrategy {
         return this;
     }
 
-    protected String getDownloadApkPath() {
+    public String getDownloadApkPath() {
         if (null == this.mApkPath) {
             this.mApkPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
         }
@@ -71,7 +73,7 @@ public abstract class UpgradeStrategy {
                 String versionCode = String.valueOf(info.versionCode);
                 //比较已下载到本地的apk安装包，与服务器上apk安装包的版本号是否一致
                 if (String.valueOf(mVersionCode).equals(versionCode)) {
-                    installApk(apkPath);
+                    checkAndInstallApk(apkPath);
                     return true;
                 }
             }
@@ -80,7 +82,11 @@ public abstract class UpgradeStrategy {
         return false;
     }
 
-    public void installApk(String apkPath) {
+    public void checkAndInstallApk() {
+        checkAndInstallApk(getDownloadApkPath());
+    }
+
+    public void checkAndInstallApk(final String apkPath) {
         if (TextUtils.isEmpty(apkPath)) {
             //APP安装文件不存在或已损坏
             return;
@@ -95,11 +101,17 @@ public abstract class UpgradeStrategy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //先获取是否有安装未知来源应用的权限
             if (!context.getPackageManager().canRequestPackageInstalls()) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, 1);
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, UpgradeDialog.RC_INSTALL_PACKAGES);
                 return;
+            } else {
+                installApk(apkFile);
             }
+        } else {
+            installApk(apkFile);
         }
+    }
 
+    private void installApk(final File apkFile) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

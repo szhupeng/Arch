@@ -88,7 +88,7 @@ public abstract class XActivity extends AppCompatActivity {
 
             ft.commitAllowingStateLoss();
         } catch (Exception e) {
-            Log.e("XActivity:pushFragment", e.getMessage());
+            Log.e("XActivity", e.getMessage());
         }
     }
 
@@ -114,7 +114,7 @@ public abstract class XActivity extends AppCompatActivity {
                 fragment = (XFragment) Fragment.instantiate(this, fname);
             }
         } catch (Exception e) {
-            Log.e("XActivity:pushFragment", e.getMessage());
+            Log.e("XActivity", e.getMessage());
             return;
         }
 
@@ -163,7 +163,7 @@ public abstract class XActivity extends AppCompatActivity {
 
             ft.commitAllowingStateLoss();
         } catch (Exception e) {
-            Log.e("XActivity:replaceFragment", e.getMessage());
+            Log.e("XActivity", e.getMessage());
         }
     }
 
@@ -176,7 +176,7 @@ public abstract class XActivity extends AppCompatActivity {
         try {
             fragment = cls.newInstance();
         } catch (Exception e) {
-            Log.e("XActivity:replaceFragment", e.getMessage());
+            Log.e("XActivity", e.getMessage());
             return;
         }
 

@@ -14,6 +14,10 @@ public class UpgradeManager {
         this.mStrategy = strategy;
     }
 
+    public void install() {
+        this.mStrategy.checkAndInstallApk();
+    }
+
     public void stop() {
         this.mStrategy.stop();
     }

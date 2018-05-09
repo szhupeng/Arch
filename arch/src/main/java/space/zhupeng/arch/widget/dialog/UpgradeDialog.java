@@ -1,8 +1,14 @@
 package space.zhupeng.arch.widget.dialog;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
@@ -14,6 +20,7 @@ import space.zhupeng.arch.R;
 import space.zhupeng.arch.manager.BackgroundUpgrade;
 import space.zhupeng.arch.manager.ForegroundUpgrade;
 import space.zhupeng.arch.manager.UpgradeManager;
+import space.zhupeng.arch.utils.AppUtils;
 import space.zhupeng.arch.widget.progress.MaterialProgressView;
 
 /**
@@ -24,6 +31,9 @@ import space.zhupeng.arch.widget.progress.MaterialProgressView;
  */
 
 public class UpgradeDialog extends BaseDialogFragment {
+
+    public static final int RC_INSTALL_PACKAGES = 0x01;
+    private static final int RC_UNKNOWN_APP_SOURCES = 0x02;
 
     private TextView tvUpgradeTitle;
     private TextView tvUpgradeLog;
@@ -163,6 +173,28 @@ public class UpgradeDialog extends BaseDialogFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (RC_INSTALL_PACKAGES == requestCode) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mUpgradeManager.install();
+            } else {
+                Uri pkgUri = Uri.parse("package:" + getActivity().getPackageName());
+                Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, pkgUri);
+                startActivityForResult(intent, RC_UNKNOWN_APP_SOURCES);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && RC_UNKNOWN_APP_SOURCES == requestCode) {
+            if (AppUtils.canInstallPackages(getActivity())) {
+                mUpgradeManager.install();
+            }
+        }
     }
 
     private void setBuilder(final Builder builder) {

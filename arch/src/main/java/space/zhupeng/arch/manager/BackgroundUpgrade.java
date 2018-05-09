@@ -137,7 +137,7 @@ public class BackgroundUpgrade extends UpgradeStrategy {
 
             int columnIndex = cur.getColumnIndex(DownloadManager.COLUMN_STATUS);
             if (DownloadManager.STATUS_SUCCESSFUL == cur.getInt(columnIndex)) {
-                installApk(getDownloadApkPath());
+                checkAndInstallApk(getDownloadApkPath());
             } else {
                 Toast.makeText(context, "下载App最新版本失败!", Toast.LENGTH_LONG).show();
             }

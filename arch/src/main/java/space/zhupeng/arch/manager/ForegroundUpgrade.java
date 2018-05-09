@@ -127,7 +127,7 @@ public class ForegroundUpgrade extends UpgradeStrategy {
                         mProgressHandler.sendMessage(mProgressHandler.obtainMessage(1, downloaded, total));
                         if (downloaded >= total) {
                             timer.cancel();
-                            installApk(getDownloadApkPath());
+                            checkAndInstallApk(getDownloadApkPath());
                         }
                     }
                 } else {
@@ -164,7 +164,7 @@ public class ForegroundUpgrade extends UpgradeStrategy {
 
             int columnIndex = cur.getColumnIndex(DownloadManager.COLUMN_STATUS);
             if (DownloadManager.STATUS_SUCCESSFUL == cur.getInt(columnIndex)) {
-                installApk(getDownloadApkPath());
+                checkAndInstallApk(getDownloadApkPath());
             } else {
                 Toast.makeText(context, "下载App最新版本失败!", Toast.LENGTH_LONG).show();
             }

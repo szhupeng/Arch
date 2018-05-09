@@ -11,13 +11,13 @@
             name="cache"
             path="" />
         <external-path
-            name="external"
+            name="ext"
             path="" />
         <external-files-path
-            name="external_file_path"
+            name="ext_file_path"
             path="" />
         <external-cache-path
-            name="external_cache_path"
+            name="ext_cache_path"
             path="" />
     </paths>
 </resources>

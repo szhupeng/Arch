@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 
 import java.util.List;
 
@@ -309,6 +310,20 @@ public final class AppUtils {
             }
         }
         return false;
+    }
+
+    /**
+     * 判断是否可以安装未知来源的app
+     *
+     * @param context
+     * @return
+     */
+    public static boolean canInstallPackages(final Context context) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            return context.getPackageManager().canRequestPackageInstalls();
+        } else {
+            return true;
+        }
     }
 
     private static boolean isSpace(final String s) {

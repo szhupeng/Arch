@@ -208,22 +208,22 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
         if (manager == null) return;
         if (manager instanceof LinearLayoutManager) {
-            final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) manager;
+            final LinearLayoutManager llm = (LinearLayoutManager) manager;
             recyclerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() + 1) != getItemCount()) {
+                    if (isFullScreen(llm)) {
                         setEnableLoadMore(true);
                     }
                 }
             }, 50);
         } else if (manager instanceof StaggeredGridLayoutManager) {
-            final StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) manager;
+            final StaggeredGridLayoutManager sglm = (StaggeredGridLayoutManager) manager;
             recyclerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    final int[] positions = new int[staggeredGridLayoutManager.getSpanCount()];
-                    staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(positions);
+                    final int[] positions = new int[sglm.getSpanCount()];
+                    sglm.findLastCompletelyVisibleItemPositions(positions);
                     int pos = getTheBiggestNumber(positions) + 1;
                     if (pos != getItemCount()) {
                         setEnableLoadMore(true);
@@ -231,6 +231,11 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
                 }
             }, 50);
         }
+    }
+
+    private boolean isFullScreen(LinearLayoutManager manager) {
+        return (manager.findLastCompletelyVisibleItemPosition() + 1) != getItemCount() ||
+                manager.findFirstCompletelyVisibleItemPosition() != 0;
     }
 
     private int getTheBiggestNumber(int[] numbers) {

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
@@ -18,8 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import space.zhupeng.arch.activity.BaseActivity;
-import space.zhupeng.arch.manager.NotificationOreoCompat;
 import space.zhupeng.arch.utils.FileProviderCompat;
+import space.zhupeng.arch.widget.dialog.UpgradeDialog;
 import space.zhupeng.demo.R;
 
 public class FileActivity extends BaseActivity {
@@ -47,6 +48,18 @@ public class FileActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 openGallery();
+            }
+        });
+
+        findViewById(R.id.btn_update).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpgradeDialog.Builder builder = new UpgradeDialog.Builder(FileActivity.this);
+                builder.setDownloadUrl("http://olg4na3ji.bkt.clouddn.com/B27E5E4BCFECC71E_1525673551003_3.6.4.apk")
+                        .setAppPath("haha.apk")
+                        .setDownloadInBack(false)
+                        .setUpgradeLog("哈哈哈")
+                        .build().show(getSupportFragmentManager());
             }
         });
 
