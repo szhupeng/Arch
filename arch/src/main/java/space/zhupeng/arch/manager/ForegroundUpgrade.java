@@ -13,13 +13,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import space.zhupeng.arch.utils.AppUtils;
+import space.zhupeng.arch.utils.ToastUtils;
 
 /**
  * 前台下载更新
@@ -166,7 +166,7 @@ public class ForegroundUpgrade extends UpgradeStrategy {
             if (DownloadManager.STATUS_SUCCESSFUL == cur.getInt(columnIndex)) {
                 checkAndInstallApk(getDownloadApkPath());
             } else {
-                Toast.makeText(context, "下载App最新版本失败!", Toast.LENGTH_LONG).show();
+                ToastUtils.showLong(context, "下载App最新版本失败!");
             }
 
             sp.edit().remove("download_id").commit();

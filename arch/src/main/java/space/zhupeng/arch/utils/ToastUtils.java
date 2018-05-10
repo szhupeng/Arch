@@ -241,7 +241,7 @@ public final class ToastUtils {
 
         cancel();
 
-        sToast = Toast.makeText(context, text, duration);
+        sToast = ToastCompat.makeText(context, text, duration);
         sToast.setGravity(Gravity.CENTER, 0, 0);
         sToast.show();
     }
@@ -267,10 +267,10 @@ public final class ToastUtils {
      */
     private static void showCustom(@NonNull final Context context, @NonNull final View view, final int duration) {
         if (null == view) return;
-        
+
         cancel();
 
-        sToast = new Toast(context);
+        sToast = new ToastCompat(context);
         sToast.setView(view);
         sToast.setDuration(duration);
         sToast.setGravity(Gravity.CENTER, 0, 0);

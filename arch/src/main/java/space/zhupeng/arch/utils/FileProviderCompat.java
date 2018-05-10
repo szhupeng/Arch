@@ -230,6 +230,7 @@ public class FileProviderCompat {
             try {
                 return parseUriByXml(context, path);
             } catch (Exception e) {
+                Log.e("FileProviderCompat", e.getMessage());
                 return null;
             }
         } else {

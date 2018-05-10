@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.Log;
 
 import java.util.List;
 
@@ -53,13 +54,13 @@ public final class AppUtils {
      * @return App名称
      */
     public static String getAppName(final Context context, final String packageName) {
-        if (isSpace(packageName)) return null;
+        if (Utils.isSpace(packageName)) return null;
         try {
             PackageManager pm = context.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(packageName, 0);
             return pi == null ? null : pi.applicationInfo.loadLabel(pm).toString();
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("AppUtils", e.getMessage());
             return null;
         }
     }
@@ -82,13 +83,13 @@ public final class AppUtils {
      * @return App图标
      */
     public static Drawable getAppIcon(final Context context, final String packageName) {
-        if (isSpace(packageName)) return null;
+        if (Utils.isSpace(packageName)) return null;
         try {
             PackageManager pm = context.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(packageName, 0);
             return pi == null ? null : pi.applicationInfo.loadIcon(pm);
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("AppUtils", e.getMessage());
             return null;
         }
     }
@@ -111,13 +112,13 @@ public final class AppUtils {
      * @return App路径
      */
     public static String getAppPath(final Context context, final String packageName) {
-        if (isSpace(packageName)) return null;
+        if (Utils.isSpace(packageName)) return null;
         try {
             PackageManager pm = context.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(packageName, 0);
             return pi == null ? null : pi.applicationInfo.sourceDir;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("AppUtils", e.getMessage());
             return null;
         }
     }
@@ -140,13 +141,13 @@ public final class AppUtils {
      * @return App版本号
      */
     public static String getAppVersionName(final Context context, final String packageName) {
-        if (isSpace(packageName)) return null;
+        if (Utils.isSpace(packageName)) return null;
         try {
             PackageManager pm = context.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(packageName, 0);
             return pi == null ? null : pi.versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("AppUtils", e.getMessage());
             return null;
         }
     }
@@ -169,13 +170,13 @@ public final class AppUtils {
      * @return App版本码
      */
     public static int getAppVersionCode(final Context context, final String packageName) {
-        if (isSpace(packageName)) return -1;
+        if (Utils.isSpace(packageName)) return -1;
         try {
             PackageManager pm = context.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(packageName, 0);
             return pi == null ? -1 : pi.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("AppUtils", e.getMessage());
             return -1;
         }
     }
@@ -198,13 +199,13 @@ public final class AppUtils {
      * @return {@code true}: 是<br>{@code false}: 否
      */
     public static boolean isSystemApp(final Context context, final String packageName) {
-        if (isSpace(packageName)) return false;
+        if (Utils.isSpace(packageName)) return false;
         try {
             PackageManager pm = context.getPackageManager();
             ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
             return ai != null && (ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("AppUtils", e.getMessage());
             return false;
         }
     }
@@ -227,13 +228,13 @@ public final class AppUtils {
      * @return {@code true}: 是<br>{@code false}: 否
      */
     public static boolean isAppDebug(final Context context, final String packageName) {
-        if (isSpace(packageName)) return false;
+        if (Utils.isSpace(packageName)) return false;
         try {
             PackageManager pm = context.getPackageManager();
             ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
             return ai != null && (ai.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("AppUtils", e.getMessage());
             return false;
         }
     }
@@ -256,14 +257,14 @@ public final class AppUtils {
      * @return App签名
      */
     public static Signature[] getAppSignature(final Context context, final String packageName) {
-        if (isSpace(packageName)) return null;
+        if (Utils.isSpace(packageName)) return null;
         try {
             PackageManager pm = context.getPackageManager();
             @SuppressLint("PackageManagerGetSignatures")
             PackageInfo pi = pm.getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
             return pi == null ? null : pi.signatures;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("AppUtils", e.getMessage());
             return null;
         }
     }
@@ -324,15 +325,5 @@ public final class AppUtils {
         } else {
             return true;
         }
-    }
-
-    private static boolean isSpace(final String s) {
-        if (s == null) return true;
-        for (int i = 0, len = s.length(); i < len; ++i) {
-            if (!Character.isWhitespace(s.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
     }
 }

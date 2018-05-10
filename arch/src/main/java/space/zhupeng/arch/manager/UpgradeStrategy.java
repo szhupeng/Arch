@@ -1,6 +1,5 @@
 package space.zhupeng.arch.manager;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -9,13 +8,14 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
+import android.provider.Settings;
 import android.text.TextUtils;
 
 import java.io.File;
 
-import space.zhupeng.arch.widget.dialog.UpgradeDialog;
+import space.zhupeng.arch.route.Router;
+import space.zhupeng.arch.utils.FileProviderCompat;
+import space.zhupeng.arch.utils.Utils;
 
 /**
  * @author zhupeng
@@ -91,34 +91,48 @@ public abstract class UpgradeStrategy {
             //APP安装文件不存在或已损坏
             return;
         }
-        File apkFile = new File(Uri.parse(apkPath).getPath());
+        final File apkFile = new File(Uri.parse(apkPath).getPath());
         if (!apkFile.exists()) {
             //APP安装文件不存在或已损坏
             return;
         }
 
-        // 兼容Android 8.0
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //先获取是否有安装未知来源应用的权限
-            if (!context.getPackageManager().canRequestPackageInstalls()) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, UpgradeDialog.RC_INSTALL_PACKAGES);
-                return;
-            } else {
-                installApk(apkFile);
+        Utils.runOnUiThreadSafely(new Runnable() {
+            @Override
+            public void run() {
+                // 兼容Android 8.0
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    //先获取是否有安装未知来源应用的权限
+                    if (!context.getPackageManager().canRequestPackageInstalls()) {
+                        Uri pkgUri = Uri.parse("package:" + context.getPackageName());
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, pkgUri);
+                        Router router = new Router((Activity) context);
+                        router.startActivityForResult(intent, new Router.Callback() {
+                            @Override
+                            public void onActivityResult(int resultCode, Intent data) {
+                                if (Activity.RESULT_OK == resultCode) {
+                                    installApk(apkFile);
+                                }
+                            }
+                        });
+                        return;
+                    } else {
+                        installApk(apkFile);
+                    }
+                } else {
+                    installApk(apkFile);
+                }
             }
-        } else {
-            installApk(apkFile);
-        }
+        });
     }
 
     private void installApk(final File apkFile) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", apkFile);
-            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
-        } else {
-            intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+        }
+        intent.setDataAndType(FileProviderCompat.getUriForFile(context, apkFile), "application/vnd.android.package-archive");
+        if (!(context instanceof Activity)) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         context.startActivity(intent);

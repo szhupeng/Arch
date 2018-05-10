@@ -1,6 +1,7 @@
 package space.zhupeng.arch.utils;
 
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -125,7 +126,7 @@ public final class EncryptUtils {
      * @return 文件的16进制密文
      */
     public static String encryptMD5File2String(final String filePath) {
-        File file = isSpace(filePath) ? null : new File(filePath);
+        File file = Utils.isSpace(filePath) ? null : new File(filePath);
         return encryptMD5File2String(file);
     }
 
@@ -136,7 +137,7 @@ public final class EncryptUtils {
      * @return 文件的MD5校验码
      */
     public static byte[] encryptMD5File(final String filePath) {
-        File file = isSpace(filePath) ? null : new File(filePath);
+        File file = Utils.isSpace(filePath) ? null : new File(filePath);
         return encryptMD5File(file);
     }
 
@@ -171,14 +172,14 @@ public final class EncryptUtils {
             md = digestInputStream.getMessageDigest();
             return md.digest();
         } catch (NoSuchAlgorithmException | IOException e) {
-            e.printStackTrace();
+            Log.e("EncryptUtils", e.getMessage());
             return null;
         } finally {
             if (fis != null) {
                 try {
                     fis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e("EncryptUtils", e.getMessage());
                 }
             }
         }
@@ -348,7 +349,7 @@ public final class EncryptUtils {
             md.update(data);
             return md.digest();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.e("EncryptUtils", e.getMessage());
             return null;
         }
     }
@@ -567,7 +568,7 @@ public final class EncryptUtils {
             mac.init(secretKey);
             return mac.doFinal(data);
         } catch (InvalidKeyException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.e("EncryptUtils", e.getMessage());
             return null;
         }
     }
@@ -830,7 +831,7 @@ public final class EncryptUtils {
             cipher.init(isEncrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, keySpec, random);
             return cipher.doFinal(data);
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.e("EncryptUtils", e.getMessage());
             return null;
         }
     }
@@ -850,7 +851,7 @@ public final class EncryptUtils {
     }
 
     private static byte[] hexString2Bytes(String hexString) {
-        if (isSpace(hexString)) return null;
+        if (Utils.isSpace(hexString)) return null;
         int len = hexString.length();
         if (len % 2 != 0) {
             hexString = "0" + hexString;
@@ -880,15 +881,5 @@ public final class EncryptUtils {
 
     private static byte[] base64Decode(final byte[] input) {
         return Base64.decode(input, Base64.NO_WRAP);
-    }
-
-    private static boolean isSpace(final String s) {
-        if (s == null) return true;
-        for (int i = 0, len = s.length(); i < len; ++i) {
-            if (!Character.isWhitespace(s.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
     }
 }

@@ -88,7 +88,7 @@ public final class Utils {
                 try {
                     runnable.run();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e("Utils", e.getMessage());
                 }
             }
         });
@@ -108,7 +108,7 @@ public final class Utils {
                 try {
                     runnable.run();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e("Utils", e.getMessage());
                 }
             }
         }, delayMillis);
@@ -130,7 +130,7 @@ public final class Utils {
             try {
                 runnable.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("Utils", e.getMessage());
             }
         } else {
             activity.runOnUiThread(new Runnable() {
@@ -139,7 +139,36 @@ public final class Utils {
                     try {
                         runnable.run();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.e("Utils", e.getMessage());
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * 在主线程安全执行
+     *
+     * @param runnable
+     */
+    public static void runOnUiThreadSafely(final Runnable runnable) {
+        if (null == runnable) return;
+
+        if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                Log.e("Utils", e.getMessage());
+            }
+        } else {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        runnable.run();
+                    } catch (Exception e) {
+                        Log.e("Utils", e.getMessage());
                     }
                 }
             });
@@ -160,7 +189,7 @@ public final class Utils {
                 try {
                     runnable.run();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e("Utils", e.getMessage());
                 }
             }
         }).start();
@@ -195,7 +224,7 @@ public final class Utils {
                     PackageManager.GET_META_DATA);
             bundle = ai.metaData;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("Utils", e.getMessage());
         }
         return bundle;
     }
@@ -282,5 +311,15 @@ public final class Utils {
         ClipboardManager mClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("text copy", text);
         mClipboard.setPrimaryClip(clip);
+    }
+
+    public static boolean isSpace(String s) {
+        if (s == null) return true;
+        for (int i = 0, len = s.length(); i < len; ++i) {
+            if (!Character.isWhitespace(s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

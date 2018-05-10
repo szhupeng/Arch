@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -126,7 +127,7 @@ public final class NetworkUtils {
                 return (boolean) getMobileDataEnabledMethod.invoke(tm);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("NetworkUtils", e.getMessage());
         }
         return false;
     }
@@ -146,7 +147,7 @@ public final class NetworkUtils {
                 setMobileDataEnabledMethod.invoke(tm, enabled);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("NetworkUtils", e.getMessage());
         }
     }
 
@@ -325,7 +326,7 @@ public final class NetworkUtils {
                 }
             }
         } catch (SocketException e) {
-            e.printStackTrace();
+            Log.e("NetworkUtils", e.getMessage());
         }
         return null;
     }
@@ -343,7 +344,7 @@ public final class NetworkUtils {
             inetAddress = InetAddress.getByName(domain);
             return inetAddress.getHostAddress();
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            Log.e("NetworkUtils", e.getMessage());
             return null;
         }
     }
