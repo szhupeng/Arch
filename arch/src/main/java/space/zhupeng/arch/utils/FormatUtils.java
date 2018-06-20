@@ -84,19 +84,20 @@ public final class FormatUtils {
     }
 
     public static String formatNumber(double value, boolean comma) {
-        DecimalFormat df;
-        if (comma) {
-            df = new DecimalFormat("###,##0.###");
-        } else {
-            df = new DecimalFormat("0.###");
-        }
-        return df.format(value);
+        return formatNumber(value, comma ? "###,##0.###" : "0.###");
     }
 
     public static String formatBigNumber(double value) {
-        DecimalFormat nf = new DecimalFormat("###,###");
-        return nf.format(value);
+        return formatNumber(value, "###,###");
     }
 
-
+    public static String formatNumber(double value, String pattern) {
+        try {
+            DecimalFormat nf = new DecimalFormat(pattern);
+            return nf.format(value);
+        } catch (Exception e) {
+            Log.e("FormatUtils", e.getMessage());
+            return null;
+        }
+    }
 }

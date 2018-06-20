@@ -15,16 +15,15 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import space.zhupeng.arch.fragment.BaseListFragment;
 import space.zhupeng.arch.manager.DataManager;
 import space.zhupeng.arch.manager.HttpHelper;
 import space.zhupeng.arch.net.response.BaseResp;
-import space.zhupeng.arch.fragment.BaseListFragment;
 import space.zhupeng.arch.widget.MultiStyleTextView;
 import space.zhupeng.arch.widget.adapter.BaseAdapter;
 import space.zhupeng.arch.widget.adapter.BaseViewHolder;
 import space.zhupeng.arch.widget.adapter.FlexibleItemDecoration;
 import space.zhupeng.demo.Api;
-import space.zhupeng.demo.AppContext;
 import space.zhupeng.demo.MenuService;
 import space.zhupeng.demo.R;
 import space.zhupeng.demo.activity.MenuDetailsActivity;
@@ -50,7 +49,7 @@ public class TypedMenusFragment extends BaseListFragment<TypeSearchVo.TypeSearch
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
 
-        mClassId = String.valueOf(mPassedData);
+        mClassId = getArguments().getString("classId");
 
         TypedMenuAdapter adapter = new TypedMenuAdapter(getActivity());
         adapter.openLoadAnimation(BaseAdapter.ALPHAIN);

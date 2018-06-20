@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
@@ -45,18 +44,11 @@ import space.zhupeng.arch.widget.dialog.DialogFactory;
  * @date 2017/1/14
  */
 @SuppressWarnings("all")
-public abstract class BaseActivity<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends XActivity implements BaseView, LoaderManager.LoaderCallbacks<Object> {
+public abstract class BaseActivity<M extends Repository, V extends BaseView, P extends BasePresenter<M, V>> extends XActivity implements BaseView, LoaderManager.LoaderCallbacks<Object>, Handler.Callback {
 
     protected static final int ID_PRESENTER_LOADER = 100;
 
-    protected final Handler mHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-
-            BaseActivity.this.handleMessage(msg);
-        }
-    };
+    protected final Handler mHandler = new Handler(this);
 
     protected P mPresenter;
 
@@ -118,6 +110,7 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
      * 执行setContentView之前的操作，比如全屏
      */
     protected void requestFeature() {
+        getWindow().setBackgroundDrawable(null);
     }
 
     /**
@@ -306,10 +299,9 @@ public abstract class BaseActivity<M extends Repository, V extends BaseView, P e
         Utils.postDelayedSafely(this.mHandler, runnable, delayMillis);
     }
 
-    /**
-     * @param msg
-     */
-    protected void handleMessage(Message msg) {
+    @Override
+    public boolean handleMessage(Message msg) {
+        return false;
     }
 
     /**

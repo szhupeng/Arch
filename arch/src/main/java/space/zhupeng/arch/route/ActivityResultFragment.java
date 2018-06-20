@@ -1,9 +1,9 @@
 package space.zhupeng.arch.route;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.util.SparseArrayCompat;
 
 /**
@@ -12,9 +12,9 @@ import android.support.v4.util.SparseArrayCompat;
  * @author zhupeng
  * @date 2016/12/11
  */
-public class ActivityResultFragment extends Fragment implements ResultFragmentCompat {
+public class ActivityResultFragment extends Fragment {
 
-    public static final String TAG = "ActivityResultFragment";
+    public static final String TAG = "SupportActivityResultFragment";
 
     private final SparseArrayCompat<Router.Callback> mCallbacks;
 
@@ -29,7 +29,6 @@ public class ActivityResultFragment extends Fragment implements ResultFragmentCo
         setRetainInstance(true);
     }
 
-    @Override
     public void startActivityForResult(Intent intent, Router.Callback callback) {
         int requestCode = Math.abs(callback.hashCode() & 0xFFFF);
         requestCode = checkRequestCode(requestCode);
@@ -54,6 +53,5 @@ public class ActivityResultFragment extends Fragment implements ResultFragmentCo
         if (callback != null) {
             callback.onActivityResult(resultCode, data);
         }
-
     }
 }

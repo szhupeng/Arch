@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,11 +14,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -87,13 +90,7 @@ public class BaseWebFragment extends BaseToolbarFragment {
         pbLoading = (ProgressBar) view.findViewById(R.id.pb_loading);
 
         Bundle args = getArguments();
-        if (null == args) {
-            if (mPassedData != null) {
-                args = (Bundle) mPassedData;
-            } else {
-                return;
-            }
-        }
+        if (null == args) return;
 
         mUrl = args.getString(EXTRA_URL);
         mWebView.setWebChromeClient(getWebChromeClient());
@@ -143,6 +140,14 @@ public class BaseWebFragment extends BaseToolbarFragment {
             // 是否允许通过file url加载的Javascript读取全部资源(包括文件,http,https)，默认值 false
             settings.setAllowUniversalAccessFromFileURLs(true);
         }
+
+        /**
+         *  WebView在安卓5.0之前默认允许其加载混合网络协议内容
+         *  在安卓5.0之后，默认不允许加载http与https混合内容，需要设置WebView允许其加载混合网络协议内容
+         */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
         settings.setDefaultTextEncodingName("UTF-8");
         settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -173,7 +178,7 @@ public class BaseWebFragment extends BaseToolbarFragment {
                 mWebView.loadUrl(trigger);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("BaseWebFragment", e.getMessage());
         }
     }
 
@@ -343,6 +348,12 @@ public class BaseWebFragment extends BaseToolbarFragment {
     }
 
     public class BaseWebViewClient extends WebViewClient {
+
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.proceed();
+        }
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if (!url.equals(mUrl)) {

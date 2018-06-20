@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -32,11 +33,11 @@ public abstract class XActivity extends AppCompatActivity {
         pushFragment(fragment, null, false);
     }
 
-    public void pushFragment(final XFragment fragment, final Object data) {
-        pushFragment(fragment, data, false);
+    public void pushFragment(final XFragment fragment, final Bundle args) {
+        pushFragment(fragment, args, false);
     }
 
-    public void pushFragment(final XFragment fragment, final Object data, final boolean addToBackStack) {
+    public void pushFragment(final XFragment fragment, final Bundle args, final boolean addToBackStack) {
         try {
             final String fname = fragment.getClass().getName();
             FragmentManager fm = getSupportFragmentManager();
@@ -46,7 +47,7 @@ public abstract class XActivity extends AppCompatActivity {
                 ft.hide(this.mCurrentFragment);
             }
 
-            fragment.setData(data);
+            fragment.setArguments(args);
             if (fm.getBackStackEntryCount() > 0) {
                 Transition transition = fragment.onCreateTransition();
                 if (transition != null) {
@@ -96,11 +97,11 @@ public abstract class XActivity extends AppCompatActivity {
         pushFragment(cls, null, false);
     }
 
-    public void pushFragment(final Class<? extends XFragment> cls, final Object data) {
-        pushFragment(cls, data, false);
+    public void pushFragment(final Class<? extends XFragment> cls, final Bundle args) {
+        pushFragment(cls, args, false);
     }
 
-    public void pushFragment(final Class<? extends XFragment> cls, final Object data, final boolean addToBackStack) {
+    public void pushFragment(final Class<? extends XFragment> cls, final Bundle args, final boolean addToBackStack) {
         if (null == cls) {
             return;
         }
@@ -118,18 +119,18 @@ public abstract class XActivity extends AppCompatActivity {
             return;
         }
 
-        pushFragment(fragment, data, addToBackStack);
+        pushFragment(fragment, args, addToBackStack);
     }
 
     public void replaceFragment(final XFragment fragment) {
         replaceFragment(fragment, null);
     }
 
-    public void replaceFragment(final XFragment fragment, final Object data) {
+    public void replaceFragment(final XFragment fragment, final Bundle args) {
         try {
             FragmentManager fm = this.getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            fragment.setData(data);
+            fragment.setArguments(args);
             if (fm.getBackStackEntryCount() > 0) {
                 Transition transition = fragment.onCreateTransition();
                 if (transition != null) {
@@ -167,7 +168,7 @@ public abstract class XActivity extends AppCompatActivity {
         }
     }
 
-    public void replaceFragment(final Class<? extends XFragment> cls, final Object data) {
+    public void replaceFragment(final Class<? extends XFragment> cls, final Bundle args) {
         if (null == cls) {
             return;
         }
@@ -180,7 +181,7 @@ public abstract class XActivity extends AppCompatActivity {
             return;
         }
 
-        replaceFragment(fragment, data);
+        replaceFragment(fragment, args);
     }
 
     /**

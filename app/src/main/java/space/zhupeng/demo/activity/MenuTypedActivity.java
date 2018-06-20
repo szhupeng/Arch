@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import space.zhupeng.arch.activity.BaseToolbarActivity;
-import space.zhupeng.demo.AppContext;
 import space.zhupeng.demo.R;
 import space.zhupeng.demo.fragment.TypedMenusFragment;
 import space.zhupeng.demo.vo.MenuTypeVo;
@@ -40,6 +39,8 @@ public class MenuTypedActivity extends BaseToolbarActivity {
         setCenterTitle("分类菜谱");
 
         MenuTypeVo vo = getIntent().getParcelableExtra("vo");
-        replaceFragment(TypedMenusFragment.class, vo.classid);
+        Bundle args = new Bundle();
+        args.putString("classId", vo.classid);
+        replaceFragment(TypedMenusFragment.class, args);
     }
 }

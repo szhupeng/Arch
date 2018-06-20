@@ -21,12 +21,6 @@ public abstract class XFragment extends Fragment {
     protected boolean isVisibleToUser;
     protected boolean isDataLoaded;
 
-    protected Object mPassedData;
-
-    public void setData(Object data) {
-        this.mPassedData = data;
-    }
-
     /**
      * 当前fragment切换动画
      *

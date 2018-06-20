@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 
 import java.io.File;
@@ -106,7 +107,7 @@ public abstract class UpgradeStrategy {
                     if (!context.getPackageManager().canRequestPackageInstalls()) {
                         Uri pkgUri = Uri.parse("package:" + context.getPackageName());
                         Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, pkgUri);
-                        Router router = new Router((Activity) context);
+                        Router router = new Router((FragmentActivity) context);
                         router.startActivityForResult(intent, new Router.Callback() {
                             @Override
                             public void onActivityResult(int resultCode, Intent data) {

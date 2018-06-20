@@ -21,50 +21,28 @@ public class Router {
         void onActivityResult(int resultCode, Intent data);
     }
 
-    private final ResultFragmentCompat mResultFragment;
+    private final ActivityResultFragment mResultFragment;
 
     public Router() {
         mResultFragment = null;
-    }
-
-    public Router(android.app.Fragment fragment) {
-        this(fragment.getActivity());
     }
 
     public Router(Fragment fragment) {
         this(fragment.getActivity());
     }
 
-    public Router(Activity activity) {
-        if (activity instanceof FragmentActivity) {
-            mResultFragment = getResultFragment((FragmentActivity) activity);
-        } else {
-            mResultFragment = getResultFragment(activity);
-        }
+    public Router(FragmentActivity activity) {
+        mResultFragment = getResultFragment(activity);
     }
 
-    private SupportActivityResultFragment getResultFragment(FragmentActivity activity) {
+    private ActivityResultFragment getResultFragment(FragmentActivity activity) {
         final FragmentManager manager = activity.getSupportFragmentManager();
 
-        Fragment fragment = manager.findFragmentByTag(SupportActivityResultFragment.TAG);
-        if (null == fragment) {
-            fragment = new SupportActivityResultFragment();
-            manager.beginTransaction()
-                    .add(fragment, SupportActivityResultFragment.TAG)
-                    .commitAllowingStateLoss();
-            manager.executePendingTransactions();
-        }
-        return (SupportActivityResultFragment) fragment;
-    }
-
-    private ActivityResultFragment getResultFragment(Activity activity) {
-        final android.app.FragmentManager manager = activity.getFragmentManager();
-
-        android.app.Fragment fragment = manager.findFragmentByTag(ActivityResultFragment.TAG);
+        Fragment fragment = manager.findFragmentByTag(ActivityResultFragment.TAG);
         if (null == fragment) {
             fragment = new ActivityResultFragment();
             manager.beginTransaction()
-                    .add(fragment, SupportActivityResultFragment.TAG)
+                    .add(fragment, ActivityResultFragment.TAG)
                     .commitAllowingStateLoss();
             manager.executePendingTransactions();
         }

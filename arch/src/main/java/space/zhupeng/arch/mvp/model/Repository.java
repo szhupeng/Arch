@@ -18,7 +18,7 @@ import space.zhupeng.arch.net.response.BaseResp;
  * @date 2017/9/9
  */
 
-public abstract class Repository<T> implements DataSource<T>, LifecycleObserver {
+public abstract class Repository<T> implements LifecycleObserver {
 
     public interface CallFactory<D> {
         Call<D> create();
@@ -33,14 +33,6 @@ public abstract class Repository<T> implements DataSource<T>, LifecycleObserver 
     protected T mCachedData;
     //将缓存标记为无效（设为true），以便在下次请求数据时强制更新
     protected boolean mCacheIsDirty = true;
-
-    private LocalDataSource<T> mLocal;
-    private RemoteDataSource<T> mRemote;
-
-    public Repository(RemoteDataSource remote, LocalDataSource local) {
-        this.mRemote = remote;
-        this.mLocal = local;
-    }
 
     public boolean isCachedDataAvailable() {
         return mCachedData != null && !mCacheIsDirty;
@@ -243,15 +235,6 @@ public abstract class Repository<T> implements DataSource<T>, LifecycleObserver 
      */
     protected T loadFromLocal(final int what) throws Exception {
         return null;
-    }
-
-    @Override
-    public T getData() {
-        if (!mCacheIsDirty) {
-            return mLocal.getData();
-        } else {
-            return mRemote.getData();
-        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
